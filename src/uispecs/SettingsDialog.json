@@ -1,0 +1,17 @@
+// #part /uispecs/SettingsDialog
+
+{
+    "type": "panel",
+    "children": [
+      {
+        "type": "button",
+        "bind": "saveButton",
+        "label": "Save"
+      },
+      {
+        "type": "button",
+        "bind": "loadButton",
+        "label": "Load"
+      }
+    ]
+  }

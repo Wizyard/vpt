@@ -63,6 +63,154 @@ constructor() {
         this._renderingContext.setFilter(options.filter);
     });
 
+    this._settingsDialog = new SettingsDialog();
+    this._settingsDialog.appendTo(
+        this._mainDialog.getSettingsContainer());
+
+    this._settingsDialog._binds.saveButton.addEventListener('click', () => {
+        this._settingsDialog._downloadSettings(this);
+    });
+
+    /*console.log(this);
+    this._settingsDialog._binds.testButton.addEventListener('click', () => {
+        console.log(this);
+    });*/
+
+    this._settingsDialog._binds.loadButton.addEventListener('click', () => {
+        CommonUtils.readTextFile(data => {
+            const settings = JSON.parse(data);
+            
+            const renderer = settings.renderer;
+            this._mainDialog._binds.rendererSelect._binds.input.value = renderer;
+            this._mainDialog.trigger('rendererchange', renderer);
+            switch (renderer) {
+                case 'mip' :
+                    this._rendererDialog._binds.steps.setValue(settings.rendererSettings.steps);
+                    this._rendererDialog._binds.steps._binds.input.value = settings.rendererSettings.steps;
+                    break;
+                case 'iso' :
+                    this._rendererDialog._binds.steps.setValue(settings.rendererSettings.steps);
+                    this._rendererDialog._binds.isovalue.setValue(settings.rendererSettings.isovalue);
+                    this._rendererDialog._binds.color.setValue(settings.rendererSettings.color);
+                    this._rendererDialog._binds.direction.setValue(settings.rendererSettings.direction);
+                    this._rendererDialog._binds.steps._binds.input.value = settings.rendererSettings.steps;
+                    this._rendererDialog._binds.isovalue._binds.button.style.marginLeft = settings.rendererSettings.isovalue;
+                    this._rendererDialog._binds.color._binds.color.style.backgroundColor = settings.rendererSettings.color;
+                    this._rendererDialog._binds.direction._binds.vectorX.children[0].children[0].value = settings.rendererSettings.direction.x;
+                    this._rendererDialog._binds.direction._binds.vectorY.children[0].children[0].value = settings.rendererSettings.direction.y;
+                    this._rendererDialog._binds.direction._binds.vectorZ.children[0].children[0].value = settings.rendererSettings.direction.z;
+                    break;
+                case 'eam' :
+                    this._rendererDialog._binds.slices.setValue(settings.rendererSettings.slices);
+                    this._rendererDialog._binds.extinction.setValue(settings.rendererSettings.extinction);
+                    this._rendererDialog._binds.slices._binds.input.value = settings.rendererSettings.slices;
+                    this._rendererDialog._binds.extinction._binds.input.value = settings.rendererSettings.extinction;
+                    this._rendererDialog._tfwidget._bumps = settings.rendererSettings.transferFunction;
+                    this._rendererDialog._tfwidget.render();
+                    this._rendererDialog._tfwidget._rebuildHandles();
+                    this._rendererDialog._tfwidget.trigger('change');
+                    break;
+                case 'mcs' :
+                    this._rendererDialog._binds.extinction.setValue(settings.rendererSettings.extinction);
+                    this._rendererDialog._binds.extinction._binds.input.value = settings.rendererSettings.extinction;
+                    this._rendererDialog._tfwidget._bumps = settings.rendererSettings.transferFunction;
+                    this._rendererDialog._tfwidget.render();
+                    this._rendererDialog._tfwidget._rebuildHandles();
+                    this._rendererDialog._tfwidget.trigger('change');
+                    break;
+                case 'mcm' :
+                    this._rendererDialog._binds.extinction.setValue(settings.rendererSettings.extinction);
+                    this._rendererDialog._binds.albedo.setValue(settings.rendererSettings.albedo);
+                    this._rendererDialog._binds.bias.setValue(settings.rendererSettings.bias);
+                    this._rendererDialog._binds.ratio.setValue(settings.rendererSettings.ratio);
+                    this._rendererDialog._binds.bounces.setValue(settings.rendererSettings.bounces);
+                    this._rendererDialog._binds.steps.setValue(settings.rendererSettings.steps);
+                    this._rendererDialog._binds.extinction._binds.input.value = settings.rendererSettings.extinction;
+                    this._rendererDialog._binds.albedo._binds.button.style.marginLeft = settings.rendererSettings.albedo;
+                    this._rendererDialog._binds.bias._binds.button.style.marginLeft = settings.rendererSettings.bias;
+                    this._rendererDialog._binds.ratio._binds.button.style.marginLeft = settings.rendererSettings.ratio;
+                    this._rendererDialog._binds.bounces._binds.input.value = settings.rendererSettings.bounces;
+                    this._rendererDialog._binds.steps._binds.input.value = settings.rendererSettings.steps;
+                    this._rendererDialog._tfwidget._bumps = settings.rendererSettings.transferFunction;
+                    this._rendererDialog._tfwidget.render();
+                    this._rendererDialog._tfwidget._rebuildHandles();
+                    this._rendererDialog._tfwidget.trigger('change');
+                    break;
+                case 'mcc' :
+                    break;
+                case 'dos' :
+                    this._rendererDialog._binds.steps.setValue(settings.rendererSettings.steps);
+                    this._rendererDialog._binds.slices.setValue(settings.rendererSettings.slices);
+                    this._rendererDialog._binds.extinction.setValue(settings.rendererSettings.extinction);
+                    this._rendererDialog._binds.aperture.setValue(settings.rendererSettings.aperture);
+                    this._rendererDialog._binds.samples.setValue(settings.rendererSettings.samples);
+                    this._rendererDialog._binds.steps._binds.input.value = settings.rendererSettings.steps;
+                    this._rendererDialog._binds.slices._binds.input.value = settings.rendererSettings.slices;
+                    this._rendererDialog._binds.extinction._binds.input.value = settings.rendererSettings.extinction;
+                    this._rendererDialog._binds.aperture._binds.input.value = settings.rendererSettings.aperture;
+                    this._rendererDialog._binds.samples._binds.input.value = settings.rendererSettings.samples;
+                    this._rendererDialog._tfwidget._bumps = settings.rendererSettings.transferFunction;
+                    this._rendererDialog._tfwidget.render();
+                    this._rendererDialog._tfwidget._rebuildHandles();
+                    this._rendererDialog._tfwidget.trigger('change');
+                    break;
+            }
+            this._rendererDialog._handleChange();
+
+            const toneMapper = settings.toneMapper;
+            this._mainDialog._binds.toneMapperSelect._binds.input.value = toneMapper;
+            this._mainDialog.trigger('tonemapperchange', toneMapper);
+            switch (toneMapper) {
+                case 'range':
+                    this._toneMapperDialog._binds.low.setValue(settings.toneMapperSettings.low);
+                    this._toneMapperDialog._binds.high.setValue(settings.toneMapperSettings.high);
+                    this._toneMapperDialog._binds.low._binds.input.value = settings.toneMapperSettings.low;
+                    this._toneMapperDialog._binds.high._binds.input.value = settings.toneMapperSettings.high;
+                    break;
+                case 'reinhard':
+                    this._toneMapperDialog._binds.exposure.setValue(settings.toneMapperSettings.exposure);
+                    this._toneMapperDialog._binds.exposure._binds.input.value = settings.toneMapperSettings.exposure;
+                    break;
+                case 'artistic':
+                    this._toneMapperDialog._binds.low.setValue(settings.toneMapperSettings.low);
+                    this._toneMapperDialog._binds.high.setValue(settings.toneMapperSettings.high);
+                    this._toneMapperDialog._binds.midtones.setValue(settings.toneMapperSettings.midtones);
+                    this._toneMapperDialog._binds.saturation.setValue(settings.toneMapperSettings.saturation);
+                    this._toneMapperDialog._binds.low._binds.input.value = settings.toneMapperSettings.low;
+                    this._toneMapperDialog._binds.high._binds.input.value = settings.toneMapperSettings.high;
+                    this._toneMapperDialog._binds.midtones._binds.button.style.marginLeft = settings.toneMapperSettings.midtones;
+                    this._toneMapperDialog._binds.saturation._binds.input.value = settings.toneMapperSettings.saturation;
+                    break;
+            }
+            this._toneMapperDialog._handleChange();
+
+            this._renderingContextDialog._binds.filter.checked = settings.context.filter;
+            this._renderingContextDialog._binds.resolution.setValue(settings.context.resolution);
+            this._renderingContextDialog._binds.scale.setValue(settings.context.scale);
+            this._renderingContextDialog._binds.translation.setValue(settings.context.translation);
+            
+            let newClassName = 'instantiate checkbox';
+            if (settings.context.filter) {
+                newClassName += ' checked';
+            }
+            this._renderingContextDialog._binds.filter._element.className = newClassName;
+            this._renderingContextDialog._binds.resolution._binds.input.value = settings.context.resolution;
+            this._renderingContextDialog._binds.scale._binds.vectorX.children[0].children[0].value = settings.context.scale.x;
+            this._renderingContextDialog._binds.scale._binds.vectorY.children[0].children[0].value = settings.context.scale.y;
+            this._renderingContextDialog._binds.scale._binds.vectorZ.children[0].children[0].value = settings.context.scale.z;
+            this._renderingContextDialog._binds.translation._binds.vectorX.children[0].children[0].value = settings.context.translation.x;
+            this._renderingContextDialog._binds.translation._binds.vectorY.children[0].children[0].value = settings.context.translation.y;
+            this._renderingContextDialog._binds.translation._binds.vectorZ.children[0].children[0].value = settings.context.translation.z;
+
+            this._renderingContextDialog.trigger('filter', { filter: settings.context.filter });
+            this._renderingContextDialog.trigger('resolution', { resolution: settings.context.resolution });
+            this._renderingContextDialog.trigger('transformation', {
+                scale: settings.context.scale,
+                translation: settings.context.translation
+            });
+        });
+    });
+
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
     this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());
