@@ -1,6 +1,6 @@
 // #part /js/EventEmitter
 
-class EventEmitter {
+class EventEmitter { // extends Serializable {
 
 constructor() {
     this._eventHandlers = {};

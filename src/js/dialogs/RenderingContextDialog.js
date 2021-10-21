@@ -19,6 +19,16 @@ constructor(options) {
     this._binds.filter.addEventListener('change', this._handleFilterChange);
 }
 
+serialize() {
+    this.settings = {
+        filter: this._binds.filter.isChecked(),
+        resolution: this._binds.resolution.getValue(),
+        scale: this._binds.scale.getValue(),
+        translation: this._binds.translation.getValue()
+    }
+    return this.settings;
+}
+
 _handleResolutionChange() {
     this.trigger('resolution', {
         resolution: this._binds.resolution.getValue()

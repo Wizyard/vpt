@@ -63,6 +63,14 @@ constructor() {
         this._renderingContext.setFilter(options.filter);
     });
 
+    this._mainDialog._binds.saveButton.addEventListener('click', () => {
+        const context = this._renderingContextDialog.serialize();
+        const settings = {
+            context: context
+        }
+        console.log(settings);
+    });
+
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
     this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());

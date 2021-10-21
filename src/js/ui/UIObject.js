@@ -2,7 +2,7 @@
 
 // #link ../utils
 
-class UIObject {
+class UIObject { // extends Serializable {
 
 constructor(template, options) {
     Object.assign(this, {
