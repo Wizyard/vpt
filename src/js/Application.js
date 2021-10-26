@@ -31,6 +31,8 @@ constructor() {
     document.body.addEventListener('dragover', e => e.preventDefault());
     document.body.addEventListener('drop', this._handleFileDrop);
 
+    //window.customElements.define('wc-main-dialog', MainDialog);
+
     this._mainDialog = new MainDialog();
     if (!this._renderingContext.hasComputeCapabilities()) {
         this._mainDialog.disableMCC();
@@ -39,6 +41,9 @@ constructor() {
     this._statusBar = new StatusBar();
     this._statusBar.appendTo(document.body);
 
+    //window.customElements.define('wc-volume-load-dialog', VolumeLoadDialog);
+    //window.customElements.define('wc-envmap-load-dialog', EnvmapLoadDialog);
+
     this._volumeLoadDialog = new VolumeLoadDialog();
     this._volumeLoadDialog.appendTo(this._mainDialog.getVolumeLoadContainer());
     this._volumeLoadDialog.addEventListener('load', this._handleVolumeLoad);
@@ -46,6 +51,8 @@ constructor() {
     this._envmapLoadDialog = new EnvmapLoadDialog();
     this._envmapLoadDialog.appendTo(this._mainDialog.getEnvmapLoadContainer());
     this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);
+
+    //window.customElements.define('wc-rendering-context-dialog', RenderingContextDialog);
 
     this._renderingContextDialog = new RenderingContextDialog();
     this._renderingContextDialog.appendTo(
@@ -64,11 +71,18 @@ constructor() {
     });
 
     this._mainDialog._binds.saveButton.addEventListener('click', () => {
+        const rendererSettings = this._rendererDialog.serialize();
+        const toneMapperSettings = this._toneMapperDialog.serialize();
         const context = this._renderingContextDialog.serialize();
         const settings = {
+            renderer: this._mainDialog.getSelectedRenderer(),
+            rendererSettings: rendererSettings,
+            toneMapper: this._mainDialog.getSelectedToneMapper(),
+            toneMapperSettings: toneMapperSettings,
             context: context
         }
-        console.log(settings);
+        //console.log(settings);
+        CommonUtils.downloadJSON(settings, 'Settings.json');
     });
 
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);

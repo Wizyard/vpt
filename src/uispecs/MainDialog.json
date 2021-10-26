@@ -31,7 +31,6 @@
               "children": [
                 {
                   "type": "accordion",
-                  "bind": "settingsContainer",
                   "label": "Load & save settings",
                   "children": [
                     {

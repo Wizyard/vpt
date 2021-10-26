@@ -17,9 +17,14 @@ constructor(options) {
     this._binds.scale.addEventListener('input', this._handleTransformationChange);
     this._binds.translation.addEventListener('input', this._handleTransformationChange);
     this._binds.filter.addEventListener('change', this._handleFilterChange);
+
+    /*this.registerSetting('resolution', 'integer');
+    this.registerSetting('scale', 'vector');
+    this.registerSetting('translation', 'vector');
+    this.registerSetting('filter', 'bool');*/
 }
 
-serialize() {
+/*serialize() {
     this.settings = {
         filter: this._binds.filter.isChecked(),
         resolution: this._binds.resolution.getValue(),
@@ -27,7 +32,7 @@ serialize() {
         translation: this._binds.translation.getValue()
     }
     return this.settings;
-}
+}*/
 
 _handleResolutionChange() {
     this.trigger('resolution', {
@@ -49,3 +54,5 @@ _handleFilterChange() {
 }
 
 }
+
+//window.customElements.define('wc-rendering-context-dialog', RenderingContextDialog);

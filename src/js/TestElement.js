@@ -1,9 +1,11 @@
 // #part /js/TestElement
 
-class TestElement extends Serializable { // HTMLElement
+class TestElement extends HTMLElement {
 
     constructor() {
         super();
+        Object.assign(this, Serializable);
+        this.settings = {};
 
         this.registerSetting('translation', 'vector');
         this.registerSetting('scale', 'vector');
@@ -14,4 +16,5 @@ class TestElement extends Serializable { // HTMLElement
     }
 }
 
+Object.assign(TestElement.prototype, Serializable);
 window.customElements.define('wc-test-element', TestElement);

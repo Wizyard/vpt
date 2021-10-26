@@ -2,11 +2,13 @@
 
 // #link ../ui
 // #link ../EventEmitter
+// #link ../Serializable
 
 class AbstractDialog extends EventEmitter {
 
 constructor(spec, options) {
     super();
+    Object.assign(this, Serializable);
 
     Object.assign(this, {
         visible: true
