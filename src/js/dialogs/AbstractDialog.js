@@ -14,11 +14,11 @@ constructor(spec, options) {
         visible: true
     }, options);
 
-    this._spec = spec;
+    /*this._spec = spec;
 
     const creation = UI.create(JSON.parse(this._spec));
     this._object = creation.object;
-    this._binds = creation.binds;
+    this._binds = creation.binds;*/
 }
 
 destroy() {

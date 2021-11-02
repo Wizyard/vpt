@@ -2,10 +2,10 @@
 
 // #link Serializable
 
-class EventEmitter { // extends Serializable {
+class EventEmitter extends HTMLElement {
 
 constructor() {
-    //super();
+    super();
     this._eventHandlers = {};
 }
 

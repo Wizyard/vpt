@@ -10,14 +10,16 @@ constructor(options) {
     super(TEMPLATES.ui.Accordion, options);
 
     Object.assign(this, {
-        label      : '',
+        label      : this.attributes.label.value,
         contracted : false
     }, options);
 
     this._handleClick = this._handleClick.bind(this);
 
-    this._binds.handle.textContent = this.label;
-    this._binds.handle.addEventListener('click', this._handleClick);
+    //this._binds.handle.textContent = this.label;
+    //this._binds.handle.addEventListener('click', this._handleClick);
+    this.shadowRoot.querySelector('.handle').textContent = this.label;
+    this.shadowRoot.querySelector('.handle').addEventListener('click', this._handleClick);
     this.setContracted(this.contracted);
 }
 
@@ -27,7 +29,8 @@ add(object) {
 
 setContracted(contracted) {
     this.contracted = contracted;
-    this._element.classList.toggle('contracted', contracted);
+    //this._element.classList.toggle('contracted', contracted);
+    this.shadowRoot.querySelector('.accordion').classList.toggle('contracted', contracted);
 }
 
 expand() {

@@ -31,30 +31,41 @@ constructor() {
     document.body.addEventListener('dragover', e => e.preventDefault());
     document.body.addEventListener('drop', this._handleFileDrop);
 
+    window.customElements.define('vpt-main-dialog', MainDialog);
+    window.customElements.define('vpt-sidebar', Sidebar);
+    window.customElements.define('vpt-panel', Panel);
+    window.customElements.define('vpt-tabs', Tabs);
+    window.customElements.define('vpt-accordion', Accordion);
+    window.customElements.define('vpt-button', Button);
+    window.customElements.define('vpt-field', Field);
+    window.customElements.define('vpt-dropdown', Dropdown);
+    window.customElements.define('vpt-rendering-context-dialog', RenderingContextDialog);
+
+    
     //window.customElements.define('wc-main-dialog', MainDialog);
 
-    this._mainDialog = new MainDialog();
+    /*this._mainDialog = new MainDialog();
     if (!this._renderingContext.hasComputeCapabilities()) {
         this._mainDialog.disableMCC();
     }
 
     this._statusBar = new StatusBar();
-    this._statusBar.appendTo(document.body);
+    this._statusBar.appendTo(document.body);*/
 
     //window.customElements.define('wc-volume-load-dialog', VolumeLoadDialog);
     //window.customElements.define('wc-envmap-load-dialog', EnvmapLoadDialog);
 
-    this._volumeLoadDialog = new VolumeLoadDialog();
+    /*this._volumeLoadDialog = new VolumeLoadDialog();
     this._volumeLoadDialog.appendTo(this._mainDialog.getVolumeLoadContainer());
     this._volumeLoadDialog.addEventListener('load', this._handleVolumeLoad);
 
     this._envmapLoadDialog = new EnvmapLoadDialog();
     this._envmapLoadDialog.appendTo(this._mainDialog.getEnvmapLoadContainer());
-    this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);
+    this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);*/
 
     //window.customElements.define('wc-rendering-context-dialog', RenderingContextDialog);
 
-    this._renderingContextDialog = new RenderingContextDialog();
+    /*this._renderingContextDialog = new RenderingContextDialog();
     this._renderingContextDialog.appendTo(
         this._mainDialog.getRenderingContextSettingsContainer());
     this._renderingContextDialog.addEventListener('resolution', options => {
@@ -88,7 +99,7 @@ constructor() {
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
     this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());
-    this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());
+    this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());*/
 }
 
 _handleFileDrop(e) {

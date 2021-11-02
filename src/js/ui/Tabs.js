@@ -11,9 +11,134 @@ constructor(options) {
 
     this._tabs = [];
     this._index = 0;
+
+    this.setup();
+
+    Object.assign(this.shadowRoot.querySelector('#renderer-dropdown'), {
+        options: [
+            {
+            "value": "mip",
+            "label": "Maximum intensity projection"
+            },
+            {
+            "value": "iso",
+            "label": "Isosurface extraction"
+            },
+            {
+            "value": "eam",
+            "label": "Emission-absorption model"
+            },
+            {
+            "value": "dos",
+            "label": "Directional occlusion shading"
+            },
+            {
+            "value": "mcs",
+            "label": "Single scattering"
+            },
+            {
+            "selected": true,
+            "value": "mcm",
+            "label": "Multiple scattering"
+            },
+            {
+            "value": "mcc",
+            "label": "Multiple scattering (compute)"
+            }
+        ]
+    });
+
+    Object.assign(this.shadowRoot.querySelector('#tone-mapper-dropdown'), {
+        options: [
+            {
+            "value": "artistic",
+            "label": "Artistic",
+            "selected": true
+            },
+            {
+            "value": "range",
+            "label": "Range"
+            },
+            {
+            "value": "reinhard",
+            "label": "Reinhard"
+            },
+            {
+            "value": "reinhard2",
+            "label": "Reinhard 2"
+            },
+            {
+            "value": "uncharted2",
+            "label": "Uncharted 2"
+            },
+            {
+            "value": "filmic",
+            "label": "Filmic"
+            },
+            {
+            "value": "unreal",
+            "label": "Unreal"
+            },
+            {
+            "value": "aces",
+            "label": "Aces"
+            },
+            {
+            "value": "lottes",
+            "label": "Lottes"
+            },
+            {
+            "value": "uchimura",
+            "label": "Uchimura"
+            }
+        ]
+    });
+
+    const about = DOMUtils.instantiate(TEMPLATES.AboutText);
+    this.shadowRoot.querySelector('#about-panel').appendChild(about);
+
+    /*this.add("Data", {
+        "type": "panel",
+        "children": [
+          {
+            "type": "accordion",
+            "bind": "volumeLoadContainer",
+            "label": "Volume"
+          },
+          {
+            "type": "accordion",
+            "bind": "envmapLoadContainer",
+            "label": "Environment"
+          }
+        ]
+      });*/
 }
 
-add(name, object) {
+setup() {
+    let headers = this.shadowRoot.querySelectorAll('.header');
+    let panels = this.shadowRoot.querySelector('.container').children;
+
+    for (let i = 0; i < headers.length; i++) {
+        let header = headers[i];
+        let panel = panels[i];
+        const index = this._tabs.length;
+
+        this._tabs.push({
+            object : {},
+            header : header,
+            panel  : panel
+        });
+
+        panel.style.order = index;
+        header.style.order = index;
+
+        header.addEventListener('click', this._handleClick);
+
+        this._updateStyle();
+    }
+}
+
+add(name, object) { // Unused
     let panel = document.createElement('div');
     let header = document.createElement('div');
     const index = this._tabs.length;
@@ -24,8 +149,10 @@ add(name, object) {
         header : header,
         panel  : panel
     });
-    this._binds.container.appendChild(panel);
-    this._binds.headers.appendChild(header);
+    //this._binds.container.appendChild(panel);
+    //this._binds.headers.appendChild(header);
+    this.shadowRoot.querySelector('.container').appendChild(panel);
+    this.shadowRoot.querySelector('.headers').appendChild(header);
     object.appendTo(panel);
 
     panel.style.order = index;

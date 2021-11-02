@@ -8,7 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.Panel, options);
 
     Object.assign(this, {
-        scrollable: false
+        scrollable: this.hasAttribute('scrollable')
     }, options);
 
     this.setScrollable(this.scrollable);
@@ -16,7 +16,8 @@ constructor(options) {
 
 setScrollable(scrollable) {
     this.scrollable = scrollable;
-    this._element.classList.toggle('scrollable', scrollable);
+    //this._element.classList.toggle('scrollable', scrollable);
+    this.shadowRoot.querySelector('.panel').classList.toggle('scrollable', scrollable);
 }
 
 add(object) {

@@ -2,9 +2,11 @@
 
 // #link ../utils
 
-class UIObject { // extends Serializable {
+class UIObject extends HTMLElement {
 
 constructor(template, options) {
+    super();
+    
     Object.assign(this, {
         enabled: true,
         visible: true
@@ -14,6 +16,8 @@ constructor(template, options) {
 
     this._element = DOMUtils.instantiate(this._template);
     this._binds = DOMUtils.bind(this._element);
+
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element.cloneNode(true));
 
     this._element.classList.toggle('disabled', !this.enabled);
     this._element.classList.toggle('invisible', !this.visible);

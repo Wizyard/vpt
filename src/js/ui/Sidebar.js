@@ -13,7 +13,8 @@ constructor(options) {
 
     this._handleClick = this._handleClick.bind(this);
 
-    this._binds.handle.addEventListener('click', this._handleClick);
+    //this._binds.handle.addEventListener('click', this._handleClick);
+    this.shadowRoot.querySelector('.handle').addEventListener('click', this._handleClick);
     this.setContracted(this.contracted);
 }
 
@@ -23,7 +24,8 @@ add(object) {
 
 setContracted(contracted) {
     this.contracted = contracted;
-    this._element.classList.toggle('contracted', contracted);
+    //this._element.classList.toggle('contracted', contracted);
+    this.shadowRoot.querySelector('.sidebar').classList.toggle('contracted', contracted);
 }
 
 expand() {

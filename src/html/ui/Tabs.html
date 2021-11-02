@@ -3,8 +3,47 @@
 <!-- #link /css/ui/Tabs -->
 
 <div class="instantiate tabs">
+    <link rel="stylesheet" href="css/ui/Tabs.css">
     <div class="headers" data-bind="headers">
         <div class="filler"></div>
+        <div class="header">Data</div>
+        <div class="header">Settings</div>
+        <div class="header">About</div>
     </div>
-    <div class="container" data-bind="container"></div>
+    <div class="container" data-bind="container">
+        <div>
+            <vpt-panel>
+                <vpt-accordion label="Volume"></vpt-accordion>
+                <vpt-accordion label="Environment"></vpt-accordion>
+            </vpt-panel>
+        </div>
+        <div>
+            <vpt-panel>
+                <vpt-accordion label="Load & save settings">
+                    <vpt-panel>
+                        <vpt-button label="Save"></vpt-button>
+                        <vpt-button label="Load"></vpt-button>
+                    </vpt-panel>
+                </vpt-accordion>
+                <vpt-accordion label="Renderer">
+                    <vpt-field label="Renderer:">
+                        <vpt-dropdown id="renderer-dropdown"></vpt-dropdown>
+                    </vpt-field>
+                    <vpt-panel></vpt-panel>
+                </vpt-accordion>
+                <vpt-accordion label="Tone mapper">
+                    <vpt-field label="Tone mapper:">
+                        <vpt-dropdown id="tone-mapper-dropdown"></vpt-dropdown>
+                    </vpt-field>
+                    <vpt-panel></vpt-panel>
+                </vpt-accordion>
+                <vpt-accordion label="Context">
+                    <!-- <vpt-rendering-context-dialog></vpt-rendering-context-dialog> -->
+                </vpt-accordion>
+            </vpt-panel>
+        </div>
+        <div>
+            <vpt-panel id="about-panel"></vpt-panel>
+        </div>
+    </div>
 </div>

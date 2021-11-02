@@ -14,12 +14,12 @@ constructor(options) {
     this._handleRendererChange = this._handleRendererChange.bind(this);
     this._handleToneMapperChange = this._handleToneMapperChange.bind(this);
 
-    this._binds.sidebar.appendTo(document.body);
+    /*this._binds.sidebar.appendTo(document.body);
     this._binds.rendererSelect.addEventListener('change', this._handleRendererChange);
     this._binds.toneMapperSelect.addEventListener('change', this._handleToneMapperChange);
 
     const about = DOMUtils.instantiate(TEMPLATES.AboutText);
-    this._binds.about._element.appendChild(about);
+    this._binds.about._element.appendChild(about);*/
 }
 
 getVolumeLoadContainer() {
