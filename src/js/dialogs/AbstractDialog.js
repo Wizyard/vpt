@@ -7,8 +7,13 @@
 class AbstractDialog extends EventEmitter {
 
 constructor(spec, options) {
-    super();
+    super(spec);
     Object.assign(this, Serializable);
+
+    /*let visible = true;
+    if (this.hasAttribute('visible')) {
+        visible = this.getAttribute('visible') === 'true';
+    }*/
 
     Object.assign(this, {
         visible: true
@@ -19,6 +24,13 @@ constructor(spec, options) {
     const creation = UI.create(JSON.parse(this._spec));
     this._object = creation.object;
     this._binds = creation.binds;*/
+
+    this._element = DOMUtils.instantiate(spec); // this._object?
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);//.cloneNode(true));
+
+    /*if (this.visible === false) {
+        this.hide();
+    }*/
 }
 
 destroy() {
@@ -34,11 +46,13 @@ setVisible(visible) {
 }
 
 show() {
-    this._object.show();
+    //this._object.show();
+    this.hidden = false;
 }
 
 hide() {
-    this._object.hide();
+    //this._object.hide();
+    this.hidden = true;
 }
 
 appendTo(object) {

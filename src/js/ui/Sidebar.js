@@ -13,19 +13,20 @@ constructor(options) {
 
     this._handleClick = this._handleClick.bind(this);
 
+    this._handle = this.shadowRoot.querySelector('.handle');
+
     //this._binds.handle.addEventListener('click', this._handleClick);
-    this.shadowRoot.querySelector('.handle').addEventListener('click', this._handleClick);
+    this._handle.addEventListener('click', this._handleClick);
     this.setContracted(this.contracted);
 }
 
-add(object) {
+add(object) { // Unused?
     object.appendTo(this._binds.container);
 }
 
 setContracted(contracted) {
     this.contracted = contracted;
-    //this._element.classList.toggle('contracted', contracted);
-    this.shadowRoot.querySelector('.sidebar').classList.toggle('contracted', contracted);
+    this._element.classList.toggle('contracted', contracted);
 }
 
 expand() {

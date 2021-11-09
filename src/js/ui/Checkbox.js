@@ -13,10 +13,8 @@ constructor(options) {
 
     this._handleClick = this._handleClick.bind(this);
 
-    //this._element.addEventListener('click', this._handleClick);
-    //this._element.classList.toggle('checked', this.checked);
-    this.shadowRoot.querySelector('.checkbox').addEventListener('click', this._handleClick);
-    this.shadowRoot.querySelector('.checkbox').classList.toggle('checked', this.checked);
+    this._element.addEventListener('click', this._handleClick);
+    this._element.classList.toggle('checked', this.checked);
 }
 
 isChecked() {
@@ -26,8 +24,7 @@ isChecked() {
 setChecked(checked) {
     if (this.checked !== checked) {
         this.checked = checked;
-        //this._element.classList.toggle('checked', checked);
-        this.shadowRoot.querySelector('.checkbox').classList.toggle('checked', checked);
+        this._element.classList.toggle('checked', checked);
         this.trigger('change');
     }
 }

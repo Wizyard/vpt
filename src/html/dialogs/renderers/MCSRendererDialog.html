@@ -1,0 +1,14 @@
+<!-- #part /html/dialogs/renderers/MCSRendererDialog -->
+
+<div class="instantiate mcs-renderer-dialog">
+    <vpt-panel>
+        <vpt-field label="Extinction:">
+            <vpt-spinner logarithmic=true value=1 min=0 step=0.1 id="extinction-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-accordion label="Transfer function">
+            <vpt-panel>
+                <vpt-transfer-function-widget></vpt-transfer-function-widget>
+            </vpt-panel>
+        </vpt-accordion>
+    </vpt-panel>
+</div>

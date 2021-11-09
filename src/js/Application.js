@@ -31,7 +31,6 @@ constructor() {
     document.body.addEventListener('dragover', e => e.preventDefault());
     document.body.addEventListener('drop', this._handleFileDrop);
 
-    window.customElements.define('vpt-main-dialog', MainDialog);
     window.customElements.define('vpt-sidebar', Sidebar);
     window.customElements.define('vpt-panel', Panel);
     window.customElements.define('vpt-tabs', Tabs);
@@ -39,35 +38,64 @@ constructor() {
     window.customElements.define('vpt-button', Button);
     window.customElements.define('vpt-field', Field);
     window.customElements.define('vpt-dropdown', Dropdown);
+    window.customElements.define('vpt-checkbox', Checkbox);
+    window.customElements.define('vpt-spinner', Spinner);
+    window.customElements.define('vpt-vector', VectorSpinner);
+    window.customElements.define('vpt-file-chooser', FileChooser);
+    window.customElements.define('vpt-radio', Radio);
+    window.customElements.define('vpt-textbox', Textbox);
+    window.customElements.define('vpt-progress-bar', ProgressBar);
+    window.customElements.define('vpt-slider', Slider);
+    window.customElements.define('vpt-transfer-function-widget', TransferFunctionWidget);
+    window.customElements.define('vpt-color-chooser', ColorChooser);
     window.customElements.define('vpt-rendering-context-dialog', RenderingContextDialog);
+    window.customElements.define('vpt-volume-load-dialog', VolumeLoadDialog);
+    window.customElements.define('vpt-envmap-load-dialog', EnvmapLoadDialog);
+    window.customElements.define('vpt-main-dialog', MainDialog);
 
-    
-    //window.customElements.define('wc-main-dialog', MainDialog);
+    window.customElements.define('vpt-dos-renderer-dialog', DOSRendererDialog);
+    window.customElements.define('vpt-eam-renderer-dialog', EAMRendererDialog);
+    window.customElements.define('vpt-iso-renderer-dialog', ISORendererDialog);
+    window.customElements.define('vpt-mcm-renderer-dialog', MCMRendererDialog);
+    window.customElements.define('vpt-mcs-renderer-dialog', MCSRendererDialog);
+    window.customElements.define('vpt-mip-renderer-dialog', MIPRendererDialog);
 
-    /*this._mainDialog = new MainDialog();
+    window.customElements.define('vpt-aces-tone-mapper-dialog', AcesToneMapperDialog);
+    window.customElements.define('vpt-artistic-tone-mapper-dialog', ArtisticToneMapperDialog);
+    window.customElements.define('vpt-filmic-tone-mapper-dialog', FilmicToneMapperDialog);
+    window.customElements.define('vpt-lottes-tone-mapper-dialog', LottesToneMapperDialog);
+    window.customElements.define('vpt-range-tone-mapper-dialog', RangeToneMapperDialog);
+    window.customElements.define('vpt-reinhard-tone-mapper-dialog', ReinhardToneMapperDialog);
+    window.customElements.define('vpt-reinhard2-tone-mapper-dialog', Reinhard2ToneMapperDialog);
+    window.customElements.define('vpt-uchimura-tone-mapper-dialog', UchimuraToneMapperDialog);
+    window.customElements.define('vpt-uncharted2-tone-mapper-dialog', Uncharted2ToneMapperDialog);
+    window.customElements.define('vpt-unreal-tone-mapper-dialog', UnrealToneMapperDialog);
+
+    //this._mainDialog = new MainDialog();
+    this._mainDialog = document.querySelector('vpt-main-dialog');
     if (!this._renderingContext.hasComputeCapabilities()) {
         this._mainDialog.disableMCC();
     }
 
-    this._statusBar = new StatusBar();
-    this._statusBar.appendTo(document.body);*/
+    this._tabs = this._mainDialog.shadowRoot.querySelector('vpt-tabs');
 
-    //window.customElements.define('wc-volume-load-dialog', VolumeLoadDialog);
-    //window.customElements.define('wc-envmap-load-dialog', EnvmapLoadDialog);
+    //this._statusBar = new StatusBar();
+    //this._statusBar.appendTo(document.body);
 
-    /*this._volumeLoadDialog = new VolumeLoadDialog();
-    this._volumeLoadDialog.appendTo(this._mainDialog.getVolumeLoadContainer());
+    //this._volumeLoadDialog = new VolumeLoadDialog();
+    //this._volumeLoadDialog.appendTo(this._mainDialog.getVolumeLoadContainer());
+    this._volumeLoadDialog = this._tabs.shadowRoot.querySelector('vpt-volume-load-dialog');
     this._volumeLoadDialog.addEventListener('load', this._handleVolumeLoad);
 
-    this._envmapLoadDialog = new EnvmapLoadDialog();
-    this._envmapLoadDialog.appendTo(this._mainDialog.getEnvmapLoadContainer());
-    this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);*/
-
-    //window.customElements.define('wc-rendering-context-dialog', RenderingContextDialog);
+    //this._envmapLoadDialog = new EnvmapLoadDialog();
+    //this._envmapLoadDialog.appendTo(this._mainDialog.getEnvmapLoadContainer());
+    this._envmapLoadDialog = this._tabs.shadowRoot.querySelector('vpt-envmap-load-dialog');
+    this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);
 
     /*this._renderingContextDialog = new RenderingContextDialog();
     this._renderingContextDialog.appendTo(
-        this._mainDialog.getRenderingContextSettingsContainer());
+        this._mainDialog.getRenderingContextSettingsContainer());*/
+    this._renderingContextDialog = this._tabs.shadowRoot.querySelector('vpt-rendering-context-dialog');
     this._renderingContextDialog.addEventListener('resolution', options => {
         this._renderingContext.setResolution(options.resolution);
     });
@@ -81,7 +109,7 @@ constructor() {
         this._renderingContext.setFilter(options.filter);
     });
 
-    this._mainDialog._binds.saveButton.addEventListener('click', () => {
+    /*this._mainDialog._binds.saveButton.addEventListener('click', () => {
         const rendererSettings = this._rendererDialog.serialize();
         const toneMapperSettings = this._toneMapperDialog.serialize();
         const context = this._renderingContextDialog.serialize();
@@ -94,12 +122,12 @@ constructor() {
         }
         //console.log(settings);
         CommonUtils.downloadJSON(settings, 'Settings.json');
-    });
+    });*/
 
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
     this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());
-    this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());*/
+    this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());
 }
 
 _handleFileDrop(e) {
@@ -123,26 +151,38 @@ _handleFileDrop(e) {
 
 _handleRendererChange(which) {
     if (this._rendererDialog) {
-        this._rendererDialog.destroy();
+        //this._rendererDialog.destroy();
+        this._rendererDialog.hide();
     }
     this._renderingContext.chooseRenderer(which);
     const renderer = this._renderingContext.getRenderer();
-    const container = this._mainDialog.getRendererSettingsContainer();
+    /*const container = this._mainDialog.getRendererSettingsContainer();
     const dialogClass = this._getDialogForRenderer(which);
     this._rendererDialog = new dialogClass(renderer);
-    this._rendererDialog.appendTo(container);
+    this._rendererDialog.appendTo(container);*/
+    this._rendererDialog = this._tabs.shadowRoot.querySelector('vpt-' + which + '-renderer-dialog');
+    Object.assign(this._rendererDialog, {
+        _renderer: renderer
+    });
+    this._rendererDialog.show();
 }
 
 _handleToneMapperChange(which) {
     if (this._toneMapperDialog) {
-        this._toneMapperDialog.destroy();
+        //this._toneMapperDialog.destroy();
+        this._toneMapperDialog.hide();
     }
     this._renderingContext.chooseToneMapper(which);
     const toneMapper = this._renderingContext.getToneMapper();
-    const container = this._mainDialog.getToneMapperSettingsContainer();
+    /*const container = this._mainDialog.getToneMapperSettingsContainer();
     const dialogClass = this._getDialogForToneMapper(which);
     this._toneMapperDialog = new dialogClass(toneMapper);
-    this._toneMapperDialog.appendTo(container);
+    this._toneMapperDialog.appendTo(container);*/
+    this._toneMapperDialog = this._tabs.shadowRoot.querySelector('vpt-' + which + '-tone-mapper-dialog');
+    Object.assign(this._toneMapperDialog, {
+        _toneMapper: toneMapper
+    });
+    this._toneMapperDialog.show();
 }
 
 _handleVolumeLoad(options) {

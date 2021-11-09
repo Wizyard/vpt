@@ -8,7 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.Field, options);
 
     Object.assign(this, {
-        label: this.attributes.label.value
+        label: this.getAttribute('label')
     }, options);
 
     this._content = null;
@@ -32,7 +32,7 @@ setEnabled(enabled) {
     super.setEnabled(enabled);
 }
 
-add(object) {
+add(object) { // Unused?
     if (!this._content) {
         this._content = object;
         object.appendTo(this._binds.container);

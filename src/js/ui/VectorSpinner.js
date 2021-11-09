@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.VectorSpinner, options);
 
     Object.assign(this, {
-        value : 0,
+        value : this.getAttribute('value'),
         min   : null,
         max   : null,
-        step  : 1
+        step  : this.getAttribute('step')
     }, options);
 
     this._handleChange = this._handleChange.bind(this);
@@ -25,13 +25,24 @@ constructor(options) {
         step  : this.step
     };
 
-    this._spinnerX = new Spinner(opts);
+    /*this._spinnerX = new Spinner(opts);
     this._spinnerY = new Spinner(opts);
     this._spinnerZ = new Spinner(opts);
 
     this._spinnerX.appendTo(this._binds.vectorX);
     this._spinnerY.appendTo(this._binds.vectorY);
-    this._spinnerZ.appendTo(this._binds.vectorZ);
+    this._spinnerZ.appendTo(this._binds.vectorZ);*/
+
+    let spinners = this.shadowRoot.querySelectorAll('vpt-spinner');
+    for (const spinner of spinners) {
+        for (const iterator in opts) {
+            spinner.setAttribute(iterator, opts[iterator]);
+        }
+    }
+
+    this._spinnerX = spinners[0];
+    this._spinnerY = spinners[1];
+    this._spinnerZ = spinners[2];
 
     this._spinnerX.addEventListener('change', this._handleChange);
     this._spinnerY.addEventListener('change', this._handleChange);

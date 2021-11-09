@@ -9,12 +9,21 @@ constructor(options) {
     super(TEMPLATES.ui.Dropdown, options);
 
     Object.assign(this, {
-        //options: this.attributes.options.value
+        //options: this.getAttribute('options')
     }, options);
 
-    //console.log(this.options);
-    for (let option of this.options) {
+    this._select = this.shadowRoot.querySelector('select');
+
+    /*for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
+    }*/
+}
+
+connectedCallback() {
+    if (this.options) {
+        for (let option of this.options) {
+            this.addOption(option.value, option.label, option.selected);
+        }
     }
 }
 
@@ -23,17 +32,17 @@ addOption(value, label, selected) {
     option.value = value;
     option.text = label;
     //this._binds.input.add(option);
-    this.shadowRoot.querySelector('select').add(option);
+    this._select.add(option);
     if (selected) {
         //this._binds.input.value = value;
-        this.shadowRoot.querySelector('select').value = value;
+        this._select.value = value;
     }
 }
 
 removeOption(value) {
     const selector = 'option[value="' + value + '"]';
     //const option = this._binds.input.querySelector(selector);
-    const option = this.shadowRoot.querySelector('select').querySelector(selector);
+    const option = this.shadowRoot.querySelector(selector);
     if (option) {
         DOMUtils.remove(option);
     }
@@ -41,12 +50,12 @@ removeOption(value) {
 
 setValue(value) {
     //this._binds.input.value = value;
-    this.shadowRoot.querySelector('select').value = value;
+    this._select.value = value;
 }
 
 getValue() {
     //return this._binds.input.value;
-    return this.shadowRoot.querySelector('select').value;
+    return this._select.value;
 }
 
 }

@@ -6,21 +6,47 @@ class Spinner extends UIObject {
 
 constructor(options) {
     super(TEMPLATES.ui.Spinner, options);
+}
+
+connectedCallback() {
+    let value = 0;
+    let min = null;
+    let max = null;
+    let step = 1;
+    let logarithmic = false;
+    if (this.hasAttribute('value')) {
+        value = this.getAttribute('value');
+    }
+    if (this.hasAttribute('min') && this.getAttribute('min') !== 'null') {
+        min = this.getAttribute('min');
+    }
+    if (this.hasAttribute('max') && this.getAttribute('max') !== 'null') {
+        max = this.getAttribute('max');
+    }
+    if (this.hasAttribute('step')) {
+        step = this.getAttribute('step');
+    }
+    if (this.hasAttribute('logarithmic')) {
+        logarithmic = this.getAttribute('logarithmic');
+    }
 
     Object.assign(this, {
-        value : 0,
-        min   : null,
-        max   : null,
-        step  : 1,
+        value : value,
+        min   : min,
+        max   : max,
+        step  : step,
         unit  : null, // TODO: add a label with units at the end of input
         // If logarithmic, step size is proportional to value * this.step
-        logarithmic : false
-    }, options);
+        logarithmic : logarithmic
+    });//, options);
 
     this._handleInput = this._handleInput.bind(this);
     this._handleChange = this._handleChange.bind(this);
 
-    let input = this._binds.input;
+    this._input = this.shadowRoot.querySelector('input');
+
+    //let input = this._binds.input;
+    let input = this._input;
     if (this.value !== null) {
         input.value = this.value;
     }
@@ -39,7 +65,8 @@ constructor(options) {
 }
 
 setEnabled(enabled) {
-    this._binds.input.disabled = !enabled;
+    //this._binds.input.disabled = !enabled;
+    this._input.disabled = !enabled;
     super.setEnabled(enabled);
 }
 
@@ -52,7 +79,8 @@ setValue(value) {
         this.value = Math.min(this.value, this.max);
     }
     if (this.logarithmic) {
-        this._binds.input.step = this.value * this.step;
+        //this._binds.input.step = this.value * this.step;
+        this._input.step = this.value * this.step;
     }
 }
 
@@ -63,31 +91,36 @@ getValue() {
 _handleInput(e) {
     e.stopPropagation();
 
-    if (this._binds.input.value === '') {
+    if (this._input.value === '') { //(this._binds.input.value === '') {
         return;
     }
 
-    const parsedValue = parseFloat(this._binds.input.value);
+    //const parsedValue = parseFloat(this._binds.input.value);
+    const parsedValue = parseFloat(this._input.value);
     if (!isNaN(parsedValue)) {
         this.setValue(parsedValue);
         this.trigger('input');
     } else {
-        this._binds.input.value = parsedValue;
+        //this._binds.input.value = parsedValue;
+        this._input.value = parsedValue;
     }
 }
 
 _handleChange(e) {
     e.stopPropagation();
 
-    const parsedValue = parseFloat(this._binds.input.value);
+    //const parsedValue = parseFloat(this._binds.input.value);
+    const parsedValue = this._input.value;
     if (!isNaN(parsedValue)) {
         this.setValue(parsedValue);
-        if (this._binds.input.value !== this.value) {
-            this._binds.input.value = this.value;
+        if (this._input.value !== this.value) { //(this._binds.input.value !== this.value) {
+            //this._binds.input.value = this.value;
+            this._input.value = this.value;
             this.trigger('change');
         }
     } else {
-        this._binds.input.value = this.value;
+        //this._binds.input.value = this.value;
+        this._input.value = this.value;
     }
 }
 

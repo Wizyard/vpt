@@ -1,0 +1,26 @@
+<!-- #part /html/dialogs/renderers/DOSRendererDialog -->
+
+<div class="instantiate dos-renderer-dialog">
+    <vpt-panel>
+        <vpt-field label="Steps:">
+            <vpt-spinner value=50 min=1 id="steps-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Slices:">
+            <vpt-spinner value=200 min=1 id="slices-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Extinction:">
+            <vpt-spinner logarithmic=true value=100 min=0 step=0.1 id="extinction-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Aperture (°):">
+            <vpt-spinner value=30 min=0 max=89 steop=0.1 id="aperture-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Occlusion samples:">
+            <vpt-spinner value=8 min=1 max=200 step=1 id="samples-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-accordion label="Transfer function">
+            <vpt-panel>
+                <vpt-transfer-function-widget></vpt-transfer-function-widget>
+            </vpt-panel>
+        </vpt-accordion>
+    </vpt-panel>
+</div>

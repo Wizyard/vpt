@@ -17,33 +17,33 @@ constructor(options) {
     Object.assign(this.shadowRoot.querySelector('#renderer-dropdown'), {
         options: [
             {
-            "value": "mip",
-            "label": "Maximum intensity projection"
+                "value": "mip",
+                "label": "Maximum intensity projection"
             },
             {
-            "value": "iso",
-            "label": "Isosurface extraction"
+                "value": "iso",
+                "label": "Isosurface extraction"
             },
             {
-            "value": "eam",
-            "label": "Emission-absorption model"
+                "value": "eam",
+                "label": "Emission-absorption model"
             },
             {
-            "value": "dos",
-            "label": "Directional occlusion shading"
+                "value": "dos",
+                "label": "Directional occlusion shading"
             },
             {
-            "value": "mcs",
-            "label": "Single scattering"
+                "value": "mcs",
+                "label": "Single scattering"
             },
             {
-            "selected": true,
-            "value": "mcm",
-            "label": "Multiple scattering"
+                "selected": true,
+                "value": "mcm",
+                "label": "Multiple scattering"
             },
             {
-            "value": "mcc",
-            "label": "Multiple scattering (compute)"
+                "value": "mcc",
+                "label": "Multiple scattering (compute)"
             }
         ]
     });
@@ -51,45 +51,45 @@ constructor(options) {
     Object.assign(this.shadowRoot.querySelector('#tone-mapper-dropdown'), {
         options: [
             {
-            "value": "artistic",
-            "label": "Artistic",
-            "selected": true
+                "value": "artistic",
+                "label": "Artistic",
+                "selected": true
             },
             {
-            "value": "range",
-            "label": "Range"
+                "value": "range",
+                "label": "Range"
             },
             {
-            "value": "reinhard",
-            "label": "Reinhard"
+                "value": "reinhard",
+                "label": "Reinhard"
             },
             {
-            "value": "reinhard2",
-            "label": "Reinhard 2"
+                "value": "reinhard2",
+                "label": "Reinhard 2"
             },
             {
-            "value": "uncharted2",
-            "label": "Uncharted 2"
+                "value": "uncharted2",
+                "label": "Uncharted 2"
             },
             {
-            "value": "filmic",
-            "label": "Filmic"
+                "value": "filmic",
+                "label": "Filmic"
             },
             {
-            "value": "unreal",
-            "label": "Unreal"
+                "value": "unreal",
+                "label": "Unreal"
             },
             {
-            "value": "aces",
-            "label": "Aces"
+                "value": "aces",
+                "label": "Aces"
             },
             {
-            "value": "lottes",
-            "label": "Lottes"
+                "value": "lottes",
+                "label": "Lottes"
             },
             {
-            "value": "uchimura",
-            "label": "Uchimura"
+                "value": "uchimura",
+                "label": "Uchimura"
             }
         ]
     });

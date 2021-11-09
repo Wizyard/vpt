@@ -16,11 +16,10 @@ constructor(options) {
 
 setScrollable(scrollable) {
     this.scrollable = scrollable;
-    //this._element.classList.toggle('scrollable', scrollable);
-    this.shadowRoot.querySelector('.panel').classList.toggle('scrollable', scrollable);
+    this._element.classList.toggle('scrollable', scrollable);
 }
 
-add(object) {
+add(object) { // Unused?
     object.appendTo(this._element);
 }
 

@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.Slider, options);
 
     Object.assign(this, {
-        value       : 0,
-        min         : 0,
-        max         : 100,
-        step        : 1,
+        value       : this.getAttribute("value"),
+        min         : this.getAttribute("min"),
+        max         : this.getAttribute("max"),
+        step        : this.getAttribute("step"),
         logarithmic : false
     }, options);
 
@@ -20,6 +20,9 @@ constructor(options) {
     this._handleMouseUp   = this._handleMouseUp.bind(this);
     this._handleMouseMove = this._handleMouseMove.bind(this);
     this._handleWheel     = this._handleWheel.bind(this);
+
+    this._button = this.shadowRoot.querySelector('.button');
+    this._container = this.shadowRoot.querySelector('.container');
 
     this._updateUI();
 
@@ -45,10 +48,12 @@ _updateUI() {
         const logmin = Math.log(this.min);
         const logmax = Math.log(this.max);
         const ratio = (Math.log(this.value) - logmin) / (logmax - logmin) * 100;
-        this._binds.button.style.marginLeft = ratio + '%';
+        //this._binds.button.style.marginLeft = ratio + '%';
+        this._button.style.marginLeft = ratio + '%';
     } else {
         const ratio = (this.value - this.min) / (this.max - this.min) * 100;
-        this._binds.button.style.marginLeft = ratio + '%';
+        //this._binds.button.style.marginLeft = ratio + '%';
+        this._button.style.marginLeft = ratio + '%';
     }
 }
 
@@ -57,7 +62,8 @@ getValue() {
 }
 
 _setValueByEvent(e) {
-    const rect = this._binds.container.getBoundingClientRect();
+    //const rect = this._binds.container.getBoundingClientRect();
+    const rect = this._container.getBoundingClientRect();
     const ratio = (e.pageX - rect.left) / (rect.right - rect.left);
     if (this.logarithmic) {
         const logmin = Math.log(this.min);

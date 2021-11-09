@@ -1,0 +1,32 @@
+<!-- #part /html/EnvmapLoadDialog -->
+
+<div class="instantiate volume-load-dialog">
+    <vpt-panel>
+        <vpt-field label="Type:">
+            <vpt-dropdown id="type-dropdown"></vpt-dropdown>
+        </vpt-field>
+        <vpt-panel visible=true id="file-panel">
+            <vpt-field label="File:">
+                <vpt-file-chooser id="file-chooser"></vpt-file-chooser>
+            </vpt-field>
+        </vpt-panel>
+        <vpt-panel visible=false id="url-panel">
+            <vpt-field label="URL:">
+                <vpt-textbox placeholder="http://"></vpt-textbox>
+            </vpt-field>
+        </vpt-panel>
+        <vpt-panel visible=false id="demo-panel">
+            <vpt-field label="File:">
+                <vpt-dropdown id="demo-dropdown"></vpt-dropdown>
+            </vpt-field>
+        </vpt-panel>
+        <vpt-panel visible=false id="load-button-and-progress-panel">
+            <vpt-field>
+                <vpt-button label="Load" id="load-button"></vpt-button>
+            </vpt-field>
+            <vpt-field>
+                <vpt-progress-bar></vpt-progress-bar>
+            </vpt-field>
+        </vpr-panel>
+    </vpt-panel>
+</div>

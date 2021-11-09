@@ -25,15 +25,24 @@ constructor(options) {
     }, options);
 
     this._$html = DOMUtils.instantiate(TEMPLATES.TransferFunctionWidget);
-    this._$colorPicker   = this._$html.querySelector('[name="color"]');
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._$html);//.cloneNode(true));
+    /*this._$colorPicker   = this._$html.querySelector('[name="color"]');
     this._$alphaPicker   = this._$html.querySelector('[name="alpha"]');
     this._$addBumpButton = this._$html.querySelector('[name="add-bump"]');
     this._$removeSelectedBump   = this._$html.querySelector('[name=remove-selected-bump]');
     this._$removeAllBumps       = this._$html.querySelector('[name=remove-all-bumps]');
     this._$loadButton    = this._$html.querySelector('[name="load"]');
-    this._$saveButton    = this._$html.querySelector('[name="save"]');
+    this._$saveButton    = this._$html.querySelector('[name="save"]');*/
+    this._$colorPicker   = this.shadowRoot.querySelector('[name="color"]');
+    this._$alphaPicker   = this.shadowRoot.querySelector('[name="alpha"]');
+    this._$addBumpButton = this.shadowRoot.querySelector('[name="add-bump"]');
+    this._$removeSelectedBump   = this.shadowRoot.querySelector('[name=remove-selected-bump]');
+    this._$removeAllBumps       = this.shadowRoot.querySelector('[name=remove-all-bumps]');
+    this._$loadButton    = this.shadowRoot.querySelector('[name="load"]');
+    this._$saveButton    = this.shadowRoot.querySelector('[name="save"]');
 
-    this._canvas = this._$html.querySelector('canvas');
+    //this._canvas = this._$html.querySelector('canvas');
+    this._canvas = this.shadowRoot.querySelector('canvas');
     this._canvas.width = this._transferFunctionWidth;
     this._canvas.height = this._transferFunctionHeight;
     this.resize(this._width, this._height);

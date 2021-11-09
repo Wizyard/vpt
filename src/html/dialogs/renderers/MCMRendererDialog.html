@@ -1,0 +1,29 @@
+<!-- #part /html/dialogs/renderers/MCMRendererDialog -->
+
+<div class="instantiate mcm-renderer-dialog">
+    <vpt-panel>
+        <vpt-field label="Extinction:">
+            <vpt-spinner logarithmic=true value=1 min=0 step=0.1 id="extinction-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Scattering albedo:">
+            <vpt-slider value=0.5 min=0 max=1 step=0.1 id="albedo-slider"></vpt-slider>
+        </vpt-field>
+        <vpt-field label="Scattering bias:">
+            <vpt-slider value=0 min=-1 max=1 step=0.2 id="bias-slider"></vpt-slider>
+        </vpt-field>
+        <vpt-field label="Majorant ratio:">
+            <vpt-slider value=1 min=0 max=1 step=0.1 id="ratio-slider"></vpt-slider>
+        </vpt-field>
+        <vpt-field label="Max bounces:">
+            <vpt-spinner value=8 min=1 id="bounces-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-field label="Steps:">
+            <vpt-spinner value=8 min=1 id="steps-spinner"></vpt-spinner>
+        </vpt-field>
+        <vpt-accordion label="Transfer function">
+            <vpt-panel>
+                <vpt-transfer-function-widget></vpt-transfer-function-widget>
+            </vpt-panel>
+        </vpt-accordion>
+    </vpt-panel>
+</div>
