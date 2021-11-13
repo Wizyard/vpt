@@ -8,11 +8,6 @@
             "parse": true
         },
         {
-            "input": "src/css",
-            "output": "/css",
-            "recursive": true
-        },
-        {
             "input": "src/images",
             "output": "/images",
             "recursive": true
@@ -41,8 +36,8 @@
         },
         {
             "input": "/css",
-            "output": "build/css",
-            "mode": "each"
+            "output": "build/css/main.css",
+            "mode": "concat"
         },
         {
             "input": "/html",
