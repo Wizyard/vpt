@@ -4,16 +4,24 @@
 
 <div class="instantiate transfer-function-widget">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/ui/button.css">
   <link rel="stylesheet" href="css/TransferFunctionWidget.css">
   <div class="widget">
     <canvas></canvas>
   </div>
   <div class="controls">
+    <!-- appears same as in the original app -->
     <input type="button" class="button" value="Add bump" name="add-bump">
     <input type="button" class="button" value="Remove selected bump" name="remove-selected-bump">
     <input type="button" class="button" value="Remove all bumps" name="remove-all-bumps">
     <input type="button" class="button" value="Load" name="load">
     <input type="button" class="button" value="Save" name="save">
+    <!-- appears different than in the original app, but more in line with the other buttons -->
+    <!-- <vpt-button label="Add bump" name="add-bump"></vpt-button>
+    <vpt-button label="Remove selected bump" name="remove-selected-bump"></vpt-button>
+    <vpt-button label="Remove all bumps" name="remove-all-bumps"></vpt-button>
+    <vpt-button label="Load" name="load"></vpt-button>
+    <vpt-button label="Save" name="save"></vpt-button> -->
     <div class="panel">
       <label>Color</label>
       <input name="color" type="color">

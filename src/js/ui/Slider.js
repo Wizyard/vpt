@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.Slider, options);
 
     Object.assign(this, {
-        value       : this.getAttribute("value"),
-        min         : this.getAttribute("min"),
-        max         : this.getAttribute("max"),
-        step        : this.getAttribute("step"),
+        value       : parseFloat(this.getAttribute("value")),
+        min         : parseFloat(this.getAttribute("min")),
+        max         : parseFloat(this.getAttribute("max")),
+        step        : parseFloat(this.getAttribute("step")),
         logarithmic : false
     }, options);
 
