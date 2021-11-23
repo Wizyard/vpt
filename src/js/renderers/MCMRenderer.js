@@ -17,7 +17,109 @@ constructor(gl, volume, environmentTexture, options) {
         steps                 : 1
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+    this._handleTFChange = this._handleTFChange.bind(this);
+
+    this.addEventListeners();
+
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCM, MIXINS);
+}
+
+_handleChange() {
+    const extinction = this.settings.extinction.component.getValue();
+    const albedo     = this.settings.albedo.component.getValue();
+    const bias       = this.settings.bias.component.getValue();
+    const ratio      = this.settings.ratio.component.getValue();
+    const bounces    = this.settings.bounces.component.getValue();
+    const steps      = this.settings.steps.component.getValue();
+
+    this.absorptionCoefficient = extinction * (1 - albedo);
+    this.scatteringCoefficient = extinction * albedo;
+    this.scatteringBias = bias;
+    this.majorant = extinction * ratio;
+    this.maxBounces = bounces;
+    this.steps = steps;
+
+    this.reset();
+}
+
+_handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.extinction = {
+        name: 'extinction',
+        type: 'spinner',
+        label: 'Extinction:',
+        attributes: {
+            logarithmic: true,
+            value: 1,
+            min: 0,
+            step: 0.1
+        }
+    }
+    this.settings.albedo = {
+        name: 'albedo',
+        type: 'slider',
+        label: 'Scattering albedo:',
+        attributes: {
+            value: 0.5,
+            min: 0,
+            max: 1,
+            step: 0.1
+        }
+    }
+    this.settings.bias = {
+        name: 'bias',
+        type: 'slider',
+        label: 'Scattering bias:',
+        attributes: {
+            value: 0,
+            min: -1,
+            max: 1,
+            step: 0.2
+        }
+    }
+    this.settings.ratio = {
+        name: 'ratio',
+        type: 'slider',
+        label: 'Majorant ratio:',
+        attributes: {
+            value: 1,
+            min: 0,
+            max: 1,
+            step: 0.1
+        }
+    }
+    this.settings.bounces = {
+        name: 'bounces',
+        type: 'spinner',
+        label: 'Max bounces:',
+        attributes: {
+            value: 8,
+            min: 0
+        }
+    }
+    this.settings.steps = {
+        name: 'steps',
+        type: 'spinner',
+        label: 'Steps:',
+        attributes: {
+            value: 8,
+            min: 1
+        }
+    }
+    this.settings.transferFunction = {
+        type: 'transfer-function-widget',
+        label: 'Transfer function'
+    }
 }
 
 destroy() {

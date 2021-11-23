@@ -8,7 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.ColorChooser, options);
 
     Object.assign(this, {
-        value: this.getAttribute("value")
+        //value: this.getAttribute("value")
     }, options);
 
     this._input = this.shadowRoot.querySelector('input');
@@ -21,12 +21,23 @@ constructor(options) {
     const input = this._input;
     input.addEventListener('input', this._handleInput);
 
-    if (this.value !== null) {
+    /*if (this.value !== null) {
         input.value = this.value;
-    }
+    }*/
     //this._binds.color.style.backgroundColor = input.value /* + alpha */;
-    this._color.style.backgroundColor = input.value /* + alpha */;
+    //this._color.style.backgroundColor = input.value /* + alpha */;
     this._element.addEventListener('click', this._handleClick);
+}
+
+connectedCallback() {
+    Object.assign(this, {
+        value: this.getAttribute("value")
+    });
+
+    if (this.value !== null) {
+        this._input.value = this.value;
+    }
+    this._color.style.backgroundColor = this._input.value /* + alpha */;
 }
 
 setEnabled(enabled) {

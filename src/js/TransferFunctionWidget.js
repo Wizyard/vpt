@@ -9,10 +9,13 @@
 // #link /html/TransferFunctionWidgetBumpHandle
 // #link /css/TransferFunctionWidget
 
-class TransferFunctionWidget extends EventEmitter {
+//class TransferFunctionWidget extends EventEmitter {
+class TransferFunctionWidget extends HTMLElement {
 
 constructor(options) {
     super();
+    this._eventHandlers = {};
+    Object.assign(this, EventEmitter);
 
     this._onColorChange = this._onColorChange.bind(this);
 

@@ -15,7 +15,72 @@ constructor(gl, volume, environmentTexture, options) {
         _diffuse  : [0.7, 0.8, 0.9]
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+
+    this.addEventListeners();
+
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.ISO, MIXINS);
+}
+
+_handleChange() {
+    this._stepSize = 1 / this.settings.steps.component.getValue();
+    this._isovalue = this.settings.isovalue.component.getValue();
+
+    const color = CommonUtils.hex2rgb(this.settings.color.component.getValue());
+    this._diffuse[0] = color.r;
+    this._diffuse[1] = color.g;
+    this._diffuse[2] = color.b;
+
+    const direction = this.settings.direction.component.getValue();
+    this._light[0] = direction.x;
+    this._light[1] = direction.y;
+    this._light[2] = direction.z;
+
+    this.reset();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.steps = {
+        name: 'steps',
+        type: 'spinner',
+        label: 'Steps:',
+        attributes: {
+            value: 10,
+            min: 1
+        }
+    }
+    this.settings.isovalue = {
+        name: 'isovalue',
+        type: 'slider',
+        label: 'Isovalue:',
+        attributes: {
+            value: 0.5,
+            min: 0,
+            max: 1,
+            step: 0.1
+        }
+    }
+    this.settings.color = {
+        name: 'color',
+        type: 'color-chooser',
+        label: 'Color:',
+        attributes: {
+            value: '#ddeeff'
+        }
+    }
+    this.settings.direction = {
+        name: 'direction',
+        type: 'vector',
+        label: 'Light direction:',
+        attributes: {
+            value: 1
+        }
+    }
 }
 
 destroy() {

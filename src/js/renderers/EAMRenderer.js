@@ -14,7 +14,55 @@ constructor(gl, volume, environmentTexture, options) {
         steps      : 64,
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+    this._handleTFChange = this._handleTFChange.bind(this);
+
+    this.addEventListeners();
+
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.EAM, MIXINS);
+}
+
+_handleChange() {
+    this.slices = this.settings.slices.component.getValue();
+    this.extinction = this.settings.extinction.component.getValue();
+    this.reset();
+}
+
+_handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.slices = {
+        name: 'slices',
+        type: 'spinner',
+        label: 'Slices:',
+        attributes: {
+            value: 64,
+            min: 1
+        }
+    }
+    this.settings.extinction = {
+        name: 'extinction',
+        type: 'spinner',
+        label: 'Extinction:',
+        attributes: {
+            logarithmic: true,
+            value: 100,
+            min: 0,
+            step: 0.1
+        }
+    }
+    this.settings.transferFunction = {
+        type: 'transfer-function-widget',
+        label: 'Transfer function'
+    }
 }
 
 destroy() {

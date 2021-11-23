@@ -10,7 +10,7 @@ constructor(options) {
     super(TEMPLATES.ui.Accordion, options);
 
     Object.assign(this, {
-        label      : this.getAttribute('label'),
+        //label      : this.getAttribute('label'),
         contracted : false
     }, options);
 
@@ -20,9 +20,17 @@ constructor(options) {
 
     //this._binds.handle.textContent = this.label;
     //this._binds.handle.addEventListener('click', this._handleClick);
-    this._handle.textContent = this.label;
+    //this._handle.textContent = this.label;
     this._handle.addEventListener('click', this._handleClick);
     this.setContracted(this.contracted);
+}
+
+connectedCallback() {
+    Object.assign(this, {
+        label      : this.getAttribute('label')
+    });
+
+    this._handle.textContent = this.label;
 }
 
 add(object) { // Unused?

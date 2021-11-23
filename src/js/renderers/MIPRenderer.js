@@ -12,7 +12,33 @@ constructor(gl, volume, environmentTexture, options) {
         steps : 64
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+
+    this.addEventListeners(); // change instead of input on a spinner?
+    //this.settings.steps.component.addEventListener('change', this._handleChange);
+
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.MIP, MIXINS);
+}
+
+_handleChange() {
+    this.steps = this.settings.steps.component.getValue();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.steps = {
+        name: 'steps',
+        type: 'spinner',
+        label: 'Steps:',
+        attributes: {
+            value: 64,
+            min: 1
+        }
+    }
 }
 
 destroy() {

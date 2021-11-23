@@ -22,7 +22,7 @@ constructor(options) {
     this._demoPanel = this.shadowRoot.querySelector('#demo-panel');
     this._loadButtonAndProgress = this.shadowRoot.querySelector('#load-button-and-progress-panel');
 
-    Object.assign(this._type, {
+    /*Object.assign(this._type, {
         options: [
             {
                 "value": "file",
@@ -38,7 +38,7 @@ constructor(options) {
                 "label": "Demo"
             }
         ]
-    });
+    });*/
 
     this._demos = [];
 

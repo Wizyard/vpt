@@ -3,7 +3,11 @@
 <div class="instantiate volume-load-dialog">
     <vpt-panel>
         <vpt-field label="Type:">
-            <vpt-dropdown id="type-dropdown"></vpt-dropdown>
+            <vpt-dropdown id="type-dropdown">
+                <option value="file" selected>File</option>
+                <option value="url">URL</option>
+                <option value="demo">Demo</option>
+            </vpt-dropdown>
         </vpt-field>
         <vpt-panel visible=true id="file-panel">
             <vpt-field label="File:">

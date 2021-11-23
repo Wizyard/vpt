@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.Slider, options);
 
     Object.assign(this, {
-        value       : parseFloat(this.getAttribute("value")),
+        /*value       : parseFloat(this.getAttribute("value")),
         min         : parseFloat(this.getAttribute("min")),
         max         : parseFloat(this.getAttribute("max")),
-        step        : parseFloat(this.getAttribute("step")),
+        step        : parseFloat(this.getAttribute("step")),*/
         logarithmic : false
     }, options);
 
@@ -24,10 +24,21 @@ constructor(options) {
     this._button = this.shadowRoot.querySelector('.button');
     this._container = this.shadowRoot.querySelector('.container');
 
-    this._updateUI();
+    //this._updateUI();
 
     this._element.addEventListener('mousedown', this._handleMouseDown);
     this._element.addEventListener('wheel', this._handleWheel);
+}
+
+connectedCallback() {
+    Object.assign(this, {
+        value       : parseFloat(this.getAttribute("value")),
+        min         : parseFloat(this.getAttribute("min")),
+        max         : parseFloat(this.getAttribute("max")),
+        step        : parseFloat(this.getAttribute("step")),
+    });
+
+    this._updateUI();
 }
 
 destroy() {

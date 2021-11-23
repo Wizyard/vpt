@@ -9,21 +9,21 @@ constructor(options) {
     super(TEMPLATES.ui.VectorSpinner, options);
 
     Object.assign(this, {
-        value : this.getAttribute('value'),
+        //value : this.getAttribute('value'),
         min   : null,
         max   : null,
-        step  : this.getAttribute('step')
+        //step  : this.getAttribute('step')
     }, options);
 
     this._handleChange = this._handleChange.bind(this);
     this._handleInput = this._handleInput.bind(this);
 
-    const opts = {
+    /*const opts = {
         value : this.value,
         min   : this.min,
         max   : this.max,
         step  : this.step
-    };
+    };*/
 
     /*this._spinnerX = new Spinner(opts);
     this._spinnerY = new Spinner(opts);
@@ -34,11 +34,11 @@ constructor(options) {
     this._spinnerZ.appendTo(this._binds.vectorZ);*/
 
     let spinners = this.shadowRoot.querySelectorAll('vpt-spinner');
-    for (const spinner of spinners) {
+    /*for (const spinner of spinners) {
         for (const iterator in opts) {
             spinner.setAttribute(iterator, opts[iterator]);
         }
-    }
+    }*/
 
     this._spinnerX = spinners[0];
     this._spinnerY = spinners[1];
@@ -50,6 +50,27 @@ constructor(options) {
     this._spinnerX.addEventListener('input', this._handleInput);
     this._spinnerY.addEventListener('input', this._handleInput);
     this._spinnerZ.addEventListener('input', this._handleInput);
+}
+
+connectedCallback() {
+    Object.assign(this, {
+        value : this.getAttribute('value'),
+        step  : this.getAttribute('step')
+    });
+
+    const opts = {
+        value : this.value,
+        min   : this.min,
+        max   : this.max,
+        step  : this.step
+    };
+
+    let spinners = this.shadowRoot.querySelectorAll('vpt-spinner');
+    for (const spinner of spinners) {
+        for (const iterator in opts) {
+            spinner.setAttribute(iterator, opts[iterator]);
+        }
+    }
 }
 
 destroy() {

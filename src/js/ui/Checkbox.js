@@ -8,12 +8,24 @@ constructor(options) {
     super(TEMPLATES.ui.Checkbox, options);
 
     Object.assign(this, {
-        checked : this.hasAttribute('checked')
+        //checked : this.hasAttribute('checked')
     }, options);
 
     this._handleClick = this._handleClick.bind(this);
 
     this._element.addEventListener('click', this._handleClick);
+    //this._element.classList.toggle('checked', this.checked);
+}
+
+connectedCallback() {
+    let checked = true;
+    if (!this.hasAttribute('checked') || this.getAttribute('checked') === 'false') {
+        checked = false;
+    }
+    Object.assign(this, {
+        checked : checked
+    });
+    
     this._element.classList.toggle('checked', this.checked);
 }
 

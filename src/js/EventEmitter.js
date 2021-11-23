@@ -2,19 +2,20 @@
 
 // #link Serializable
 
-class EventEmitter extends HTMLElement {
+//class EventEmitter extends HTMLElement {
+let EventEmitter = {
 
-constructor() {
+/*constructor() {
     super();
     this._eventHandlers = {};
-}
+}*/
 
 addEventListener(event, handler) {
     if (!this._eventHandlers[event]) {
         this._eventHandlers[event] = [];
     }
     this._eventHandlers[event].push(handler);
-}
+},
 
 removeEventListener(event, handler) {
     let handlers = this._eventHandlers[event];
@@ -27,7 +28,7 @@ removeEventListener(event, handler) {
             handlers.splice(i--, 1);
         }
     }
-}
+},
 
 trigger(event) {
     let handlers = this._eventHandlers[event];

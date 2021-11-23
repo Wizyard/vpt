@@ -8,10 +8,16 @@
 // #link Volume
 // #link renderers
 // #link tonemappers
+// #link Serializable
+// #link EventEmitter
 
 class RenderingContext {
 
 constructor(options) {
+    this._eventHandlers = {};
+    Object.assign(this, EventEmitter);
+    Object.assign(this, Serializable);
+
     this._render = this._render.bind(this);
     this._webglcontextlostHandler = this._webglcontextlostHandler.bind(this);
     this._webglcontextrestoredHandler = this._webglcontextrestoredHandler.bind(this);
@@ -20,6 +26,18 @@ constructor(options) {
         _resolution : 512,
         _filter     : 'linear'
     }, options);
+
+    this.registerSettings();
+    this.makeDialog('rendering-context');
+
+    this._handleResolutionChange = this._handleResolutionChange.bind(this);
+    this._handleTransformationChange = this._handleTransformationChange.bind(this);
+    this._handleFilterChange = this._handleFilterChange.bind(this);
+
+    this.settings.resolution.component.addEventListener('change', this._handleResolutionChange);
+    this.settings.scale.component.addEventListener('input', this._handleTransformationChange);
+    this.settings.translation.component.addEventListener('input', this._handleTransformationChange);
+    this.settings.filter.component.addEventListener('change', this._handleFilterChange);
 
     this._canvas = document.createElement('canvas');
     this._canvas.addEventListener('webglcontextlost', this._webglcontextlostHandler);
@@ -40,6 +58,66 @@ constructor(options) {
     this._translation = new Vector(0, 0, 0);
     this._isTransformationDirty = true;
     this._updateMvpInverseMatrix();
+}
+
+_handleResolutionChange() {
+    this.trigger('resolution', {
+        resolution: this.settings.resolution.component.getValue()
+    });
+}
+
+_handleTransformationChange() {
+    this.trigger('transformation', {
+        scale       : this.settings.scale.component.getValue(),
+        translation : this.settings.translation.component.getValue()
+    });
+}
+
+_handleFilterChange() {
+    this.trigger('filter', {
+        filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
+    });
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.filter = {
+        name: 'filter',
+        type: 'checkbox',
+        label: 'Linear filter:',
+        attributes: {
+            checked: true
+        }
+    }
+    this.settings.resolution = {
+        name: 'resolution',
+        type: 'spinner',
+        label: 'Resolution:',
+        attributes: {
+            min: 1,
+            max: 4096,
+            value: 512
+        }
+    }
+    this.settings.scale = {
+        name: 'scale',
+        type: 'vector',
+        label: 'Scale:',
+        attributes: {
+            value: 1,
+            step: 0.02
+        }
+    }
+    this.settings.translation = {
+        name: 'translation',
+        type: 'vector',
+        label: 'Translation:',
+        attributes: {
+            value: 0,
+            step: 0.1
+        }
+    }
 }
 
 // ============================ WEBGL SUBSYSTEM ============================ //

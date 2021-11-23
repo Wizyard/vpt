@@ -1,10 +1,13 @@
 // #part /js/tonemappers/AbstractToneMapper
 
 // #link ../WebGL
+// #link ../Serializable
 
 class AbstractToneMapper {
 
 constructor(gl, texture, options) {
+    Object.assign(this, Serializable);
+    
     Object.assign(this, {
         _bufferSize : 512
     }, options);

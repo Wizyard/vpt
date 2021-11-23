@@ -10,9 +10,36 @@ constructor(gl, texture, options) {
 
     this.exposure = 1;
 
+    this.registerSettings();
+    this.makeDialog('tone-mapper');
+
+    this._handleChange = this._handleChange.bind(this);
+    
+    this.addEventListeners();
+
     this._program = WebGL.buildPrograms(this._gl, {
         LottesToneMapper : SHADERS.LottesToneMapper
     }, MIXINS).LottesToneMapper;
+}
+
+_handleChange() {
+    this.exposure = this.settings.exposure.component.getValue();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.exposure = {
+        name: 'exposure',
+        type: 'spinner',
+        label: 'Exposure:',
+        attributes: {
+            logarithmic: true,
+            value: 1,
+            min: 0,
+            step: 0.1
+        }
+    }
 }
 
 destroy() {

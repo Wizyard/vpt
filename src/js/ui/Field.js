@@ -8,12 +8,16 @@ constructor(options) {
     super(TEMPLATES.ui.Field, options);
 
     Object.assign(this, {
-        label: this.getAttribute('label')
+        //label: this.getAttribute('label')
     }, options);
 
     this._content = null;
     //this._binds.label.textContent = this.label;
-    this.shadowRoot.querySelector('label').textContent = this.label;
+    //this.shadowRoot.querySelector('label').textContent = this.label;
+}
+
+connectedCallback() {
+    this.shadowRoot.querySelector('label').textContent = this.getAttribute('label');
 }
 
 destroy() {

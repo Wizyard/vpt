@@ -20,9 +20,97 @@ constructor(gl, volume, environmentTexture, options) {
         _maxDepth  : 0,
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+    this._handleSamplesChange = this._handleSamplesChange.bind(this);
+    this._handleTFChange = this._handleTFChange.bind(this);
+
+    this.addEventListeners();
+
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.DOS, MIXINS);
 
     this.generateOcclusionSamples();
+}
+
+_handleChange() {
+    this.steps = this.settings.steps.component.getValue();
+    this.slices = this.settings.slices.component.getValue();
+    this.extinction = this.settings.extinction.component.getValue();
+    this.aperture = this.settings.aperture.component.getValue();
+    this.reset();
+}
+
+_handleSamplesChange() {
+    this.samples = this.settings.samples.component.getValue();
+    this.generateOcclusionSamples();
+    this.reset();
+}
+
+_handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.steps = {
+        name: 'steps',
+        type: 'spinner',
+        label: 'Steps:',
+        attributes: {
+            value: 50,
+            min: 1
+        }
+    }
+    this.settings.slices = {
+        name: 'slices',
+        type: 'spinner',
+        label: 'Slices:',
+        attributes: {
+            value: 200,
+            min: 1
+        }
+    }
+    this.settings.extinction = {
+        name: 'extinction',
+        type: 'spinner',
+        label: 'Extinction:',
+        attributes: {
+            logarithmic: true,
+            value: 100,
+            min: 0,
+            step: 0.1
+        }
+    }
+    this.settings.aperture = {
+        name: 'aperture',
+        type: 'spinner',
+        label: 'Aperture (°):',
+        attributes: {
+            value: 30,
+            min: 0,
+            max: 89,
+            step: 0.1
+        }
+    }
+    this.settings.samples = {
+        name: 'samples',
+        type: 'spinner',
+        label: 'Occlusion samples:',
+        attributes: {
+            value: 8,
+            min: 1,
+            max: 200,
+            step: 1
+        }
+    }
+    this.settings.transferFunction = {
+        type: 'transfer-function-widget',
+        label: 'Transfer function'
+    }
 }
 
 destroy() {

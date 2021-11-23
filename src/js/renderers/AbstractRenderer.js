@@ -4,10 +4,13 @@
 // #link ../WebGL
 // #link ../SingleBuffer
 // #link ../DoubleBuffer
+// #link ../Serializable
 
 class AbstractRenderer {
 
 constructor(gl, volume, environmentTexture, options) {
+    Object.assign(this, Serializable);
+
     Object.assign(this, {
         _bufferSize : 512
     }, options);

@@ -12,9 +12,88 @@ constructor(options) {
     //super(UISPECS.MainDialog, options);
     super(TEMPLATES.MainDialog, options);
     
-    let tabs = this.shadowRoot.querySelector('vpt-tabs');
-    this._rendererSelect = tabs.shadowRoot.querySelector('#renderer-dropdown');
-    this._toneMapperSelect = tabs.shadowRoot.querySelector('#tone-mapper-dropdown');
+    this._rendererSelect = this.shadowRoot.querySelector('#renderer-dropdown');
+    this._toneMapperSelect = this.shadowRoot.querySelector('#tone-mapper-dropdown');
+
+    Object.assign(this._rendererSelect, {
+        options: [
+            {
+                "value": "mip",
+                "label": "Maximum intensity projection"
+            },
+            {
+                "value": "iso",
+                "label": "Isosurface extraction"
+            },
+            {
+                "value": "eam",
+                "label": "Emission-absorption model"
+            },
+            {
+                "value": "dos",
+                "label": "Directional occlusion shading"
+            },
+            {
+                "value": "mcs",
+                "label": "Single scattering"
+            },
+            {
+                "selected": true,
+                "value": "mcm",
+                "label": "Multiple scattering"
+            },
+            {
+                "value": "mcc",
+                "label": "Multiple scattering (compute)"
+            }
+        ]
+    });
+
+    Object.assign(this._toneMapperSelect, {
+        options: [
+            {
+                "value": "artistic",
+                "label": "Artistic",
+                "selected": true
+            },
+            {
+                "value": "range",
+                "label": "Range"
+            },
+            {
+                "value": "reinhard",
+                "label": "Reinhard"
+            },
+            {
+                "value": "reinhard2",
+                "label": "Reinhard 2"
+            },
+            {
+                "value": "uncharted2",
+                "label": "Uncharted 2"
+            },
+            {
+                "value": "filmic",
+                "label": "Filmic"
+            },
+            {
+                "value": "unreal",
+                "label": "Unreal"
+            },
+            {
+                "value": "aces",
+                "label": "Aces"
+            },
+            {
+                "value": "lottes",
+                "label": "Lottes"
+            },
+            {
+                "value": "uchimura",
+                "label": "Uchimura"
+            }
+        ]
+    });
 
     this._handleRendererChange = this._handleRendererChange.bind(this);
     this._handleToneMapperChange = this._handleToneMapperChange.bind(this);
@@ -27,6 +106,8 @@ constructor(options) {
 
     //const about = DOMUtils.instantiate(TEMPLATES.AboutText);
     //this._binds.about._element.appendChild(about);
+    const about = DOMUtils.instantiate(TEMPLATES.AboutText);
+    this.shadowRoot.querySelector('#about-panel').appendChild(about);
 }
 
 /*getVolumeLoadContainer() {

@@ -13,9 +13,49 @@ constructor(gl, volume, environmentTexture, options) {
         _alphaCorrection : 1,
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('renderer');
+
+    this._handleChange = this._handleChange.bind(this);
+    this._handleTFChange = this._handleTFChange.bind(this);
+
+    this.addEventListeners();
+
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCS, MIXINS);
 
     this._frameNumber = 1;
+}
+
+_handleChange() {
+    this._sigmaMax = this.settings.extinction.component.getValue();
+    this._alphaCorrection = this.settings.extinction.component.getValue();
+
+    this.reset();
+}
+
+_handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.extinction = {
+        name: 'extinction',
+        type: 'spinner',
+        label: 'Extinction:',
+        attributes: {
+            logarithmic: true,
+            value: 1,
+            min: 0,
+            step: 0.1
+        }
+    }
+    this.settings.transferFunction = {
+        type: 'transfer-function-widget',
+        label: 'Transfer function'
+    }
 }
 
 destroy() {

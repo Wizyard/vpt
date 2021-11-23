@@ -13,9 +13,48 @@ constructor(gl, texture, options) {
         _max : 1
     }, options);
 
+    this.registerSettings();
+    this.makeDialog('tone-mapper');
+    
+    this._handleChange = this._handleChange.bind(this);
+    
+    this.addEventListeners();
+
     this._program = WebGL.buildPrograms(this._gl, {
         RangeToneMapper : SHADERS.RangeToneMapper
     }, MIXINS).RangeToneMapper;
+}
+
+_handleChange() {
+    this._min = this.settings.low.component.getValue();
+    this._max = this.settings.high.component.getValue();
+}
+
+registerSettings() {
+    this.settings = {};
+
+    this.settings.low = {
+        name: 'low',
+        type: 'spinner',
+        label: 'Low:',
+        attributes: {
+            logarithmic: true,
+            value: 0,
+            min: 0,
+            step: 0.1
+        }
+    }
+    this.settings.high = {
+        name: 'high',
+        type: 'spinner',
+        label: 'High:',
+        attributes: {
+            logarithmic: true,
+            value: 1,
+            min: 0,
+            step: 0.1
+        }
+    }
 }
 
 destroy() {

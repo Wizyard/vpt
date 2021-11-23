@@ -4,11 +4,14 @@
 // #link ../EventEmitter
 // #link ../Serializable
 
-class AbstractDialog extends EventEmitter {
+//class AbstractDialog extends EventEmitter {
+class AbstractDialog extends HTMLElement {
 
 constructor(spec, options) {
-    super(spec);
-    Object.assign(this, Serializable);
+    super();
+    this._eventHandlers = {};
+    Object.assign(this, EventEmitter);
+    //Object.assign(this, Serializable);
 
     /*let visible = true;
     if (this.hasAttribute('visible')) {

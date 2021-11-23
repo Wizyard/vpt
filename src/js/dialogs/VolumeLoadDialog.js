@@ -25,7 +25,7 @@ constructor(options) {
     this._rawSettingsPanel = this.shadowRoot.querySelector('#raw-settings-panel');
     this._loadButtonAndProgress = this.shadowRoot.querySelector('#load-button-and-progress-panel');
 
-    Object.assign(this._type, {
+    /*Object.assign(this._type, {
         options: [
             {
                 "value": "file",
@@ -41,7 +41,7 @@ constructor(options) {
                 "label": "Demo"
             }
         ]
-    });
+    });*/
 
     Object.assign(this._precision, {
         options: [

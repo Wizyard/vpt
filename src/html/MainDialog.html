@@ -3,7 +3,90 @@
 <div class="instantiate main-dialog">
     <vpt-sidebar>
         <vpt-panel scrollable>
-            <vpt-tabs></vpt-tabs>
+            <vpt-tabs>
+                <div class="header" slot="header-slot">Data</div>
+                <div class="header" slot="header-slot">Settings</div>
+                <div class="header" slot="header-slot">About</div>
+                <div class="content">
+                    <vpt-panel>
+                        <vpt-accordion label="Volume">
+                            <vpt-volume-load-dialog></vpt-volume-load-dialog>
+                        </vpt-accordion>
+                        <vpt-accordion label="Environment">
+                            <vpt-envmap-load-dialog></vpt-envmap-load-dialog>
+                        </vpt-accordion>
+                    </vpt-panel>
+                </div>
+                <div class="content">
+                    <vpt-panel>
+                        <vpt-accordion label="Load & save settings">
+                            <vpt-panel>
+                                <vpt-button label="Save" id="save-button"></vpt-button>
+                                <vpt-button label="Load" id="load-button"></vpt-button>
+                            </vpt-panel>
+                        </vpt-accordion>
+                        <vpt-accordion label="Renderer">
+                            <vpt-field label="Renderer:">
+                                <vpt-dropdown id="renderer-dropdown">
+                                    <option value="mip">Maximum intensity projection</option>
+                                    <option value="iso">Isosurface extraction</option>
+                                    <option value="eam">Emission-absorption model</option>
+                                    <option value="dos">Directional occlusion shading</option>
+                                    <option value="mcs">Single scattering</option>
+                                    <option value="mcm" selected>Multiple scattering</option>
+                                    <option value="mcc">Multiple scattering (compute)</option>
+                                </vpt-dropdown>
+                            </vpt-field>
+                            <vpt-panel id="attach-renderer">
+                                <!-- <vpt-renderer-dialog></vpt-renderer-dialog> -->
+                                <!-- <vpt-dos-renderer-dialog hidden></vpt-dos-renderer-dialog>
+                                <vpt-eam-renderer-dialog hidden></vpt-eam-renderer-dialog>
+                                <vpt-iso-renderer-dialog hidden></vpt-iso-renderer-dialog>
+                                <vpt-mcm-renderer-dialog hidden></vpt-mcm-renderer-dialog>
+                                <vpt-mcs-renderer-dialog hidden></vpt-mcs-renderer-dialog>
+                                <vpt-mip-renderer-dialog hidden></vpt-mip-renderer-dialog> -->
+                            </vpt-panel>
+                        </vpt-accordion>
+                        <vpt-accordion label="Tone mapper">
+                            <vpt-field label="Tone mapper:">
+                                <vpt-dropdown id="tone-mapper-dropdown">
+                                    <option value="range">Range</option>
+                                    <option value="reinhard">Reinhard</option>
+                                    <option value="artistic" selected>Artistic</option>
+                                    <option value="reinhard2">Reinhard 2</option>
+                                    <option value="uncharted2">Uncharted 2</option>
+                                    <option value="filmic">Filmic</option>
+                                    <option value="unreal">Unreal</option>
+                                    <option value="aces">Aces</option>
+                                    <option value="lottes">Lottes</option>
+                                    <option value="uchimura">Uchimura</option>
+                                </vpt-dropdown>
+                            </vpt-field>
+                            <vpt-panel id="attach-tone-mapper">
+                                <!-- <vpt-tone-mapper-dialog></vpt-tone-mapper-dialog> -->
+                                <!-- <vpt-aces-tone-mapper-dialog hidden></vpt-aces-tone-mapper-dialog>
+                                <vpt-artistic-tone-mapper-dialog hidden></vpt-artistic-tone-mapper-dialog>
+                                <vpt-filmic-tone-mapper-dialog hidden></vpt-filmic-tone-mapper-dialog>
+                                <vpt-lottes-tone-mapper-dialog hidden></vpt-lottes-tone-mapper-dialog>
+                                <vpt-range-tone-mapper-dialog hidden></vpt-range-tone-mapper-dialog>
+                                <vpt-reinhard-tone-mapper-dialog hidden></vpt-reinhard-tone-mapper-dialog>
+                                <vpt-reinhard2-tone-mapper-dialog hidden></vpt-reinhard2-tone-mapper-dialog>
+                                <vpt-uchimura-tone-mapper-dialog hidden></vpt-uchimura-tone-mapper-dialog>
+                                <vpt-uncharted2-tone-mapper-dialog hidden></vpt-uncharted2-tone-mapper-dialog>
+                                <vpt-unreal-tone-mapper-dialog hidden></vpt-unreal-tone-mapper-dialog> -->
+                            </vpt-panel>
+                        </vpt-accordion>
+                        <vpt-accordion label="Context">
+                            <!-- <vpt-rendering-context-dialog></vpt-rendering-context-dialog> -->
+                            <vpt-panel id="attach-rendering-context">
+                            </vpt-panel>
+                        </vpt-accordion>
+                    </vpt-panel>
+                </div>
+                <div class="content">
+                    <vpt-panel id="about-panel"></vpt-panel>
+                </div>
+            </vpt-tabs>
         </vpt-panel>
     </vpt-sidebar>
 </div>
