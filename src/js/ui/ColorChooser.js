@@ -40,6 +40,15 @@ connectedCallback() {
     this._color.style.backgroundColor = this._input.value /* + alpha */;
 }
 
+serialize() {
+    return this.getValue();
+}
+
+deserialize(setting) {
+    this.setValue(setting);
+    this._color.style.backgroundColor = setting;
+}
+
 setEnabled(enabled) {
     //this._binds.input.disabled = !enabled;
     this._input.disabled = !enabled;

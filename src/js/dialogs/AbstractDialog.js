@@ -9,8 +9,8 @@ class AbstractDialog extends HTMLElement {
 
 constructor(spec, options) {
     super();
-    this._eventHandlers = {};
-    Object.assign(this, EventEmitter);
+    //this._eventHandlers = {};
+    //Object.assign(this, EventEmitter);
     //Object.assign(this, Serializable);
 
     /*let visible = true;

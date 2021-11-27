@@ -9,39 +9,40 @@ constructor(gl, texture, options) {
     super(gl, texture, options);
 
     Object.assign(this, {
-        low        : 0,
+        /*low        : 0,
         mid        : 0.5,
         high       : 1,
-        saturation : 1
+        saturation : 1*/
     }, options);
-
-    this.registerSettings();
-    this.makeDialog('tone-mapper');
     
-    this._handleChange = this._handleChange.bind(this);
+    //this._handleChange = this._handleChange.bind(this);
     
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._program = WebGL.buildPrograms(this._gl, {
         ArtisticToneMapper : SHADERS.ArtisticToneMapper
     }, MIXINS).ArtisticToneMapper;
+
+    //this._handleChange();
 }
 
 _handleChange() {
-    const low = this.settings.low.component.getValue();
+    /*const low = this.settings.low.component.getValue();
     const high = this.settings.high.component.getValue();
     const midtones = this.settings.midtones.component.getValue();
-    const saturation = this.settings.saturation.component.getValue();
+    const saturation = this.settings.saturation.component.getValue();*/
+    this.low = this.settings.low.component.getValue();
+    this.high = this.settings.high.component.getValue();
+    this.midtones = this.settings.midtones.component.getValue();
+    this.saturation = this.settings.saturation.component.getValue();
 
-    this.low = low;
+    /*this.low = low;
     this.mid = low + (1 - midtones) * (high - low);
     this.high = high;
-    this.saturation = saturation;
+    this.saturation = saturation;*/
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.low = {
         name: 'low',
         type: 'spinner',
@@ -106,7 +107,7 @@ _renderFrame() {
 
     gl.uniform1i(uniforms.uTexture, 0);
     gl.uniform1f(uniforms.uLow, this.low);
-    gl.uniform1f(uniforms.uMid, this.mid);
+    gl.uniform1f(uniforms.uMid, this.low + (1 - this.midtones) * (this.high - this.low));
     gl.uniform1f(uniforms.uHigh, this.high);
     gl.uniform1f(uniforms.uSaturation, this.saturation);
 

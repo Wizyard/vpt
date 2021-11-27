@@ -64,6 +64,15 @@ connectedCallback() {
     input.addEventListener('change', this._handleChange);
 }
 
+serialize() {
+    return this.getValue();
+}
+
+deserialize(setting) {
+    this.setValue(setting);
+    this._input.value = setting;
+}
+
 setEnabled(enabled) {
     //this._binds.input.disabled = !enabled;
     this._input.disabled = !enabled;

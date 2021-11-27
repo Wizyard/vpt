@@ -9,21 +9,20 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        _sigmaMax        : 1,
-        _alphaCorrection : 1,
+        /*_sigmaMax        : 1,
+        _alphaCorrection : 1,*/
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
+    //this._handleTFChange = this._handleTFChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-    this._handleTFChange = this._handleTFChange.bind(this);
-
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCS, MIXINS);
 
     this._frameNumber = 1;
+
+    //this._handleChange();
 }
 
 _handleChange() {
@@ -39,8 +38,6 @@ _handleTFChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.extinction = {
         name: 'extinction',
         type: 'spinner',

@@ -29,6 +29,14 @@ connectedCallback() {
     this._element.classList.toggle('checked', this.checked);
 }
 
+serialize() {
+    return this.isChecked();
+}
+
+deserialize(setting) {
+    this.setChecked(setting);
+}
+
 isChecked() {
     return this.checked;
 }

@@ -73,6 +73,17 @@ connectedCallback() {
     }
 }
 
+serialize() {
+    return this.getValue();
+}
+
+deserialize(setting) {
+    this.setValue(setting);
+    this._spinnerX._input.value = setting.x;
+    this._spinnerY._input.value = setting.y;
+    this._spinnerZ._input.value = setting.z;
+}
+
 destroy() {
     this._spinnerX.destroy();
     this._spinnerY.destroy();

@@ -43,7 +43,8 @@ constructor(options) {
     this._demos = [];
 
     this._addEventListeners();
-    this._loadDemoJson();
+    // So I don't get errors, uncomment later
+    //this._loadDemoJson();
 }
 
 _addEventListeners() {
@@ -98,29 +99,41 @@ _handleLoadFile() {
     }
     const file = files[0];
 
-    this.trigger('load', {
+    /*this.trigger('load', {
         type : 'file',
         file : file
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type : 'file',
+        file : file
+    }}));
 }
 
 _handleLoadURL() {
     //const url = this._binds.url.getValue();
     const url = this._url.getValue();
-    this.trigger('load', {
+    /*this.trigger('load', {
         type : 'url',
         url  : url
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type : 'url',
+        url  : url
+    }}));
 }
 
 _handleLoadDemo() {
     //const demo = this._binds.demo.getValue();
     const demo = this._demo.getValue();
     const found = this._demos.find(d => d.value === demo);
-    this.trigger('load', {
+    /*this.trigger('load', {
         type : 'url',
         url  : found.url
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type : 'url',
+        url  : found.url
+    }}));
 }
 
 _handleTypeChange() {

@@ -41,7 +41,7 @@ constructor(options) {
                 "label": "Demo"
             }
         ]
-    });*/
+    });
 
     Object.assign(this._precision, {
         options: [
@@ -59,12 +59,13 @@ constructor(options) {
                 "label": "32-bit"
             }
         ]
-    });
+    });*/
 
     this._demos = [];
 
     this._addEventListeners();
-    this._loadDemoJson();
+    // So I don't get errors, uncomment later
+    //this._loadDemoJson();
 }
 
 _addEventListeners() {
@@ -134,24 +135,36 @@ _handleLoadFile() {
     const dimensions = this._dimensions.getValue();
     const precision = parseInt(this._precision.getValue(), 10);
 
-    this.trigger('load', {
+    /*this.trigger('load', {
         type       : 'file',
         file       : file,
         filetype   : filetype,
         dimensions : dimensions,
         precision  : precision,
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type       : 'file',
+        file       : file,
+        filetype   : filetype,
+        dimensions : dimensions,
+        precision  : precision,
+    }}));
 }
 
 _handleLoadURL() {
     //const url = this._binds.url.getValue();
     const url = this._url.getValue();
     const filetype = this._getVolumeTypeFromURL(url);
-    this.trigger('load', {
+    /*this.trigger('load', {
         type     : 'url',
         url      : url,
         filetype : filetype
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type     : 'url',
+        url      : url,
+        filetype : filetype
+    }}));
 }
 
 _handleLoadDemo() {
@@ -159,11 +172,16 @@ _handleLoadDemo() {
     const demo = this._demo.getValue();
     const found = this._demos.find(d => d.value === demo);
     const filetype = this._getVolumeTypeFromURL(found.url);
-    this.trigger('load', {
+    /*this.trigger('load', {
         type     : 'url',
         url      : found.url,
         filetype : filetype
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('load', { detail: {
+        type     : 'url',
+        url      : found.url,
+        filetype : filetype
+    }}));
 }
 
 _handleTypeChange() {

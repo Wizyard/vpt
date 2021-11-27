@@ -41,6 +41,14 @@ connectedCallback() {
     this._updateUI();
 }
 
+serialize() {
+    return this.getValue();
+}
+
+deserialize(setting) {
+    this.setValue(setting);
+}
+
 destroy() {
     document.removeEventListener('mouseup', this._handleMouseUp);
     document.removeEventListener('mousemove', this._handleMouseMove);

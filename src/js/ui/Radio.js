@@ -23,6 +23,9 @@ constructor(options) {
 }
 
 connectedCallback() {
+    if (!this.options) {
+        this.options = this.querySelectorAll('option');
+    }
     for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
     }

@@ -9,18 +9,17 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        steps : 64
+        //steps : 64
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-
-    this.addEventListeners(); // change instead of input on a spinner?
+    //this.addEventListeners(); // change instead of input on a spinner?
     //this.settings.steps.component.addEventListener('change', this._handleChange);
 
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.MIP, MIXINS);
+
+    //this._handleChange();
 }
 
 _handleChange() {
@@ -28,8 +27,6 @@ _handleChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.steps = {
         name: 'steps',
         type: 'spinner',

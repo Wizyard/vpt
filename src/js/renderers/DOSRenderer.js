@@ -10,28 +10,28 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        steps      : 50,
+        /*steps      : 50,
         slices     : 200,
         extinction : 100,
         aperture   : 30,
         samples    : 8,
         _depth     : 0,
         _minDepth  : 0,
-        _maxDepth  : 0,
+        _maxDepth  : 0,*/
+        // It works even if _depth, _minDepth and _maxDepth aren't initialized
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
+    //this._handleSamplesChange = this._handleSamplesChange.bind(this);
+    //this._handleTFChange = this._handleTFChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-    this._handleSamplesChange = this._handleSamplesChange.bind(this);
-    this._handleTFChange = this._handleTFChange.bind(this);
-
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.DOS, MIXINS);
 
-    this.generateOcclusionSamples();
+    //this.generateOcclusionSamples();
+    //this._handleChange();
+    //this._handleSamplesChange();
 }
 
 _handleChange() {
@@ -54,8 +54,6 @@ _handleTFChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.steps = {
         name: 'steps',
         type: 'spinner',

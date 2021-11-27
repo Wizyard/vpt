@@ -9,20 +9,20 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        _stepSize : 0.05,
-        _isovalue : 0.4,
+        /*_stepSize : 0.05,
+        _isovalue : 0.4,*/
         _light    : [0.5, 0.5, 0.5],
         _diffuse  : [0.7, 0.8, 0.9]
+        // Have to leave these two because they're vectors
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.ISO, MIXINS);
+
+    //this._handleChange();
 }
 
 _handleChange() {
@@ -43,8 +43,6 @@ _handleChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.steps = {
         name: 'steps',
         type: 'spinner',

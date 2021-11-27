@@ -17,22 +17,23 @@ constructor() {
     window.customElements.define('vpt-button', Button);
     window.customElements.define('vpt-field', Field);
     window.customElements.define('vpt-dropdown', Dropdown);
-    window.customElements.define('vpt-checkbox', Checkbox);
-    window.customElements.define('vpt-spinner', Spinner);
-    window.customElements.define('vpt-vector', VectorSpinner);
     window.customElements.define('vpt-file-chooser', FileChooser);
     window.customElements.define('vpt-radio', Radio);
     window.customElements.define('vpt-textbox', Textbox);
     window.customElements.define('vpt-progress-bar', ProgressBar);
+    window.customElements.define('vpt-checkbox', Checkbox);
+    window.customElements.define('vpt-spinner', Spinner);
+    window.customElements.define('vpt-vector', VectorSpinner);
     window.customElements.define('vpt-slider', Slider);
-    window.customElements.define('vpt-transfer-function-widget', TransferFunctionWidget);
     window.customElements.define('vpt-color-chooser', ColorChooser);
-    window.customElements.define('vpt-rendering-context-dialog', RenderingContextDialog);
+    window.customElements.define('vpt-transfer-function-widget', TransferFunctionWidget);
+
+    //window.customElements.define('vpt-rendering-context-dialog', RenderingContextDialog);
     window.customElements.define('vpt-volume-load-dialog', VolumeLoadDialog);
     window.customElements.define('vpt-envmap-load-dialog', EnvmapLoadDialog);
     window.customElements.define('vpt-main-dialog', MainDialog);
 
-    window.customElements.define('vpt-dos-renderer-dialog', DOSRendererDialog);
+    /*window.customElements.define('vpt-dos-renderer-dialog', DOSRendererDialog);
     window.customElements.define('vpt-eam-renderer-dialog', EAMRendererDialog);
     window.customElements.define('vpt-iso-renderer-dialog', ISORendererDialog);
     window.customElements.define('vpt-mcm-renderer-dialog', MCMRendererDialog);
@@ -48,7 +49,7 @@ constructor() {
     window.customElements.define('vpt-reinhard2-tone-mapper-dialog', Reinhard2ToneMapperDialog);
     window.customElements.define('vpt-uchimura-tone-mapper-dialog', UchimuraToneMapperDialog);
     window.customElements.define('vpt-uncharted2-tone-mapper-dialog', Uncharted2ToneMapperDialog);
-    window.customElements.define('vpt-unreal-tone-mapper-dialog', UnrealToneMapperDialog);
+    window.customElements.define('vpt-unreal-tone-mapper-dialog', UnrealToneMapperDialog);*/
 
     this._handleFileDrop = this._handleFileDrop.bind(this);
     this._handleRendererChange = this._handleRendererChange.bind(this);
@@ -106,16 +107,21 @@ constructor() {
     this._renderingContextDialog.addEventListener('filter', options => {
         this._renderingContext.setFilter(options.filter);
     });*/
-    this._renderingContext.addEventListener('resolution', options => {
+    this._makeDialog('rendering-context', this._renderingContext.settings);
+    this._handleChangesAndListenersRC(this._renderingContext);
+    this._renderingContext.addEventListener('resolution', event => {
+        let options = event.detail;
         this._renderingContext.setResolution(options.resolution);
     });
-    this._renderingContext.addEventListener('transformation', options => {
+    this._renderingContext.addEventListener('transformation', event => {
+        let options = event.detail;
         const s = options.scale;
         const t = options.translation;
         this._renderingContext.setScale(s.x, s.y, s.z);
         this._renderingContext.setTranslation(t.x, t.y, t.z);
     });
-    this._renderingContext.addEventListener('filter', options => {
+    this._renderingContext.addEventListener('filter', event => {
+        let options = event.detail;
         this._renderingContext.setFilter(options.filter);
     });
 
@@ -140,30 +146,107 @@ constructor() {
 
             const renderer = settings.renderer;
             this._mainDialog._rendererSelect.setValue(renderer);
-            this._mainDialog.trigger('rendererchange', renderer);
+            //this._mainDialog.trigger('rendererchange', renderer);
+            this._mainDialog.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
             this._renderingContext._renderer.deserialize(settings.rendererSettings);
             this._renderingContext._renderer._handleChange();
 
             const toneMapper = settings.toneMapper;
             this._mainDialog._toneMapperSelect.setValue(toneMapper);
-            this._mainDialog.trigger('tonemapperchange', toneMapper);
+            //this._mainDialog.trigger('tonemapperchange', toneMapper);
+            this._mainDialog.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
             this._renderingContext._toneMapper.deserialize(settings.toneMapperSettings);
             this._renderingContext._toneMapper._handleChange();
 
             this._renderingContext.deserialize(settings.context);
-            this._renderingContext.trigger('filter', { filter: settings.context.filter ? 'linear' : 'nearest' });
-            this._renderingContext.trigger('resolution', { resolution: settings.context.resolution });
-            this._renderingContext.trigger('transformation', {
-                scale: settings.context.scale,
-                translation: settings.context.translation
-            });
+            this._renderingContext._handleResolutionChange();
+            this._renderingContext._handleTransformationChange();
+            this._renderingContext._handleFilterChange();
         });
     });
 
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
-    this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());
-    this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());
+    //this._mainDialog.trigger('rendererchange', this._mainDialog.getSelectedRenderer());
+    //this._mainDialog.trigger('tonemapperchange', this._mainDialog.getSelectedToneMapper());
+    this._mainDialog.dispatchEvent(new CustomEvent('rendererchange', { detail: this._mainDialog.getSelectedRenderer() }));
+    this._mainDialog.dispatchEvent(new CustomEvent('tonemapperchange', { detail: this._mainDialog.getSelectedToneMapper() }));
+}
+
+_makeDialog(which, settings) {
+    let dialogPanel = this._mainDialog.shadowRoot.querySelector('#attach-' + which);
+    for (const key in settings) {
+        let setting = settings[key];
+        let newElement = document.createElement('vpt-' + setting.type);
+        if (setting.type === 'transfer-function-widget') {
+            let newAccordion = document.createElement('vpt-accordion');
+            newAccordion.setAttribute('label', setting.label);
+            let newPanel = document.createElement('vpt-panel');
+            newPanel.appendChild(newElement);
+            newAccordion.appendChild(newPanel);
+            dialogPanel.appendChild(newAccordion);
+        } else {
+            for (const key in setting.attributes) {
+                const attribute = setting.attributes[key];
+                newElement.setAttribute(key, attribute);
+            }
+            let newField = document.createElement('vpt-field');
+            newField.setAttribute('label', setting.label);
+            newField.appendChild(newElement);
+            dialogPanel.appendChild(newField);
+        }
+        setting.component = newElement;
+    }
+}
+
+_handleChangesAndListeners(which) {
+    which._handleChange = which._handleChange.bind(which);
+    if (which.settings.samples) {
+        which._handleSamplesChange = which._handleSamplesChange.bind(which);
+    }
+    if (which.settings.transferFunction) {
+        which._handleTFChange = which._handleTFChange.bind(which);
+    }
+    
+    for (const key in which.settings) {
+        let setting = which.settings[key];
+        if (key === 'samples') {
+            setting.component.addEventListener('input', which._handleSamplesChange);
+        } else {
+            switch (setting.type) {
+                case 'transfer-function-widget':
+                    setting.component.addEventListener('change', which._handleTFChange);
+                    break;
+                case 'color-chooser':
+                case 'slider':
+                    setting.component.addEventListener('change', which._handleChange);
+                    break;
+                default:
+                    setting.component.addEventListener('input', which._handleChange);
+                    break;
+            }
+        }
+    }
+
+    which._handleChange();
+    if (which.settings.samples) {
+        which._handleSamplesChange();
+    }
+}
+
+_handleChangesAndListenersRC(which) {
+    which._handleResolutionChange = which._handleResolutionChange.bind(which);
+    which._handleTransformationChange = which._handleTransformationChange.bind(which);
+    which._handleFilterChange = which._handleFilterChange.bind(which);
+
+    which.settings.resolution.component.addEventListener('change', which._handleResolutionChange);
+    which.settings.scale.component.addEventListener('input', which._handleTransformationChange);
+    which.settings.translation.component.addEventListener('input', which._handleTransformationChange);
+    which.settings.filter.component.addEventListener('change', which._handleFilterChange);
+
+    which._handleResolutionChange();
+    which._handleTransformationChange();
+    which._handleFilterChange();
 }
 
 _handleFileDrop(e) {
@@ -176,16 +259,24 @@ _handleFileDrop(e) {
     if (!file.name.toLowerCase().endsWith('.bvp')) {
         return;
     }
-    this._handleVolumeLoad({
+    /*this._handleVolumeLoad({
         type       : 'file',
         file       : file,
         filetype   : 'bvp',
         dimensions : { x: 0, y: 0, z: 0 }, // doesn't matter
         precision  : 8 // doesn't matter
-    });
+    });*/
+    this._handleVolumeLoad({ detail: {
+        type       : 'file',
+        file       : file,
+        filetype   : 'bvp',
+        dimensions : { x: 0, y: 0, z: 0 }, // doesn't matter
+        precision  : 8 // doesn't matter
+    }});
 }
 
-_handleRendererChange(which) {
+_handleRendererChange(event) {
+    let which = event.detail;
     this._mainDialog.shadowRoot.querySelector('#attach-renderer').innerHTML = '';
 
     if (this._rendererDialog) {
@@ -194,6 +285,8 @@ _handleRendererChange(which) {
     }
     this._renderingContext.chooseRenderer(which);
     const renderer = this._renderingContext.getRenderer();
+    this._makeDialog('renderer', renderer.settings);
+    this._handleChangesAndListeners(renderer);
     /*const container = this._mainDialog.getRendererSettingsContainer();
     const dialogClass = this._getDialogForRenderer(which);
     this._rendererDialog = new dialogClass(renderer);
@@ -205,7 +298,8 @@ _handleRendererChange(which) {
     this._rendererDialog.show();*/
 }
 
-_handleToneMapperChange(which) {
+_handleToneMapperChange(event) {
+    let which = event.detail;
     this._mainDialog.shadowRoot.querySelector('#attach-tone-mapper').innerHTML = '';
     
     if (this._toneMapperDialog) {
@@ -214,6 +308,8 @@ _handleToneMapperChange(which) {
     }
     this._renderingContext.chooseToneMapper(which);
     const toneMapper = this._renderingContext.getToneMapper();
+    this._makeDialog('tone-mapper', toneMapper.settings);
+    this._handleChangesAndListeners(toneMapper);
     /*const container = this._mainDialog.getToneMapperSettingsContainer();
     const dialogClass = this._getDialogForToneMapper(which);
     this._toneMapperDialog = new dialogClass(toneMapper);
@@ -225,7 +321,8 @@ _handleToneMapperChange(which) {
     this._toneMapperDialog.show();*/
 }
 
-_handleVolumeLoad(options) {
+_handleVolumeLoad(event) {
+    let options = event.detail;
     if (options.type === 'file') {
         const readerClass = this._getReaderForFileType(options.filetype);
         if (readerClass) {
@@ -250,7 +347,8 @@ _handleVolumeLoad(options) {
     }
 }
 
-_handleEnvmapLoad(options) {
+_handleEnvmapLoad(event) {
+    let options = event.detail;
     let image = new Image();
     image.crossOrigin = 'anonymous';
     image.addEventListener('load', () => {

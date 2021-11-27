@@ -11,11 +11,12 @@
 // #link Serializable
 // #link EventEmitter
 
-class RenderingContext {
+class RenderingContext extends EventTarget {
 
 constructor(options) {
-    this._eventHandlers = {};
-    Object.assign(this, EventEmitter);
+    super();
+    //this._eventHandlers = {};
+    //Object.assign(this, EventEmitter);
     Object.assign(this, Serializable);
 
     this._render = this._render.bind(this);
@@ -23,21 +24,22 @@ constructor(options) {
     this._webglcontextrestoredHandler = this._webglcontextrestoredHandler.bind(this);
 
     Object.assign(this, {
-        _resolution : 512,
-        _filter     : 'linear'
+        /*_resolution : 512,
+        _filter     : 'linear'*/
     }, options);
 
+    this.settings = {};
     this.registerSettings();
-    this.makeDialog('rendering-context');
+    //this.makeDialog('rendering-context');
 
-    this._handleResolutionChange = this._handleResolutionChange.bind(this);
+    /*this._handleResolutionChange = this._handleResolutionChange.bind(this);
     this._handleTransformationChange = this._handleTransformationChange.bind(this);
     this._handleFilterChange = this._handleFilterChange.bind(this);
 
     this.settings.resolution.component.addEventListener('change', this._handleResolutionChange);
     this.settings.scale.component.addEventListener('input', this._handleTransformationChange);
     this.settings.translation.component.addEventListener('input', this._handleTransformationChange);
-    this.settings.filter.component.addEventListener('change', this._handleFilterChange);
+    this.settings.filter.component.addEventListener('change', this._handleFilterChange);*/
 
     this._canvas = document.createElement('canvas');
     this._canvas.addEventListener('webglcontextlost', this._webglcontextlostHandler);
@@ -58,30 +60,42 @@ constructor(options) {
     this._translation = new Vector(0, 0, 0);
     this._isTransformationDirty = true;
     this._updateMvpInverseMatrix();
+
+    /*this._handleResolutionChange();
+    this._handleTransformationChange();
+    this._handleFilterChange();*/
 }
 
 _handleResolutionChange() {
-    this.trigger('resolution', {
+    /*this.trigger('resolution', {
         resolution: this.settings.resolution.component.getValue()
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('resolution', { detail: {
+        resolution: this.settings.resolution.component.getValue()
+    }}));
 }
 
 _handleTransformationChange() {
-    this.trigger('transformation', {
+    /*this.trigger('transformation', {
         scale       : this.settings.scale.component.getValue(),
         translation : this.settings.translation.component.getValue()
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('transformation', { detail: {
+        scale       : this.settings.scale.component.getValue(),
+        translation : this.settings.translation.component.getValue()
+    }}));
 }
 
 _handleFilterChange() {
-    this.trigger('filter', {
+    /*this.trigger('filter', {
         filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
-    });
+    });*/
+    this.dispatchEvent(new CustomEvent('filter', { detail: {
+        filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
+    }}));
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.filter = {
         name: 'filter',
         type: 'checkbox',

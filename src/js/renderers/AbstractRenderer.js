@@ -39,6 +39,10 @@ constructor(gl, volume, environmentTexture, options) {
     this._clipQuadProgram = WebGL.buildPrograms(gl, {
         quad: SHADERS.quad
     }).quad;
+
+    this.settings = {};
+    this.registerSettings();
+    //this.makeDialog('renderer');
 }
 
 destroy() {

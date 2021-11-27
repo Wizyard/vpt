@@ -1,5 +1,21 @@
 /* #part /css/ui/ColorChooser */
 
+* {
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    color: var(--color);
+}
+
+input {
+    appearance: var(--input-appearance);
+    -webkit-appearance: var(--input-appearance);
+    -moz-appearance: var(--input-appearance);
+}
+
+.invisible {
+    display: var(--invisible-display);
+}
+
 .color-chooser {
     --enabled-border-color  : #aaaaaa;
     --disabled-border-color : #cccccc;

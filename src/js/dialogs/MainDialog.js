@@ -15,7 +15,7 @@ constructor(options) {
     this._rendererSelect = this.shadowRoot.querySelector('#renderer-dropdown');
     this._toneMapperSelect = this.shadowRoot.querySelector('#tone-mapper-dropdown');
 
-    Object.assign(this._rendererSelect, {
+    /*Object.assign(this._rendererSelect, {
         options: [
             {
                 "value": "mip",
@@ -93,7 +93,7 @@ constructor(options) {
                 "label": "Uchimura"
             }
         ]
-    });
+    });*/
 
     this._handleRendererChange = this._handleRendererChange.bind(this);
     this._handleToneMapperChange = this._handleToneMapperChange.bind(this);
@@ -143,13 +143,15 @@ getSelectedToneMapper() {
 _handleRendererChange() {
     //const renderer = this._binds.rendererSelect.getValue();
     const renderer = this._rendererSelect.getValue();
-    this.trigger('rendererchange', renderer);
+    //this.trigger('rendererchange', renderer);
+    this.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
 }
 
 _handleToneMapperChange() {
     //const toneMapper = this._binds.toneMapperSelect.getValue();
     const toneMapper = this._toneMapperSelect.getValue();
-    this.trigger('tonemapperchange', toneMapper);
+    //this.trigger('tonemapperchange', toneMapper);
+    this.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
 }
 
 disableMCC() {

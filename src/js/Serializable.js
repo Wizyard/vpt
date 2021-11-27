@@ -25,7 +25,7 @@ let Serializable = { // class extends HTMLElement {
         this.settings.push(setting);
     },*/
 
-    makeDialog(which) {
+    /*makeDialog(which) {
         let dialogPanel = document.querySelector('vpt-main-dialog').shadowRoot.querySelector('#attach-' + which);
         for (const key in this.settings) {
             let setting = this.settings[key];
@@ -49,9 +49,9 @@ let Serializable = { // class extends HTMLElement {
             }
             setting.component = newElement;
         }
-    },
+    },*/
 
-    addEventListeners() {
+    /*addEventListeners() {
         for (const key in this.settings) {
             let setting = this.settings[key];
             if (key === 'samples') {
@@ -71,13 +71,14 @@ let Serializable = { // class extends HTMLElement {
                 }
             }
         }
-    },
+    },*/
 
     serialize() {
         let settings = {};
         for (const key in this.settings) {
             let setting = this.settings[key];
-            switch (setting.type) {
+            settings[key] = setting.component.serialize();
+            /*switch (setting.type) {
                 case 'transfer-function-widget':
                     settings[key] = setting.component._bumps;
                     break;
@@ -87,7 +88,7 @@ let Serializable = { // class extends HTMLElement {
                 default:
                     settings[key] = setting.component.getValue();
                     break;
-            }
+            }*/
         }
         return settings;
     },
@@ -124,7 +125,9 @@ let Serializable = { // class extends HTMLElement {
 
     deserialize(settings) {
         for (const key in settings) {
-            switch (this.settings[key].type) {
+            let setting = settings[key];
+            this.settings[key].component.deserialize(setting);
+            /*switch (this.settings[key].type) {
                 case 'transfer-function-widget':
                     this.settings[key].component._bumps = settings[key];
                     this.settings[key].component.render();
@@ -151,7 +154,7 @@ let Serializable = { // class extends HTMLElement {
                     this.settings[key].component.setValue(settings[key]);
                     this.settings[key].component._input.value = settings[key];
                     break;
-            }
+            }*/
         }
     }
 }

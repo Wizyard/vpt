@@ -8,18 +8,17 @@ class UnrealToneMapper extends AbstractToneMapper {
 constructor(gl, texture, options) {
     super(gl, texture, options);
 
-    this.exposure = 1;
+    //this.exposure = 1;
 
-    this.registerSettings();
-    this.makeDialog('tone-mapper');
-
-    this._handleChange = this._handleChange.bind(this);
+    //this._handleChange = this._handleChange.bind(this);
     
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._program = WebGL.buildPrograms(this._gl, {
         UnrealToneMapper : SHADERS.UnrealToneMapper
     }, MIXINS).UnrealToneMapper;
+
+    //this._handleChange();
 }
 
 _handleChange() {
@@ -27,8 +26,6 @@ _handleChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.exposure = {
         name: 'exposure',
         type: 'spinner',

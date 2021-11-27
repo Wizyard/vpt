@@ -9,20 +9,20 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        extinction : 100,
+        /*extinction : 100,
         slices     : 64,
-        steps      : 64,
+        steps      : 64,*/
+        // steps is never used
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
+    //this._handleTFChange = this._handleTFChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-    this._handleTFChange = this._handleTFChange.bind(this);
-
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.EAM, MIXINS);
+
+    //this._handleChange();
 }
 
 _handleChange() {
@@ -37,8 +37,6 @@ _handleTFChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.slices = {
         name: 'slices',
         type: 'spinner',

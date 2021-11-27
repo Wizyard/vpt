@@ -14,8 +14,8 @@ class TransferFunctionWidget extends HTMLElement {
 
 constructor(options) {
     super();
-    this._eventHandlers = {};
-    Object.assign(this, EventEmitter);
+    //this._eventHandlers = {};
+    //Object.assign(this, EventEmitter);
 
     this._onColorChange = this._onColorChange.bind(this);
 
@@ -90,13 +90,25 @@ constructor(options) {
             this._bumps = JSON.parse(data);
             this.render();
             this._rebuildHandles();
-            this.trigger('change');
+            //this.trigger('change');
+            this.dispatchEvent(new Event('change'));
         });
     });
 
     this._$saveButton.addEventListener('click', () => {
         CommonUtils.downloadJSON(this._bumps, 'TransferFunction.json');
     });
+}
+
+serialize() {
+    return this._bumps;
+}
+
+deserialize(setting) {
+    this._bumps = setting;
+    this.render();
+    this._rebuildHandles();
+    this.dispatchEvent(new Event('change'));
 }
 
 destroy() {
@@ -157,7 +169,8 @@ addBump(options) {
     this._addHandle(bumpIndex);
     this.selectBump(bumpIndex);
     this.render();
-    this.trigger('change');
+    //this.trigger('change');
+    this.dispatchEvent(new Event('change'));
 }
 
 removeSelectedBump() {
@@ -168,7 +181,8 @@ removeAllBumps() {
     this._bumps = [];
     this._rebuildHandles();
     this.render();
-    this.trigger('change');
+    //this.trigger('change');
+    this.dispatchEvent(new Event('change'));
 }
 
 _removeHandle(index) {
@@ -181,7 +195,8 @@ _removeHandle(index) {
     });
     this._rebuildHandles();
     this.render();
-    this.trigger('change');
+    //this.trigger('change');
+    this.dispatchEvent(new Event('change'));
 }
 
 _addHandle(index) {
@@ -202,7 +217,8 @@ _addHandle(index) {
         this._bumps[i].position.x = x;
         this._bumps[i].position.y = y;
         this.render();
-        this.trigger('change');
+        //this.trigger('change');
+        this.dispatchEvent(new Event('change'));
     });
     $handle.addEventListener('mousedown', e => {
         const i = parseInt(DOMUtils.data(e.currentTarget, 'index'));
@@ -219,7 +235,8 @@ _addHandle(index) {
             this._bumps[i].size.x *= scale;
         }
         this.render();
-        this.trigger('change');
+        //this.trigger('change');
+        this.dispatchEvent(new Event('change'));
     });
 }
 
@@ -275,7 +292,8 @@ _onColorChange() {
     this._bumps[i].color.b = color.b;
     this._bumps[i].color.a = alpha;
     this.render();
-    this.trigger('change');
+    //this.trigger('change');
+    this.dispatchEvent(new Event('change'));
 }
 
 appendTo(object) {

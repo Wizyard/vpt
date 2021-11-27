@@ -9,39 +9,44 @@ constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
     Object.assign(this, {
-        absorptionCoefficient : 1,
-        scatteringCoefficient : 1,
-        scatteringBias        : 0,
-        majorant              : 2,
-        maxBounces            : 8,
-        steps                 : 1
+        //absorptionCoefficient : 1,
+        //scatteringCoefficient : 1,
+        //scatteringBias        : 0,
+        //majorant              : 2,
+        //maxBounces            : 8,
+        //steps                 : 1
     }, options);
 
-    this.registerSettings();
-    this.makeDialog('renderer');
+    //this._handleChange = this._handleChange.bind(this);
+    //this._handleTFChange = this._handleTFChange.bind(this);
 
-    this._handleChange = this._handleChange.bind(this);
-    this._handleTFChange = this._handleTFChange.bind(this);
-
-    this.addEventListeners();
+    //this.addEventListeners();
 
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCM, MIXINS);
+
+    //this._handleChange();
 }
 
 _handleChange() {
-    const extinction = this.settings.extinction.component.getValue();
+    /*const extinction = this.settings.extinction.component.getValue();
     const albedo     = this.settings.albedo.component.getValue();
     const bias       = this.settings.bias.component.getValue();
     const ratio      = this.settings.ratio.component.getValue();
     const bounces    = this.settings.bounces.component.getValue();
-    const steps      = this.settings.steps.component.getValue();
+    const steps      = this.settings.steps.component.getValue();*/
+    this.extinction = this.settings.extinction.component.getValue();
+    this.albedo     = this.settings.albedo.component.getValue();
+    this.scatteringBias = this.settings.bias.component.getValue();
+    this.ratio      = this.settings.ratio.component.getValue();
+    this.maxBounces = this.settings.bounces.component.getValue();
+    this.steps      = this.settings.steps.component.getValue();
 
-    this.absorptionCoefficient = extinction * (1 - albedo);
+    /*this.absorptionCoefficient = extinction * (1 - albedo);
     this.scatteringCoefficient = extinction * albedo;
     this.scatteringBias = bias;
     this.majorant = extinction * ratio;
     this.maxBounces = bounces;
-    this.steps = steps;
+    this.steps = steps;*/
 
     this.reset();
 }
@@ -52,8 +57,6 @@ _handleTFChange() {
 }
 
 registerSettings() {
-    this.settings = {};
-
     this.settings.extinction = {
         name: 'extinction',
         type: 'spinner',
@@ -193,10 +196,10 @@ _integrateFrame() {
     gl.uniform1f(uniforms.uRandSeed, Math.random());
     gl.uniform1f(uniforms.uBlur, 0);
 
-    gl.uniform1f(uniforms.uAbsorptionCoefficient, this.absorptionCoefficient);
-    gl.uniform1f(uniforms.uScatteringCoefficient, this.scatteringCoefficient);
+    gl.uniform1f(uniforms.uAbsorptionCoefficient, this.extinction * (1 - this.albedo));
+    gl.uniform1f(uniforms.uScatteringCoefficient, this.extinction * this.albedo);
     gl.uniform1f(uniforms.uScatteringBias, this.scatteringBias);
-    gl.uniform1f(uniforms.uMajorant, this.majorant);
+    gl.uniform1f(uniforms.uMajorant, this.extinction * this.ratio);
     gl.uniform1ui(uniforms.uMaxBounces, this.maxBounces);
     gl.uniform1ui(uniforms.uSteps, this.steps);
 

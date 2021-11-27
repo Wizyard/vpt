@@ -21,6 +21,10 @@ constructor(gl, texture, options) {
     this._clipQuadProgram = WebGL.buildPrograms(gl, {
         quad: SHADERS.quad
     }).quad;
+
+    this.settings = {};
+    this.registerSettings();
+    //this.makeDialog('tone-mapper');
 }
 
 destroy() {
