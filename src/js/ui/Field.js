@@ -8,7 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.Field, options);
 
     Object.assign(this, {
-        //label: this.getAttribute('label')
+        label: ''
     }, options);
 
     this._content = null;

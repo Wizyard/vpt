@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.VectorSpinner, options);
 
     Object.assign(this, {
-        //value : this.getAttribute('value'),
+        value : 0,
         min   : null,
         max   : null,
-        //step  : this.getAttribute('step')
+        step  : 1
     }, options);
 
     this._handleChange = this._handleChange.bind(this);
@@ -54,12 +54,13 @@ constructor(options) {
 
 connectedCallback() {
     Object.assign(this, {
-        value : this.getAttribute('value'),
-        step  : this.getAttribute('step')
+        min    : this.getAttribute('min'),
+        max    : this.getAttribute('max'),
+        step   : this.getAttribute('step')
     });
 
     const opts = {
-        value : this.value,
+        //value : this.value,
         min   : this.min,
         max   : this.max,
         step  : this.step
@@ -71,6 +72,9 @@ connectedCallback() {
             spinner.setAttribute(iterator, opts[iterator]);
         }
     }
+    spinners[0].setAttribute('value', this.getAttribute('valueX'));
+    spinners[1].setAttribute('value', this.getAttribute('valueY'));
+    spinners[2].setAttribute('value', this.getAttribute('valueZ'));
 }
 
 serialize() {

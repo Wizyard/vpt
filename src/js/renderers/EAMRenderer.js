@@ -23,17 +23,7 @@ constructor(gl, volume, environmentTexture, options) {
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.EAM, MIXINS);
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this.slices = this.settings.slices.component.getValue();
-    this.extinction = this.settings.extinction.component.getValue();
-    this.reset();
-}
-
-_handleTFChange() {
-    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
-    this.reset();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -61,6 +51,41 @@ registerSettings() {
         type: 'transfer-function-widget',
         label: 'Transfer function'
     }
+}
+
+initDefaults() {
+    this.slices = this.settings.slices.attributes.value;
+    this.extinction = this.settings.extinction.attributes.value;
+    //this.reset();
+}
+
+deserializeNoGUI(settings) {
+    this.slices = settings.slices;
+    this.extinction = settings.extinction;
+    //this.setTransferFunction(settings.transferFunction);
+    this.reset();
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleTFChange = this.handleTFChange.bind(this);
+
+    this.settings.slices.component.addEventListener('input', this.handleChange);
+    this.settings.extinction.component.addEventListener('input', this.handleChange);
+    this.settings.transferFunction.component.addEventListener('change', this.handleTFChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    this.slices = this.settings.slices.component.getValue();
+    this.extinction = this.settings.extinction.component.getValue();
+    this.reset();
+}
+
+handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
 }
 
 destroy() {

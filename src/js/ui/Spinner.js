@@ -6,44 +6,40 @@ class Spinner extends UIObject {
 
 constructor(options) {
     super(TEMPLATES.ui.Spinner, options);
-}
-
-connectedCallback() {
-    let value = 0;
-    let min = null;
-    let max = null;
-    let step = 1;
-    let logarithmic = false;
-    if (this.hasAttribute('value')) {
-        value = this.getAttribute('value');
-    }
-    if (this.hasAttribute('min') && this.getAttribute('min') !== 'null') {
-        min = this.getAttribute('min');
-    }
-    if (this.hasAttribute('max') && this.getAttribute('max') !== 'null') {
-        max = this.getAttribute('max');
-    }
-    if (this.hasAttribute('step')) {
-        step = this.getAttribute('step');
-    }
-    if (this.hasAttribute('logarithmic')) {
-        logarithmic = this.getAttribute('logarithmic');
-    }
 
     Object.assign(this, {
-        value : value,
-        min   : min,
-        max   : max,
-        step  : step,
+        value : 0,
+        min   : null,
+        max   : null,
+        step  : 1,
         unit  : null, // TODO: add a label with units at the end of input
         // If logarithmic, step size is proportional to value * this.step
-        logarithmic : logarithmic
-    });//, options);
+        logarithmic : false
+    }, options);
 
     this._handleInput = this._handleInput.bind(this);
     this._handleChange = this._handleChange.bind(this);
 
     this._input = this.shadowRoot.querySelector('input');
+
+    this._input.addEventListener('input', this._handleInput);
+    this._input.addEventListener('change', this._handleChange);
+}
+
+connectedCallback() {
+    if (this.hasAttribute('value') && this.getAttribute('value') !== 'null') {
+        this.value = this.getAttribute('value');
+    }
+    if (this.hasAttribute('min') && this.getAttribute('min') !== 'null') {
+        this.min = this.getAttribute('min');
+    }
+    if (this.hasAttribute('max') && this.getAttribute('max') !== 'null') {
+        this.max = this.getAttribute('max');
+    }
+    if (this.hasAttribute('step')) {
+        this.step = this.getAttribute('step');
+    }
+    this.logarithmic = this.getAttribute('logarithmic') === '' || this.getAttribute('logarithmic') === 'true';
 
     //let input = this._binds.input;
     let input = this._input;
@@ -59,9 +55,6 @@ connectedCallback() {
     if (this.step !== null) {
         input.step = this.step;
     }
-
-    input.addEventListener('input', this._handleInput);
-    input.addEventListener('change', this._handleChange);
 }
 
 serialize() {

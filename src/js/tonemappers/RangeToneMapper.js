@@ -22,11 +22,7 @@ constructor(gl, texture, options) {
     }, MIXINS).RangeToneMapper;
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this._min = this.settings.low.component.getValue();
-    this._max = this.settings.high.component.getValue();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -52,6 +48,30 @@ registerSettings() {
             step: 0.1
         }
     }
+}
+
+initDefaults() {
+    this._min = this.settings.low.attributes.value;
+    this._max = this.settings.high.attributes.value;
+}
+
+deserializeNoGUI(settings) {
+    this._min = settings.low;
+    this._max = settings.high;
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+
+    this.settings.low.component.addEventListener('input', this.handleChange);
+    this.settings.low.component.addEventListener('input', this.handleChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    this._min = this.settings.low.component.getValue();
+    this._max = this.settings.high.component.getValue();
 }
 
 destroy() {

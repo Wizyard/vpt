@@ -24,22 +24,7 @@ constructor(gl, texture, options) {
     }, MIXINS).ArtisticToneMapper;
 
     //this._handleChange();
-}
-
-_handleChange() {
-    /*const low = this.settings.low.component.getValue();
-    const high = this.settings.high.component.getValue();
-    const midtones = this.settings.midtones.component.getValue();
-    const saturation = this.settings.saturation.component.getValue();*/
-    this.low = this.settings.low.component.getValue();
-    this.high = this.settings.high.component.getValue();
-    this.midtones = this.settings.midtones.component.getValue();
-    this.saturation = this.settings.saturation.component.getValue();
-
-    /*this.low = low;
-    this.mid = low + (1 - midtones) * (high - low);
-    this.high = high;
-    this.saturation = saturation;*/
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -87,6 +72,47 @@ registerSettings() {
             step: 0.02
         }
     }
+}
+
+initDefaults() {
+    this.low = this.settings.low.attributes.value;
+    this.high = this.settings.high.attributes.value;
+    this.midtones = this.settings.midtones.attributes.value;
+    this.saturation = this.settings.saturation.attributes.value;
+}
+
+deserializeNoGUI(settings) {
+    this.low = settings.low;
+    this.high = settings.high;
+    this.midtones = settings.midtones;
+    this.saturation = settings.saturation;
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+
+    this.settings.low.component.addEventListener('input', this.handleChange);
+    this.settings.high.component.addEventListener('input', this.handleChange);
+    this.settings.saturation.component.addEventListener('input', this.handleChange);
+    this.settings.midtones.component.addEventListener('change', this.handleChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    /*const low = this.settings.low.component.getValue();
+    const high = this.settings.high.component.getValue();
+    const midtones = this.settings.midtones.component.getValue();
+    const saturation = this.settings.saturation.component.getValue();*/
+    this.low = this.settings.low.component.getValue();
+    this.high = this.settings.high.component.getValue();
+    this.midtones = this.settings.midtones.component.getValue();
+    this.saturation = this.settings.saturation.component.getValue();
+
+    /*this.low = low;
+    this.mid = low + (1 - midtones) * (high - low);
+    this.high = high;
+    this.saturation = saturation;*/
 }
 
 destroy() {

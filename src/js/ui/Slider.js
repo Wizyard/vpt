@@ -9,10 +9,10 @@ constructor(options) {
     super(TEMPLATES.ui.Slider, options);
 
     Object.assign(this, {
-        /*value       : parseFloat(this.getAttribute("value")),
-        min         : parseFloat(this.getAttribute("min")),
-        max         : parseFloat(this.getAttribute("max")),
-        step        : parseFloat(this.getAttribute("step")),*/
+        value       : 0,
+        min         : 0,
+        max         : 100,
+        step        : 1,
         logarithmic : false
     }, options);
 
@@ -31,12 +31,25 @@ constructor(options) {
 }
 
 connectedCallback() {
-    Object.assign(this, {
+    /*Object.assign(this, {
         value       : parseFloat(this.getAttribute("value")),
         min         : parseFloat(this.getAttribute("min")),
         max         : parseFloat(this.getAttribute("max")),
         step        : parseFloat(this.getAttribute("step")),
-    });
+    });*/
+    if (this.hasAttribute('value')) {
+        this.value = parseFloat(this.getAttribute('value'));
+    }
+    if (this.hasAttribute('min')) {
+        this.min = parseFloat(this.getAttribute('min'));
+    }
+    if (this.hasAttribute('max')) {
+        this.max = parseFloat(this.getAttribute('max'));
+    }
+    if (this.hasAttribute('step')) {
+        this.step = parseFloat(this.getAttribute('step'));
+    }
+    this.logarithmic = this.getAttribute('logarithmic') === '' || this.getAttribute('logarithmic') === 'true';
 
     this._updateUI();
 }

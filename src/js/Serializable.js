@@ -1,29 +1,6 @@
 // #part /js/Serializable
 
-let Serializable = { // class extends HTMLElement {
-
-    /*constructor() {
-        //super();
-
-        this.settings = {
-            //color: this.color
-        };
-    }
-
-    connectedCallback() {
-        for (const iterator of this.attributes) {
-            this.settings[iterator.name] = iterator.value;
-        }
-    }*/
-
-    /*registerSetting(name, type, attributes) {
-        let setting = {
-            name: name,
-            type: type,
-            attributes: attributes
-        }
-        this.settings.push(setting);
-    },*/
+let Serializable = {
 
     /*makeDialog(which) {
         let dialogPanel = document.querySelector('vpt-main-dialog').shadowRoot.querySelector('#attach-' + which);
@@ -70,6 +47,23 @@ let Serializable = { // class extends HTMLElement {
                         break;
                 }
             }
+        }
+    },*/
+
+    /*bindHandlersAndListeners() {
+        this._handleChange = this._handleChange.bind(this);
+        if (this.settings.samples) {
+            this._handleSamplesChange = this._handleSamplesChange.bind(this);
+        }
+        if (this.settings.transferFunction) {
+            this._handleTFChange = this._handleTFChange.bind(this);
+        }
+        
+        this.addEventListeners();
+    
+        this._handleChange();
+        if (this.settings.samples) {
+            this._handleSamplesChange();
         }
     },*/
 
@@ -123,10 +117,14 @@ let Serializable = { // class extends HTMLElement {
         return temp;
     },*/
 
-    deserialize(settings) {
-        for (const key in settings) {
-            let setting = settings[key];
-            this.settings[key].component.deserialize(setting);
+    deserialize(settings, gui) {
+        if (gui) {
+            for (const key in settings) {
+                let setting = settings[key];
+                this.settings[key].component.deserialize(setting);
+            }
+        } else {
+            this.deserializeNoGUI(settings);
             /*switch (this.settings[key].type) {
                 case 'transfer-function-widget':
                     this.settings[key].component._bumps = settings[key];

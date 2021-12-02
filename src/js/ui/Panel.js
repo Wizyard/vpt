@@ -8,8 +8,14 @@ constructor(options) {
     super(TEMPLATES.ui.Panel, options);
 
     Object.assign(this, {
-        scrollable: this.hasAttribute('scrollable')
+        scrollable: false
     }, options);
+
+    //this.setScrollable(this.scrollable);
+}
+
+connectedCallback() {
+    this.scrollable = this.getAttribute('scrollable') === '' || this.getAttribute('scrollable') === 'true';
 
     this.setScrollable(this.scrollable);
 }

@@ -30,6 +30,7 @@ constructor(options) {
 
     this.settings = {};
     this.registerSettings();
+    this.initDefaults();
     //this.makeDialog('rendering-context');
 
     /*this._handleResolutionChange = this._handleResolutionChange.bind(this);
@@ -56,14 +57,98 @@ constructor(options) {
     this._cameraController = new OrbitCameraController(this._camera, this._canvas);
 
     this._volume = new Volume(this._gl);
-    this._scale = new Vector(1, 1, 1);
-    this._translation = new Vector(0, 0, 0);
+    //this._scale = new Vector(1, 1, 1);
+    //this._translation = new Vector(0, 0, 0);
     this._isTransformationDirty = true;
     this._updateMvpInverseMatrix();
 
     /*this._handleResolutionChange();
     this._handleTransformationChange();
     this._handleFilterChange();*/
+}
+
+registerSettings() {
+    this.settings.filter = {
+        name: 'filter',
+        type: 'checkbox',
+        label: 'Linear filter:',
+        attributes: {
+            checked: true
+        }
+    }
+    this.settings.resolution = {
+        name: 'resolution',
+        type: 'spinner',
+        label: 'Resolution:',
+        attributes: {
+            min: 1,
+            max: 4096,
+            value: 512
+        }
+    }
+    this.settings.scale = {
+        name: 'scale',
+        type: 'vector',
+        label: 'Scale:',
+        attributes: {
+            valueX: 1,
+            valueY: 1,
+            valueZ: 1,
+            step: 0.02
+        }
+    }
+    this.settings.translation = {
+        name: 'translation',
+        type: 'vector',
+        label: 'Translation:',
+        attributes: {
+            valueX: 0,
+            valueY: 0,
+            valueZ: 0,
+            step: 0.1
+        }
+    }
+}
+
+initDefaults() {
+    this._filter = this.settings.filter.attributes.checked ? 'linear' : 'nearest';
+    this._resolution = this.settings.resolution.attributes.value;
+    const s = this.settings.scale.attributes;
+    this._scale = new Vector(s.valueX, s.valueY, s.valueZ);
+    const t = this.settings.translation.attributes;
+    this._translation = new Vector(t.valueX, t.valueY, t.valueZ);
+}
+
+deserializeNoGUI(settings) {
+    //this._filter = settings.filter ? 'linear' : 'nearest';
+    //this._resolution = settings.resolution;
+    const s = settings.scale;
+    //this._scale = new Vector(s.x, s.y, s.z);
+    const t = settings.translation;
+    //this._translation = new Vector(t.x, t.y, t.z);
+    this.setFilter(settings.filter ? 'linear' : 'nearest');
+    this.setResolution(settings.resolution);
+    this.setScale(s.x, s.y, s.z);
+    this.setTranslation(t.x, t.y, t.z);
+}
+
+bindHandlersAndListeners() {
+    this._handleResolutionChange = this._handleResolutionChange.bind(this);
+    this._handleTransformationChange = this._handleTransformationChange.bind(this);
+    this._handleFilterChange = this._handleFilterChange.bind(this);
+
+    this.settings.resolution.component.addEventListener('change', this._handleResolutionChange);
+    this.settings.scale.component.addEventListener('input', this._handleTransformationChange);
+    this.settings.translation.component.addEventListener('input', this._handleTransformationChange);
+    this.settings.filter.component.addEventListener('change', this._handleFilterChange);
+
+    this.handleChanges();
+}
+
+handleChanges() {
+    this._handleResolutionChange();
+    this._handleTransformationChange();
+    this._handleFilterChange();
 }
 
 _handleResolutionChange() {
@@ -93,45 +178,6 @@ _handleFilterChange() {
     this.dispatchEvent(new CustomEvent('filter', { detail: {
         filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
     }}));
-}
-
-registerSettings() {
-    this.settings.filter = {
-        name: 'filter',
-        type: 'checkbox',
-        label: 'Linear filter:',
-        attributes: {
-            checked: true
-        }
-    }
-    this.settings.resolution = {
-        name: 'resolution',
-        type: 'spinner',
-        label: 'Resolution:',
-        attributes: {
-            min: 1,
-            max: 4096,
-            value: 512
-        }
-    }
-    this.settings.scale = {
-        name: 'scale',
-        type: 'vector',
-        label: 'Scale:',
-        attributes: {
-            value: 1,
-            step: 0.02
-        }
-    }
-    this.settings.translation = {
-        name: 'translation',
-        type: 'vector',
-        label: 'Translation:',
-        attributes: {
-            value: 0,
-            step: 0.1
-        }
-    }
 }
 
 // ============================ WEBGL SUBSYSTEM ============================ //

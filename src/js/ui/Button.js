@@ -8,11 +8,17 @@ constructor(options) {
     super(TEMPLATES.ui.Button, options);
 
     Object.assign(this, {
-        label: this.getAttribute('label')
+        label: ''
     }, options);
 
     //this._binds.input.value = this.label;
     this._input = this.shadowRoot.querySelector('input');
+    //this._input.value = this.label;
+}
+
+connectedCallback() {
+    this.label = this.getAttribute('label');
+    
     this._input.value = this.label;
 }
 

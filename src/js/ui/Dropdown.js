@@ -9,7 +9,7 @@ constructor(options) {
     super(TEMPLATES.ui.Dropdown, options);
 
     Object.assign(this, {
-        //options: this.getAttribute('options')
+        options: []
     }, options);
 
     this._select = this.shadowRoot.querySelector('select');
@@ -20,9 +20,8 @@ constructor(options) {
 }
 
 connectedCallback() {
-    if (!this.options) {
-        this.options = this.querySelectorAll('option');
-    }
+    this.options = this.querySelectorAll('option');
+    
     for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
     }

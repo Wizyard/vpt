@@ -19,10 +19,7 @@ constructor(gl, texture, options) {
     }, MIXINS).Reinhard2ToneMapper;
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this.exposure = this.settings.exposure.component.getValue();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -37,6 +34,26 @@ registerSettings() {
             step: 0.1
         }
     }
+}
+
+initDefaults() {
+    this.exposure = this.settings.exposure.attributes.value;
+}
+
+deserializeNoGUI(settings) {
+    this.exposure = settings.exposure;
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+
+    this.settings.exposure.component.addEventListener('input', this.handleChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    this.exposure = this.settings.exposure.component.getValue();
 }
 
 destroy() {

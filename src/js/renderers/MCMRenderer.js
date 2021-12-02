@@ -25,35 +25,7 @@ constructor(gl, volume, environmentTexture, options) {
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCM, MIXINS);
 
     //this._handleChange();
-}
-
-_handleChange() {
-    /*const extinction = this.settings.extinction.component.getValue();
-    const albedo     = this.settings.albedo.component.getValue();
-    const bias       = this.settings.bias.component.getValue();
-    const ratio      = this.settings.ratio.component.getValue();
-    const bounces    = this.settings.bounces.component.getValue();
-    const steps      = this.settings.steps.component.getValue();*/
-    this.extinction = this.settings.extinction.component.getValue();
-    this.albedo     = this.settings.albedo.component.getValue();
-    this.scatteringBias = this.settings.bias.component.getValue();
-    this.ratio      = this.settings.ratio.component.getValue();
-    this.maxBounces = this.settings.bounces.component.getValue();
-    this.steps      = this.settings.steps.component.getValue();
-
-    /*this.absorptionCoefficient = extinction * (1 - albedo);
-    this.scatteringCoefficient = extinction * albedo;
-    this.scatteringBias = bias;
-    this.majorant = extinction * ratio;
-    this.maxBounces = bounces;
-    this.steps = steps;*/
-
-    this.reset();
-}
-
-_handleTFChange() {
-    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
-    this.reset();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -123,6 +95,74 @@ registerSettings() {
         type: 'transfer-function-widget',
         label: 'Transfer function'
     }
+}
+
+initDefaults() {
+    this.extinction = this.settings.extinction.attributes.value;
+    this.albedo     = this.settings.albedo.attributes.value;
+    this.scatteringBias = this.settings.bias.attributes.value;
+    this.ratio      = this.settings.ratio.attributes.value;
+    this.maxBounces = this.settings.bounces.attributes.value;
+    this.steps      = this.settings.steps.attributes.value;
+
+    //this.reset();
+}
+
+deserializeNoGUI(settings) {
+    this.extinction = settings.extinction;
+    this.albedo     = settings.albedo;
+    this.scatteringBias = settings.bias;
+    this.ratio      = settings.ratio;
+    this.maxBounces = settings.bounces;
+    this.steps      = settings.steps;
+
+    //this.setTransferFunction(settings.transferFunction);
+
+    this.reset();
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleTFChange = this.handleTFChange.bind(this);
+
+    this.settings.extinction.component.addEventListener('input', this.handleChange);
+    this.settings.albedo.component.addEventListener('change', this.handleChange);
+    this.settings.bias.component.addEventListener('change', this.handleChange);
+    this.settings.ratio.component.addEventListener('change', this.handleChange);
+    this.settings.bounces.component.addEventListener('input', this.handleChange);
+    this.settings.steps.component.addEventListener('input', this.handleChange); 
+    this.settings.transferFunction.component.addEventListener('change', this.handleTFChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    /*const extinction = this.settings.extinction.component.getValue();
+    const albedo     = this.settings.albedo.component.getValue();
+    const bias       = this.settings.bias.component.getValue();
+    const ratio      = this.settings.ratio.component.getValue();
+    const bounces    = this.settings.bounces.component.getValue();
+    const steps      = this.settings.steps.component.getValue();*/
+    this.extinction = this.settings.extinction.component.getValue();
+    this.albedo     = this.settings.albedo.component.getValue();
+    this.scatteringBias = this.settings.bias.component.getValue();
+    this.ratio      = this.settings.ratio.component.getValue();
+    this.maxBounces = this.settings.bounces.component.getValue();
+    this.steps      = this.settings.steps.component.getValue();
+
+    /*this.absorptionCoefficient = extinction * (1 - albedo);
+    this.scatteringCoefficient = extinction * albedo;
+    this.scatteringBias = bias;
+    this.majorant = extinction * ratio;
+    this.maxBounces = bounces;
+    this.steps = steps;*/
+
+    this.reset();
+}
+
+handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
 }
 
 destroy() {

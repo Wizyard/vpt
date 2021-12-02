@@ -8,7 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.ColorChooser, options);
 
     Object.assign(this, {
-        //value: this.getAttribute("value")
+        value: null
     }, options);
 
     this._input = this.shadowRoot.querySelector('input');
@@ -30,9 +30,10 @@ constructor(options) {
 }
 
 connectedCallback() {
-    Object.assign(this, {
+    /*Object.assign(this, {
         value: this.getAttribute("value")
-    });
+    });*/
+    this.value = this.getAttribute("value");
 
     if (this.value !== null) {
         this._input.value = this.value;

@@ -17,6 +17,12 @@ constructor(options) {
 
     //this._binds.handle.addEventListener('click', this._handleClick);
     this._handle.addEventListener('click', this._handleClick);
+    //this.setContracted(this.contracted);
+}
+
+connectedCallback() {
+    this.contracted = this.getAttribute('contracted') === '' || this.getAttribute('contracted') === 'true';
+    
     this.setContracted(this.contracted);
 }
 

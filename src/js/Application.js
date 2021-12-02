@@ -107,27 +107,32 @@ constructor() {
     this._renderingContextDialog.addEventListener('filter', options => {
         this._renderingContext.setFilter(options.filter);
     });*/
-    this._makeDialog('rendering-context', this._renderingContext.settings);
-    this._handleChangesAndListenersRC(this._renderingContext);
-    this._renderingContext.addEventListener('resolution', event => {
-        let options = event.detail;
-        this._renderingContext.setResolution(options.resolution);
-    });
-    this._renderingContext.addEventListener('transformation', event => {
-        let options = event.detail;
-        const s = options.scale;
-        const t = options.translation;
-        this._renderingContext.setScale(s.x, s.y, s.z);
-        this._renderingContext.setTranslation(t.x, t.y, t.z);
-    });
-    this._renderingContext.addEventListener('filter', event => {
-        let options = event.detail;
-        this._renderingContext.setFilter(options.filter);
-    });
+    this.showSettings = true; // This controls whether Renderer's, Tone mapper's and Rendering Context's settings can be manually adjusted or not
+    if (this.showSettings) {
+        this._makeDialog('rendering-context', this._renderingContext.settings);
+        this._renderingContext.bindHandlersAndListeners();
+        this._renderingContext.addEventListener('resolution', event => {
+            let options = event.detail;
+            this._renderingContext.setResolution(options.resolution);
+        });
+        this._renderingContext.addEventListener('transformation', event => {
+            let options = event.detail;
+            const s = options.scale;
+            const t = options.translation;
+            this._renderingContext.setScale(s.x, s.y, s.z);
+            this._renderingContext.setTranslation(t.x, t.y, t.z);
+        });
+        this._renderingContext.addEventListener('filter', event => {
+            let options = event.detail;
+            this._renderingContext.setFilter(options.filter);
+        });
+    } else {
+        this._mainDialog.shadowRoot.querySelector('#save-button').classList += 'invisible';
+    }
 
     this._mainDialog.shadowRoot.querySelector('#save-button').addEventListener('click', () => {
-        const rendererSettings = this._renderingContext._renderer.serialize();
-        const toneMapperSettings = this._renderingContext._toneMapper.serialize();
+        const rendererSettings = this._renderingContext.getRenderer().serialize();
+        const toneMapperSettings = this._renderingContext.getToneMapper().serialize();
         const context = this._renderingContext.serialize();
         const settings = {
             renderer: this._mainDialog.getSelectedRenderer(),
@@ -144,24 +149,34 @@ constructor() {
         CommonUtils.readTextFile(data => {
             const settings = JSON.parse(data);
 
-            const renderer = settings.renderer;
-            this._mainDialog._rendererSelect.setValue(renderer);
-            //this._mainDialog.trigger('rendererchange', renderer);
-            this._mainDialog.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
-            this._renderingContext._renderer.deserialize(settings.rendererSettings);
-            this._renderingContext._renderer._handleChange();
+            const newRendererName = settings.renderer;
+            this._mainDialog.setRenderer(newRendererName);
+            const newRenderer = this._renderingContext.getRenderer();
+            newRenderer.deserialize(settings.rendererSettings, this.showSettings);
 
-            const toneMapper = settings.toneMapper;
-            this._mainDialog._toneMapperSelect.setValue(toneMapper);
-            //this._mainDialog.trigger('tonemapperchange', toneMapper);
-            this._mainDialog.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
-            this._renderingContext._toneMapper.deserialize(settings.toneMapperSettings);
-            this._renderingContext._toneMapper._handleChange();
+            const newToneMapperName = settings.toneMapper;
+            this._mainDialog.setToneMapper(newToneMapperName);
+            const newToneMapper = this._renderingContext.getToneMapper();
+            newToneMapper.deserialize(settings.toneMapperSettings, this.showSettings);
 
-            this._renderingContext.deserialize(settings.context);
-            this._renderingContext._handleResolutionChange();
-            this._renderingContext._handleTransformationChange();
-            this._renderingContext._handleFilterChange();
+            this._renderingContext.deserialize(settings.context, this.showSettings);
+
+            if (this.showSettings) {
+                newRenderer.handleChange();
+                if (settings.rendererSettings.samples) {
+                    newRenderer.handleSamplesChange();
+                }
+                if (settings.rendererSettings.transferFunction && settings.rendererSettings.transferFunction.length > 0) {
+                    newRenderer.handleTFChange();
+                }
+
+                newToneMapper.handleChange();
+                
+                /*this._renderingContext._handleResolutionChange();
+                this._renderingContext._handleTransformationChange();
+                this._renderingContext._handleFilterChange();*/
+                this._renderingContext.handleChanges();
+            }
         });
     });
 
@@ -199,7 +214,7 @@ _makeDialog(which, settings) {
     }
 }
 
-_handleChangesAndListeners(which) {
+/*_handleChangesAndListeners(which) {
     which._handleChange = which._handleChange.bind(which);
     if (which.settings.samples) {
         which._handleSamplesChange = which._handleSamplesChange.bind(which);
@@ -247,7 +262,7 @@ _handleChangesAndListenersRC(which) {
     which._handleResolutionChange();
     which._handleTransformationChange();
     which._handleFilterChange();
-}
+}*/
 
 _handleFileDrop(e) {
     e.preventDefault();
@@ -285,8 +300,10 @@ _handleRendererChange(event) {
     }
     this._renderingContext.chooseRenderer(which);
     const renderer = this._renderingContext.getRenderer();
-    this._makeDialog('renderer', renderer.settings);
-    this._handleChangesAndListeners(renderer);
+    if (this.showSettings) {
+        this._makeDialog('renderer', renderer.settings);
+        renderer.bindHandlersAndListeners();
+    }
     /*const container = this._mainDialog.getRendererSettingsContainer();
     const dialogClass = this._getDialogForRenderer(which);
     this._rendererDialog = new dialogClass(renderer);
@@ -308,8 +325,10 @@ _handleToneMapperChange(event) {
     }
     this._renderingContext.chooseToneMapper(which);
     const toneMapper = this._renderingContext.getToneMapper();
-    this._makeDialog('tone-mapper', toneMapper.settings);
-    this._handleChangesAndListeners(toneMapper);
+    if (this.showSettings) {
+        this._makeDialog('tone-mapper', toneMapper.settings);
+        toneMapper.bindHandlersAndListeners();
+    }
     /*const container = this._mainDialog.getToneMapperSettingsContainer();
     const dialogClass = this._getDialogForToneMapper(which);
     this._toneMapperDialog = new dialogClass(toneMapper);

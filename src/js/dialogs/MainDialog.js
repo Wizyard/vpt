@@ -140,6 +140,16 @@ getSelectedToneMapper() {
     return this._toneMapperSelect.getValue();
 }
 
+setRenderer(renderer) {
+    this._rendererSelect.setValue(renderer);
+    this.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
+}
+
+setToneMapper(toneMapper) {
+    this._toneMapperSelect.setValue(toneMapper);
+    this.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
+}
+
 _handleRendererChange() {
     //const renderer = this._binds.rendererSelect.getValue();
     const renderer = this._rendererSelect.getValue();

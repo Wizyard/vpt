@@ -32,25 +32,7 @@ constructor(gl, volume, environmentTexture, options) {
     //this.generateOcclusionSamples();
     //this._handleChange();
     //this._handleSamplesChange();
-}
-
-_handleChange() {
-    this.steps = this.settings.steps.component.getValue();
-    this.slices = this.settings.slices.component.getValue();
-    this.extinction = this.settings.extinction.component.getValue();
-    this.aperture = this.settings.aperture.component.getValue();
-    this.reset();
-}
-
-_handleSamplesChange() {
-    this.samples = this.settings.samples.component.getValue();
-    this.generateOcclusionSamples();
-    this.reset();
-}
-
-_handleTFChange() {
-    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
-    this.reset();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -109,6 +91,67 @@ registerSettings() {
         type: 'transfer-function-widget',
         label: 'Transfer function'
     }
+}
+
+initDefaults() {
+    this.steps = this.settings.steps.attributes.value;
+    this.slices = this.settings.slices.attributes.value;
+    this.extinction = this.settings.extinction.attributes.value;
+    this.aperture = this.settings.aperture.attributes.value;
+
+    this.samples = this.settings.samples.attributes.value;
+    //this.generateOcclusionSamples();
+
+    //this.reset();
+}
+
+deserializeNoGUI(settings) {
+    this.steps = settings.steps;
+    this.slices = settings.slices;
+    this.extinction = settings.extinction;
+    this.aperture = settings.aperture;
+
+    this.samples = settings.samples;
+    this.generateOcclusionSamples();
+
+    //this.setTransferFunction(settings.transferFunction);
+
+    this.reset();
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSamplesChange = this.handleSamplesChange.bind(this);
+    this.handleTFChange = this.handleTFChange.bind(this);
+
+    this.settings.steps.component.addEventListener('input', this.handleChange);
+    this.settings.slices.component.addEventListener('input', this.handleChange);
+    this.settings.extinction.component.addEventListener('input', this.handleChange);
+    this.settings.aperture.component.addEventListener('input', this.handleChange);
+    this.settings.samples.component.addEventListener('input', this.handleSamplesChange);
+    this.settings.transferFunction.component.addEventListener('change', this.handleTFChange);
+
+    this.handleChange();
+    this.handleSamplesChange();
+}
+
+handleChange() {
+    this.steps = this.settings.steps.component.getValue();
+    this.slices = this.settings.slices.component.getValue();
+    this.extinction = this.settings.extinction.component.getValue();
+    this.aperture = this.settings.aperture.component.getValue();
+    this.reset();
+}
+
+handleSamplesChange() {
+    this.samples = this.settings.samples.component.getValue();
+    this.generateOcclusionSamples();
+    this.reset();
+}
+
+handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
 }
 
 destroy() {

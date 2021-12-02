@@ -10,9 +10,9 @@ constructor(gl, volume, environmentTexture, options) {
 
     Object.assign(this, {
         /*_stepSize : 0.05,
-        _isovalue : 0.4,*/
+        _isovalue : 0.4,
         _light    : [0.5, 0.5, 0.5],
-        _diffuse  : [0.7, 0.8, 0.9]
+        _diffuse  : [0.7, 0.8, 0.9]*/
         // Have to leave these two because they're vectors
     }, options);
 
@@ -23,23 +23,7 @@ constructor(gl, volume, environmentTexture, options) {
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.ISO, MIXINS);
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this._stepSize = 1 / this.settings.steps.component.getValue();
-    this._isovalue = this.settings.isovalue.component.getValue();
-
-    const color = CommonUtils.hex2rgb(this.settings.color.component.getValue());
-    this._diffuse[0] = color.r;
-    this._diffuse[1] = color.g;
-    this._diffuse[2] = color.b;
-
-    const direction = this.settings.direction.component.getValue();
-    this._light[0] = direction.x;
-    this._light[1] = direction.y;
-    this._light[2] = direction.z;
-
-    this.reset();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -76,9 +60,70 @@ registerSettings() {
         type: 'vector',
         label: 'Light direction:',
         attributes: {
-            value: 1
+            valueX: 1,
+            valueY: 1,
+            valueZ: 1
         }
     }
+}
+
+initDefaults() {
+    this._stepSize = 1 / this.settings.steps.attributes.value;
+    this._isovalue = this.settings.isovalue.attributes.value;
+
+    this._diffuse = [0, 0, 0]; // To prevent errors in case value isn't defined
+    if (this.settings.color.attributes.value) {
+        const c = CommonUtils.hex2rgb(this.settings.color.attributes.value);
+        this._diffuse = [c.r, c.g, c.b];
+    }
+
+    const d = this.settings.direction.attributes;
+    this._light = [d.valueX, d.valueY, d.valueZ];
+
+    //this.reset();
+}
+
+deserializeNoGUI(settings) {
+    this._stepSize = 1 / settings.steps;
+    this._isovalue = settings.isovalue;
+
+    const c = CommonUtils.hex2rgb(settings.color);
+    this._diffuse = [c.r, c.g, c.b];
+
+    const d = settings.direction;
+    this._light = [d.x, d.y, d.z];
+
+    this.reset();
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+
+    this.settings.steps.component.addEventListener('input', this.handleChange);
+    this.settings.isovalue.component.addEventListener('change', this.handleChange);
+    this.settings.color.component.addEventListener('change', this.handleChange);
+    this.settings.direction.component.addEventListener('input', this.handleChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    //this.settings.x.attributes.value = this.settings.x.component.getValue(); // lahko se znebimo initDefaults() (delno), je pa treba tudi povsod spodaj nadomestit
+    //this.x = this.settings.x.component.getValue();
+    this._stepSize = 1 / this.settings.steps.component.getValue();
+    this._isovalue = this.settings.isovalue.component.getValue();
+
+    const color = CommonUtils.hex2rgb(this.settings.color.component.getValue());
+    this._diffuse[0] = color.r;
+    this._diffuse[1] = color.g;
+    this._diffuse[2] = color.b;
+
+    const direction = this.settings.direction.component.getValue();
+    this._light[0] = direction.x;
+    this._light[1] = direction.y;
+    this._light[2] = direction.z;
+
+    this.reset();
 }
 
 destroy() {

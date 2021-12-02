@@ -87,11 +87,12 @@ constructor(options) {
 
     this._$loadButton.addEventListener('click', () => {
         CommonUtils.readTextFile(data => {
-            this._bumps = JSON.parse(data);
+            /*this._bumps = JSON.parse(data);
             this.render();
             this._rebuildHandles();
-            //this.trigger('change');
-            this.dispatchEvent(new Event('change'));
+            this.trigger('change');
+            this.dispatchEvent(new Event('change'));*/
+            this.deserialize(data);
         });
     });
 
@@ -105,10 +106,12 @@ serialize() {
 }
 
 deserialize(setting) {
-    this._bumps = setting;
-    this.render();
-    this._rebuildHandles();
-    this.dispatchEvent(new Event('change'));
+    if (setting.length > 0) {
+        this._bumps = setting;
+        this.render();
+        this._rebuildHandles();
+        this.dispatchEvent(new Event('change'));
+    }
 }
 
 destroy() {

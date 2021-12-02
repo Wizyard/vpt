@@ -9,23 +9,26 @@ constructor(options) {
     super(TEMPLATES.ui.Radio, options);
 
     Object.assign(this, {
-        //options  : [],
+        options  : [],
         vertical : false
     }, options);
 
     this._handleClick = this._handleClick.bind(this);
 
     this._radioName = 'radio' + Radio._nextId++;
-    this._element.classList.toggle('vertical', this.vertical);
+    //this._element.classList.toggle('vertical', this.vertical);
     /*for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
     }*/
 }
 
 connectedCallback() {
-    if (!this.options) {
-        this.options = this.querySelectorAll('option');
-    }
+    Object.assign(this, {
+        options  : this.querySelectorAll('option'),
+        vertical : this.getAttribute('vertical') === '' || this.getAttribute('vertical') === 'true'
+    });
+    
+    this._element.classList.toggle('vertical', this.vertical);
     for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
     }

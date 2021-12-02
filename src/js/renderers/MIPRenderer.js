@@ -20,10 +20,7 @@ constructor(gl, volume, environmentTexture, options) {
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.MIP, MIXINS);
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this.steps = this.settings.steps.component.getValue();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -36,6 +33,26 @@ registerSettings() {
             min: 1
         }
     }
+}
+
+initDefaults() {
+    this.steps = this.settings.steps.attributes.value;
+}
+
+deserializeNoGUI(settings) {
+    this.steps = settings.steps;
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+
+    this.settings.steps.component.addEventListener('change', this.handleChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    this.steps = this.settings.steps.component.getValue();
 }
 
 destroy() {

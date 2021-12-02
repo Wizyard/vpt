@@ -23,18 +23,7 @@ constructor(gl, volume, environmentTexture, options) {
     this._frameNumber = 1;
 
     //this._handleChange();
-}
-
-_handleChange() {
-    this._sigmaMax = this.settings.extinction.component.getValue();
-    this._alphaCorrection = this.settings.extinction.component.getValue();
-
-    this.reset();
-}
-
-_handleTFChange() {
-    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
-    this.reset();
+    //this.initDefaults();
 }
 
 registerSettings() {
@@ -53,6 +42,44 @@ registerSettings() {
         type: 'transfer-function-widget',
         label: 'Transfer function'
     }
+}
+
+initDefaults() {
+    this._sigmaMax = this.settings.extinction.attributes.value;
+    this._alphaCorrection = this.settings.extinction.attributes.value;
+
+    //this.reset();
+}
+
+deserializeNoGUI(settings) {
+    this._sigmaMax = settings.extinction;
+    this._alphaCorrection = settings.extinction;
+
+    //this.setTransferFunction(settings.transferFunction);
+
+    this.reset();
+}
+
+bindHandlersAndListeners() {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleTFChange = this.handleTFChange.bind(this);
+
+    this.settings.extinction.component.addEventListener('input', this.handleChange);
+    this.settings.transferFunction.component.addEventListener('change', this.handleTFChange);
+
+    this.handleChange();
+}
+
+handleChange() {
+    this._sigmaMax = this.settings.extinction.component.getValue();
+    this._alphaCorrection = this.settings.extinction.component.getValue();
+
+    this.reset();
+}
+
+handleTFChange() {
+    this.setTransferFunction(this.settings.transferFunction.component.getTransferFunction());
+    this.reset();
 }
 
 destroy() {
