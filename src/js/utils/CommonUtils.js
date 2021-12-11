@@ -14,7 +14,7 @@ static lerp(a, b, x) {
 }
 
 static downloadJSON(json, filename) {
-    const str = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(json));
+    const str = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, null, '\t'));
     let a = document.createElement('a');
     a.setAttribute('href', str);
     a.setAttribute('download', filename);

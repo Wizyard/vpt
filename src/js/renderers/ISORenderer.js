@@ -60,9 +60,9 @@ registerSettings() {
         type: 'vector',
         label: 'Light direction:',
         attributes: {
-            valueX: 1,
-            valueY: 1,
-            valueZ: 1
+            x: 1,
+            y: 1,
+            z: 1
         }
     }
 }
@@ -78,7 +78,7 @@ initDefaults() {
     }
 
     const d = this.settings.direction.attributes;
-    this._light = [d.valueX, d.valueY, d.valueZ];
+    this._light = [d.x, d.y, d.z];
 
     //this.reset();
 }

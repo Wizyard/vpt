@@ -141,13 +141,21 @@ getSelectedToneMapper() {
 }
 
 setRenderer(renderer) {
-    this._rendererSelect.setValue(renderer);
+    if (!this._rendererSelect.setValue(renderer)) {
+        alert('Renderer does not exist. Renderer settings discarded. Using previously selected renderer');
+        return false;
+    }
     this.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
+    return true;
 }
 
 setToneMapper(toneMapper) {
-    this._toneMapperSelect.setValue(toneMapper);
+    if (!this._toneMapperSelect.setValue(toneMapper)) {
+        alert('Tone mapper does not exist. Tone mapper settings discarded. Using previously selected tone mapper');
+        return false;
+    }
     this.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
+    return true;
 }
 
 _handleRendererChange() {

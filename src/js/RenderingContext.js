@@ -91,9 +91,9 @@ registerSettings() {
         type: 'vector',
         label: 'Scale:',
         attributes: {
-            valueX: 1,
-            valueY: 1,
-            valueZ: 1,
+            x: 1,
+            y: 1,
+            z: 1,
             step: 0.02
         }
     }
@@ -102,9 +102,9 @@ registerSettings() {
         type: 'vector',
         label: 'Translation:',
         attributes: {
-            valueX: 0,
-            valueY: 0,
-            valueZ: 0,
+            x: 0,
+            y: 0,
+            z: 0,
             step: 0.1
         }
     }
@@ -114,9 +114,9 @@ initDefaults() {
     this._filter = this.settings.filter.attributes.checked ? 'linear' : 'nearest';
     this._resolution = this.settings.resolution.attributes.value;
     const s = this.settings.scale.attributes;
-    this._scale = new Vector(s.valueX, s.valueY, s.valueZ);
+    this._scale = new Vector(s.x, s.y, s.z);
     const t = this.settings.translation.attributes;
-    this._translation = new Vector(t.valueX, t.valueY, t.valueZ);
+    this._translation = new Vector(t.x, t.y, t.z);
 }
 
 deserializeNoGUI(settings) {
@@ -178,6 +178,75 @@ _handleFilterChange() {
     this.dispatchEvent(new CustomEvent('filter', { detail: {
         filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
     }}));
+}
+
+serializeCamera() {
+    return {
+        near: this._camera.near,
+        far: this._camera.far,
+        zoomFactor: this._camera.zoomFactor,
+        position: this._camera.position,
+        rotation: this._camera.rotation
+    }
+}
+
+deserializeCamera(settings) {
+
+    const settingsArray = ['near', 'far', 'zoomFactor'];
+    for (const key of settingsArray) {
+        const newValue = parseFloat(settings[key]);
+        if (isNaN(newValue)) {
+            alert('camera.' + key + ' value missing or incorrect type (must be float or number). Value unchanged');
+        } else {
+            this._camera[key] = newValue;
+        }
+    }
+
+    if (!settings.position) {
+        alert('camera.position vector missing. Value unchanged');
+    } else {
+        const positionKeys = ['x', 'y', 'z'];
+        for (const key of positionKeys) {
+            const newValue = parseFloat(settings.position[key]);
+            if (isNaN(newValue)) {
+                alert('camera.position.' + key + ' value missing or incorrect type (must be float or number). Value unchanged');
+            } else {
+                this._camera.position[key] = newValue;
+            }
+        }
+    }
+
+    let resetRotation = false;
+    if (!settings.rotation) {
+        alert('camera.rotation quaternion missing. Value unchanged');
+    } else {
+        const rotationKeys = ['x', 'y', 'z', 'w'];
+        for (const key of rotationKeys) {
+            const newValue = parseFloat(settings.rotation[key]);
+            if (isNaN(newValue)) {
+                alert('camera.rotation.' + key + ' value missing or incorrect type (must be float or number). Camera rotation reset');
+                resetRotation = true;
+                break;
+            } else {
+                this._camera.rotation[key] = Math.min(Math.max(newValue, -1), 1);
+                if (newValue !== this._camera.rotation[key]) {
+                    alert('Value of camera.rotation.' + key + ' is out of allowed range. Camera rotation reset');
+                    resetRotation = true;
+                    break;
+                }
+            }
+        }
+    }   
+    if (resetRotation) {
+        this._camera.rotation = new Quaternion();
+    }
+    /*Object.assign(this._camera, {
+        near: settings.near,
+        far: settings.far,
+        zoomFactor: settings.zoomFactor,
+        position: new Vector(pos.x, pos.y, pos.z),
+        rotation: new Quaternion(rot.x, rot.y, rot.z, rot.w)
+    });*/
 }
 
 // ============================ WEBGL SUBSYSTEM ============================ //

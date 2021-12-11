@@ -72,9 +72,9 @@ connectedCallback() {
             spinner.setAttribute(iterator, opts[iterator]);
         }
     }
-    spinners[0].setAttribute('value', this.getAttribute('valueX'));
-    spinners[1].setAttribute('value', this.getAttribute('valueY'));
-    spinners[2].setAttribute('value', this.getAttribute('valueZ'));
+    spinners[0].setAttribute('value', this.getAttribute('x'));
+    spinners[1].setAttribute('value', this.getAttribute('y'));
+    spinners[2].setAttribute('value', this.getAttribute('z'));
 }
 
 serialize() {

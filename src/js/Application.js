@@ -28,28 +28,9 @@ constructor() {
     window.customElements.define('vpt-color-chooser', ColorChooser);
     window.customElements.define('vpt-transfer-function-widget', TransferFunctionWidget);
 
-    //window.customElements.define('vpt-rendering-context-dialog', RenderingContextDialog);
     window.customElements.define('vpt-volume-load-dialog', VolumeLoadDialog);
     window.customElements.define('vpt-envmap-load-dialog', EnvmapLoadDialog);
     window.customElements.define('vpt-main-dialog', MainDialog);
-
-    /*window.customElements.define('vpt-dos-renderer-dialog', DOSRendererDialog);
-    window.customElements.define('vpt-eam-renderer-dialog', EAMRendererDialog);
-    window.customElements.define('vpt-iso-renderer-dialog', ISORendererDialog);
-    window.customElements.define('vpt-mcm-renderer-dialog', MCMRendererDialog);
-    window.customElements.define('vpt-mcs-renderer-dialog', MCSRendererDialog);
-    window.customElements.define('vpt-mip-renderer-dialog', MIPRendererDialog);
-
-    window.customElements.define('vpt-aces-tone-mapper-dialog', AcesToneMapperDialog);
-    window.customElements.define('vpt-artistic-tone-mapper-dialog', ArtisticToneMapperDialog);
-    window.customElements.define('vpt-filmic-tone-mapper-dialog', FilmicToneMapperDialog);
-    window.customElements.define('vpt-lottes-tone-mapper-dialog', LottesToneMapperDialog);
-    window.customElements.define('vpt-range-tone-mapper-dialog', RangeToneMapperDialog);
-    window.customElements.define('vpt-reinhard-tone-mapper-dialog', ReinhardToneMapperDialog);
-    window.customElements.define('vpt-reinhard2-tone-mapper-dialog', Reinhard2ToneMapperDialog);
-    window.customElements.define('vpt-uchimura-tone-mapper-dialog', UchimuraToneMapperDialog);
-    window.customElements.define('vpt-uncharted2-tone-mapper-dialog', Uncharted2ToneMapperDialog);
-    window.customElements.define('vpt-unreal-tone-mapper-dialog', UnrealToneMapperDialog);*/
 
     this._handleFileDrop = this._handleFileDrop.bind(this);
     this._handleRendererChange = this._handleRendererChange.bind(this);
@@ -107,6 +88,7 @@ constructor() {
     this._renderingContextDialog.addEventListener('filter', options => {
         this._renderingContext.setFilter(options.filter);
     });*/
+    this.serializationVersion = '1.0';
     this.showSettings = true; // This controls whether Renderer's, Tone mapper's and Rendering Context's settings can be manually adjusted or not
     if (this.showSettings) {
         this._makeDialog('rendering-context', this._renderingContext.settings);
@@ -130,55 +112,9 @@ constructor() {
         this._mainDialog.shadowRoot.querySelector('#save-button').classList += 'invisible';
     }
 
-    this._mainDialog.shadowRoot.querySelector('#save-button').addEventListener('click', () => {
-        const rendererSettings = this._renderingContext.getRenderer().serialize();
-        const toneMapperSettings = this._renderingContext.getToneMapper().serialize();
-        const context = this._renderingContext.serialize();
-        const settings = {
-            renderer: this._mainDialog.getSelectedRenderer(),
-            rendererSettings: rendererSettings,
-            toneMapper: this._mainDialog.getSelectedToneMapper(),
-            toneMapperSettings: toneMapperSettings,
-            context: context
-        }
-        console.log(settings);
-        CommonUtils.downloadJSON(settings, 'Settings.json');
-    });
+    this._mainDialog.shadowRoot.querySelector('#save-button').addEventListener('click', this._serialize);
 
-    this._mainDialog.shadowRoot.querySelector('#load-button').addEventListener('click', () => {
-        CommonUtils.readTextFile(data => {
-            const settings = JSON.parse(data);
-
-            const newRendererName = settings.renderer;
-            this._mainDialog.setRenderer(newRendererName);
-            const newRenderer = this._renderingContext.getRenderer();
-            newRenderer.deserialize(settings.rendererSettings, this.showSettings);
-
-            const newToneMapperName = settings.toneMapper;
-            this._mainDialog.setToneMapper(newToneMapperName);
-            const newToneMapper = this._renderingContext.getToneMapper();
-            newToneMapper.deserialize(settings.toneMapperSettings, this.showSettings);
-
-            this._renderingContext.deserialize(settings.context, this.showSettings);
-
-            if (this.showSettings) {
-                newRenderer.handleChange();
-                if (settings.rendererSettings.samples) {
-                    newRenderer.handleSamplesChange();
-                }
-                if (settings.rendererSettings.transferFunction && settings.rendererSettings.transferFunction.length > 0) {
-                    newRenderer.handleTFChange();
-                }
-
-                newToneMapper.handleChange();
-                
-                /*this._renderingContext._handleResolutionChange();
-                this._renderingContext._handleTransformationChange();
-                this._renderingContext._handleFilterChange();*/
-                this._renderingContext.handleChanges();
-            }
-        });
-    });
+    this._mainDialog.shadowRoot.querySelector('#load-button').addEventListener('click', this._deserialize);
 
     this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
     this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
@@ -214,55 +150,104 @@ _makeDialog(which, settings) {
     }
 }
 
-/*_handleChangesAndListeners(which) {
-    which._handleChange = which._handleChange.bind(which);
-    if (which.settings.samples) {
-        which._handleSamplesChange = which._handleSamplesChange.bind(which);
+_serialize = () => {
+    /*const rendererSettings = this._renderingContext.getRenderer().serialize();
+    const toneMapperSettings = this._renderingContext.getToneMapper().serialize();
+    const context = this._renderingContext.serialize();
+    const camera = this._renderingContext.serializeCamera();*/
+    const settings = {
+        version: this.serializationVersion,
+        renderer: this._mainDialog.getSelectedRenderer(),
+        rendererSettings: this._renderingContext.getRenderer().serialize(),
+        toneMapper: this._mainDialog.getSelectedToneMapper(),
+        toneMapperSettings: this._renderingContext.getToneMapper().serialize(),
+        context: this._renderingContext.serialize(),
+        camera: this._renderingContext.serializeCamera()
     }
-    if (which.settings.transferFunction) {
-        which._handleTFChange = which._handleTFChange.bind(which);
-    }
-    
-    for (const key in which.settings) {
-        let setting = which.settings[key];
-        if (key === 'samples') {
-            setting.component.addEventListener('input', which._handleSamplesChange);
-        } else {
-            switch (setting.type) {
-                case 'transfer-function-widget':
-                    setting.component.addEventListener('change', which._handleTFChange);
-                    break;
-                case 'color-chooser':
-                case 'slider':
-                    setting.component.addEventListener('change', which._handleChange);
-                    break;
-                default:
-                    setting.component.addEventListener('input', which._handleChange);
-                    break;
-            }
-        }
-    }
-
-    which._handleChange();
-    if (which.settings.samples) {
-        which._handleSamplesChange();
-    }
+    console.log(settings);
+    CommonUtils.downloadJSON(settings, 'Settings.json');
 }
 
-_handleChangesAndListenersRC(which) {
-    which._handleResolutionChange = which._handleResolutionChange.bind(which);
-    which._handleTransformationChange = which._handleTransformationChange.bind(which);
-    which._handleFilterChange = which._handleFilterChange.bind(which);
+_deserialize = () => {
+    CommonUtils.readTextFile(data => {
+        const settings = JSON.parse(data);
 
-    which.settings.resolution.component.addEventListener('change', which._handleResolutionChange);
-    which.settings.scale.component.addEventListener('input', which._handleTransformationChange);
-    which.settings.translation.component.addEventListener('input', which._handleTransformationChange);
-    which.settings.filter.component.addEventListener('change', which._handleFilterChange);
+        if (settings.version !== this.serializationVersion) {
+            alert('Settings file is outdated. Some settings might not work or be reset to their default value');
+        }
 
-    which._handleResolutionChange();
-    which._handleTransformationChange();
-    which._handleFilterChange();
-}*/
+        if (!settings.renderer) {
+            alert('Renderer name missing. Renderer settings discarded. Using previously selected renderer');
+        } else {
+            const newRendererName = settings.renderer;
+            if (this._mainDialog.setRenderer(newRendererName)) {
+                const newRenderer = this._renderingContext.getRenderer();
+                if (!settings.rendererSettings) {
+                    alert('Renderer settings missing. Using default values for this renderer');
+                } else {
+                    newRenderer.deserialize(settings.rendererSettings, this.showSettings);
+                    if (this.showSettings) {
+                        newRenderer.handleChange();
+                        if (settings.rendererSettings.samples) {
+                            newRenderer.handleSamplesChange();
+                        }
+                        if (settings.rendererSettings.transferFunction && settings.rendererSettings.transferFunction.length > 0) {
+                            newRenderer.handleTFChange();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!settings.toneMapper) {
+            alert('Tone mapper name missing. Tone mapper settings discarded. Using previously selected tone mapper');
+        } else {
+            const newToneMapperName = settings.toneMapper;
+            if (this._mainDialog.setToneMapper(newToneMapperName)) {
+                const newToneMapper = this._renderingContext.getToneMapper();
+                if (!settings.toneMapperSettings) {
+                    alert('Tone mapper settings missing. Using default values for this tone mapper');
+                } else {
+                    newToneMapper.deserialize(settings.toneMapperSettings, this.showSettings);
+                    if (this.showSettings) {
+                        newToneMapper.handleChange();
+                    }
+                }
+            }
+        }
+
+        if (!settings.context) {
+            alert('Rendering context settings missing. Using default values');
+        } else {
+            this._renderingContext.deserialize(settings.context, this.showSettings);
+            if (this.showSettings) {
+                this._renderingContext.handleChanges();
+            }
+        }
+        if (!settings.camera) {
+            alert('Camera settings missing. Using default values');
+        } else {
+            this._renderingContext.deserializeCamera(settings.camera);
+        }
+
+        /*if (this.showSettings) {
+            newRenderer.handleChange();
+            if (settings.rendererSettings.samples) {
+                newRenderer.handleSamplesChange();
+            }
+            if (settings.rendererSettings.transferFunction && settings.rendererSettings.transferFunction.length > 0) {
+                newRenderer.handleTFChange();
+            }
+
+            newToneMapper.handleChange();*/
+            
+            /*this._renderingContext._handleResolutionChange();
+            this._renderingContext._handleTransformationChange();
+            this._renderingContext._handleFilterChange();*/
+            //this._renderingContext.handleChanges();
+        //}
+    });
+}
 
 _handleFileDrop(e) {
     e.preventDefault();

@@ -50,7 +50,14 @@ removeOption(value) {
 
 setValue(value) {
     //this._binds.input.value = value;
+    const oldValue = this._select.value;
     this._select.value = value;
+    // If an option with that value does not exist
+    if (!this._select.value) {
+        this._select.value = oldValue;
+        return null;
+    }
+    return this._select.value;
 }
 
 getValue() {
