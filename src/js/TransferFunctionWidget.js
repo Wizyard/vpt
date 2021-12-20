@@ -1,7 +1,6 @@
 // #part /js/TransferFunctionWidget
 
 // #link utils
-// #link EventEmitter
 // #link WebGL
 // #link Draggable
 
@@ -9,13 +8,10 @@
 // #link /html/TransferFunctionWidgetBumpHandle
 // #link /css/TransferFunctionWidget
 
-//class TransferFunctionWidget extends EventEmitter {
 class TransferFunctionWidget extends HTMLElement {
 
 constructor(options) {
     super();
-    //this._eventHandlers = {};
-    //Object.assign(this, EventEmitter);
 
     this._onColorChange = this._onColorChange.bind(this);
 
@@ -28,14 +24,7 @@ constructor(options) {
     }, options);
 
     this._$html = DOMUtils.instantiate(TEMPLATES.TransferFunctionWidget);
-    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._$html);//.cloneNode(true));
-    /*this._$colorPicker   = this._$html.querySelector('[name="color"]');
-    this._$alphaPicker   = this._$html.querySelector('[name="alpha"]');
-    this._$addBumpButton = this._$html.querySelector('[name="add-bump"]');
-    this._$removeSelectedBump   = this._$html.querySelector('[name=remove-selected-bump]');
-    this._$removeAllBumps       = this._$html.querySelector('[name=remove-all-bumps]');
-    this._$loadButton    = this._$html.querySelector('[name="load"]');
-    this._$saveButton    = this._$html.querySelector('[name="save"]');*/
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._$html);
     this._$colorPicker   = this.shadowRoot.querySelector('[name="color"]');
     this._$alphaPicker   = this.shadowRoot.querySelector('[name="alpha"]');
     this._$addBumpButton = this.shadowRoot.querySelector('[name="add-bump"]');
@@ -44,7 +33,6 @@ constructor(options) {
     this._$loadButton    = this.shadowRoot.querySelector('[name="load"]');
     this._$saveButton    = this.shadowRoot.querySelector('[name="save"]');
 
-    //this._canvas = this._$html.querySelector('canvas');
     this._canvas = this.shadowRoot.querySelector('canvas');
     this._canvas.width = this._transferFunctionWidth;
     this._canvas.height = this._transferFunctionHeight;
@@ -87,11 +75,6 @@ constructor(options) {
 
     this._$loadButton.addEventListener('click', () => {
         CommonUtils.readTextFile(data => {
-            /*this._bumps = JSON.parse(data);
-            this.render();
-            this._rebuildHandles();
-            this.trigger('change');
-            this.dispatchEvent(new Event('change'));*/
             this.deserialize(data);
         });
     });
@@ -172,7 +155,6 @@ addBump(options) {
     this._addHandle(bumpIndex);
     this.selectBump(bumpIndex);
     this.render();
-    //this.trigger('change');
     this.dispatchEvent(new Event('change'));
 }
 
@@ -184,7 +166,6 @@ removeAllBumps() {
     this._bumps = [];
     this._rebuildHandles();
     this.render();
-    //this.trigger('change');
     this.dispatchEvent(new Event('change'));
 }
 
@@ -198,7 +179,6 @@ _removeHandle(index) {
     });
     this._rebuildHandles();
     this.render();
-    //this.trigger('change');
     this.dispatchEvent(new Event('change'));
 }
 
@@ -220,7 +200,6 @@ _addHandle(index) {
         this._bumps[i].position.x = x;
         this._bumps[i].position.y = y;
         this.render();
-        //this.trigger('change');
         this.dispatchEvent(new Event('change'));
     });
     $handle.addEventListener('mousedown', e => {
@@ -238,7 +217,6 @@ _addHandle(index) {
             this._bumps[i].size.x *= scale;
         }
         this.render();
-        //this.trigger('change');
         this.dispatchEvent(new Event('change'));
     });
 }
@@ -295,7 +273,6 @@ _onColorChange() {
     this._bumps[i].color.b = color.b;
     this._bumps[i].color.a = alpha;
     this.render();
-    //this.trigger('change');
     this.dispatchEvent(new Event('change'));
 }
 

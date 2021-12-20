@@ -9,38 +9,20 @@
 // #link renderers
 // #link tonemappers
 // #link Serializable
-// #link EventEmitter
 
 class RenderingContext extends EventTarget {
 
 constructor(options) {
     super();
-    //this._eventHandlers = {};
-    //Object.assign(this, EventEmitter);
     Object.assign(this, Serializable);
 
     this._render = this._render.bind(this);
     this._webglcontextlostHandler = this._webglcontextlostHandler.bind(this);
     this._webglcontextrestoredHandler = this._webglcontextrestoredHandler.bind(this);
 
-    Object.assign(this, {
-        /*_resolution : 512,
-        _filter     : 'linear'*/
-    }, options);
-
     this.settings = {};
     this.registerSettings();
     this.initDefaults();
-    //this.makeDialog('rendering-context');
-
-    /*this._handleResolutionChange = this._handleResolutionChange.bind(this);
-    this._handleTransformationChange = this._handleTransformationChange.bind(this);
-    this._handleFilterChange = this._handleFilterChange.bind(this);
-
-    this.settings.resolution.component.addEventListener('change', this._handleResolutionChange);
-    this.settings.scale.component.addEventListener('input', this._handleTransformationChange);
-    this.settings.translation.component.addEventListener('input', this._handleTransformationChange);
-    this.settings.filter.component.addEventListener('change', this._handleFilterChange);*/
 
     this._canvas = document.createElement('canvas');
     this._canvas.addEventListener('webglcontextlost', this._webglcontextlostHandler);
@@ -57,14 +39,8 @@ constructor(options) {
     this._cameraController = new OrbitCameraController(this._camera, this._canvas);
 
     this._volume = new Volume(this._gl);
-    //this._scale = new Vector(1, 1, 1);
-    //this._translation = new Vector(0, 0, 0);
     this._isTransformationDirty = true;
     this._updateMvpInverseMatrix();
-
-    /*this._handleResolutionChange();
-    this._handleTransformationChange();
-    this._handleFilterChange();*/
 }
 
 registerSettings() {
@@ -120,12 +96,8 @@ initDefaults() {
 }
 
 deserializeNoGUI(settings) {
-    //this._filter = settings.filter ? 'linear' : 'nearest';
-    //this._resolution = settings.resolution;
     const s = settings.scale;
-    //this._scale = new Vector(s.x, s.y, s.z);
     const t = settings.translation;
-    //this._translation = new Vector(t.x, t.y, t.z);
     this.setFilter(settings.filter ? 'linear' : 'nearest');
     this.setResolution(settings.resolution);
     this.setScale(s.x, s.y, s.z);
@@ -152,19 +124,12 @@ handleChanges() {
 }
 
 _handleResolutionChange() {
-    /*this.trigger('resolution', {
-        resolution: this.settings.resolution.component.getValue()
-    });*/
     this.dispatchEvent(new CustomEvent('resolution', { detail: {
         resolution: this.settings.resolution.component.getValue()
     }}));
 }
 
 _handleTransformationChange() {
-    /*this.trigger('transformation', {
-        scale       : this.settings.scale.component.getValue(),
-        translation : this.settings.translation.component.getValue()
-    });*/
     this.dispatchEvent(new CustomEvent('transformation', { detail: {
         scale       : this.settings.scale.component.getValue(),
         translation : this.settings.translation.component.getValue()
@@ -172,81 +137,17 @@ _handleTransformationChange() {
 }
 
 _handleFilterChange() {
-    /*this.trigger('filter', {
-        filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
-    });*/
     this.dispatchEvent(new CustomEvent('filter', { detail: {
         filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
     }}));
 }
 
 serializeCamera() {
-    return {
-        near: this._camera.near,
-        far: this._camera.far,
-        zoomFactor: this._camera.zoomFactor,
-        position: this._camera.position,
-        rotation: this._camera.rotation
-    }
+    return this._camera.serialize();
 }
 
 deserializeCamera(settings) {
-
-    const settingsArray = ['near', 'far', 'zoomFactor'];
-    for (const key of settingsArray) {
-        const newValue = parseFloat(settings[key]);
-        if (isNaN(newValue)) {
-            alert('camera.' + key + ' value missing or incorrect type (must be float or number). Value unchanged');
-        } else {
-            this._camera[key] = newValue;
-        }
-    }
-
-    if (!settings.position) {
-        alert('camera.position vector missing. Value unchanged');
-    } else {
-        const positionKeys = ['x', 'y', 'z'];
-        for (const key of positionKeys) {
-            const newValue = parseFloat(settings.position[key]);
-            if (isNaN(newValue)) {
-                alert('camera.position.' + key + ' value missing or incorrect type (must be float or number). Value unchanged');
-            } else {
-                this._camera.position[key] = newValue;
-            }
-        }
-    }
-
-    let resetRotation = false;
-    if (!settings.rotation) {
-        alert('camera.rotation quaternion missing. Value unchanged');
-    } else {
-        const rotationKeys = ['x', 'y', 'z', 'w'];
-        for (const key of rotationKeys) {
-            const newValue = parseFloat(settings.rotation[key]);
-            if (isNaN(newValue)) {
-                alert('camera.rotation.' + key + ' value missing or incorrect type (must be float or number). Camera rotation reset');
-                resetRotation = true;
-                break;
-            } else {
-                this._camera.rotation[key] = Math.min(Math.max(newValue, -1), 1);
-                if (newValue !== this._camera.rotation[key]) {
-                    alert('Value of camera.rotation.' + key + ' is out of allowed range. Camera rotation reset');
-                    resetRotation = true;
-                    break;
-                }
-            }
-        }
-    }   
-    if (resetRotation) {
-        this._camera.rotation = new Quaternion();
-    }
-    /*Object.assign(this._camera, {
-        near: settings.near,
-        far: settings.far,
-        zoomFactor: settings.zoomFactor,
-        position: new Vector(pos.x, pos.y, pos.z),
-        rotation: new Quaternion(rot.x, rot.y, rot.z, rot.w)
-    });*/
+    this._camera.deserialize(settings);
 }
 
 // ============================ WEBGL SUBSYSTEM ============================ //

@@ -8,21 +8,9 @@ class RangeToneMapper extends AbstractToneMapper {
 constructor(gl, texture, options) {
     super(gl, texture, options);
 
-    Object.assign(this, {
-        /*_min : 0,
-        _max : 1*/
-    }, options);
-    
-    //this._handleChange = this._handleChange.bind(this);
-    
-    //this.addEventListeners();
-
     this._program = WebGL.buildPrograms(this._gl, {
         RangeToneMapper : SHADERS.RangeToneMapper
     }, MIXINS).RangeToneMapper;
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {

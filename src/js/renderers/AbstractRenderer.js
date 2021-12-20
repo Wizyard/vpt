@@ -43,7 +43,6 @@ constructor(gl, volume, environmentTexture, options) {
     this.settings = {};
     this.registerSettings();
     this.initDefaults();
-    //this.makeDialog('renderer');
 }
 
 destroy() {

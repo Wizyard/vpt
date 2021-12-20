@@ -12,15 +12,13 @@ constructor(options) {
     }, options);
 
     this._content = null;
-    //this._binds.label.textContent = this.label;
-    //this.shadowRoot.querySelector('label').textContent = this.label;
 }
 
 connectedCallback() {
     this.shadowRoot.querySelector('label').textContent = this.getAttribute('label');
 }
 
-destroy() {
+destroy() { // Unused?
     if (this._content) {
         this._content.detach();
     }

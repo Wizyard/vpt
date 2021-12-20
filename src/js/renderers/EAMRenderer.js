@@ -8,22 +8,7 @@ class EAMRenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        /*extinction : 100,
-        slices     : 64,
-        steps      : 64,*/
-        // steps is never used
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-    //this._handleTFChange = this._handleTFChange.bind(this);
-
-    //this.addEventListeners();
-
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.EAM, MIXINS);
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -56,13 +41,11 @@ registerSettings() {
 initDefaults() {
     this.slices = this.settings.slices.attributes.value;
     this.extinction = this.settings.extinction.attributes.value;
-    //this.reset();
 }
 
 deserializeNoGUI(settings) {
     this.slices = settings.slices;
     this.extinction = settings.extinction;
-    //this.setTransferFunction(settings.transferFunction);
     this.reset();
 }
 

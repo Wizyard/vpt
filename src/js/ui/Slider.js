@@ -24,19 +24,11 @@ constructor(options) {
     this._button = this.shadowRoot.querySelector('.button');
     this._container = this.shadowRoot.querySelector('.container');
 
-    //this._updateUI();
-
     this._element.addEventListener('mousedown', this._handleMouseDown);
     this._element.addEventListener('wheel', this._handleWheel);
 }
 
 connectedCallback() {
-    /*Object.assign(this, {
-        value       : parseFloat(this.getAttribute("value")),
-        min         : parseFloat(this.getAttribute("min")),
-        max         : parseFloat(this.getAttribute("max")),
-        step        : parseFloat(this.getAttribute("step")),
-    });*/
     if (this.hasAttribute('value')) {
         this.value = parseFloat(this.getAttribute('value'));
     }
@@ -62,7 +54,7 @@ deserialize(setting) {
     this.setValue(setting);
 }
 
-destroy() {
+destroy() { // Unused?
     document.removeEventListener('mouseup', this._handleMouseUp);
     document.removeEventListener('mousemove', this._handleMouseMove);
 
@@ -80,11 +72,9 @@ _updateUI() {
         const logmin = Math.log(this.min);
         const logmax = Math.log(this.max);
         const ratio = (Math.log(this.value) - logmin) / (logmax - logmin) * 100;
-        //this._binds.button.style.marginLeft = ratio + '%';
         this._button.style.marginLeft = ratio + '%';
     } else {
         const ratio = (this.value - this.min) / (this.max - this.min) * 100;
-        //this._binds.button.style.marginLeft = ratio + '%';
         this._button.style.marginLeft = ratio + '%';
     }
 }
@@ -94,7 +84,6 @@ getValue() {
 }
 
 _setValueByEvent(e) {
-    //const rect = this._binds.container.getBoundingClientRect();
     const rect = this._container.getBoundingClientRect();
     const ratio = (e.pageX - rect.left) / (rect.right - rect.left);
     if (this.logarithmic) {

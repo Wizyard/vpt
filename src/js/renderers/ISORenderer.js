@@ -8,22 +8,7 @@ class ISORenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        /*_stepSize : 0.05,
-        _isovalue : 0.4,
-        _light    : [0.5, 0.5, 0.5],
-        _diffuse  : [0.7, 0.8, 0.9]*/
-        // Have to leave these two because they're vectors
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-
-    //this.addEventListeners();
-
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.ISO, MIXINS);
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -79,8 +64,6 @@ initDefaults() {
 
     const d = this.settings.direction.attributes;
     this._light = [d.x, d.y, d.z];
-
-    //this.reset();
 }
 
 deserializeNoGUI(settings) {
@@ -108,8 +91,6 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    //this.settings.x.attributes.value = this.settings.x.component.getValue(); // lahko se znebimo initDefaults() (delno), je pa treba tudi povsod spodaj nadomestit
-    //this.x = this.settings.x.component.getValue();
     this._stepSize = 1 / this.settings.steps.component.getValue();
     this._isovalue = this.settings.isovalue.component.getValue();
 

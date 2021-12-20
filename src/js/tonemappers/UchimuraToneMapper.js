@@ -8,18 +8,9 @@ class UchimuraToneMapper extends AbstractToneMapper {
 constructor(gl, texture, options) {
     super(gl, texture, options);
 
-    //this.exposure = 1;
-
-    //this._handleChange = this._handleChange.bind(this);
-    
-    //this.addEventListeners();
-
     this._program = WebGL.buildPrograms(this._gl, {
         UchimuraToneMapper : SHADERS.UchimuraToneMapper
     }, MIXINS).UchimuraToneMapper;
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {

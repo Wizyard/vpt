@@ -14,17 +14,10 @@ constructor(options) {
     this._label = this.shadowRoot.querySelector('.label');
 
     this._element.addEventListener('click', this._handleClick);
-    //this._binds.input.addEventListener('change', this._handleChange);
     this._input.addEventListener('change', this._handleChange);
 }
 
 _handleChange() {
-    /*if (this._binds.input.files.length > 0) {
-        const fileName = this._binds.input.files[0].name;
-        this._binds.label.textContent = fileName;
-    } else {
-        this._binds.label.textContent = '';
-    }*/
     if (this._input.files.length > 0) {
         const fileName = this._input.files[0].name;
         this._label.textContent = fileName;

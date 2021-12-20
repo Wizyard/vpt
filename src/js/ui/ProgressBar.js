@@ -20,8 +20,6 @@ constructor(options) {
 
 setProgress(progress) {
     this.progress = Math.round(CommonUtils.clamp(progress, 0, 100));
-    //this._binds.progress.style.width = this.progress + '%';
-    //this._binds.label.textContent = this.progress + '%';
     this._progress.style.width = this.progress + '%';
     this._label.textContent = this.progress + '%';
 }

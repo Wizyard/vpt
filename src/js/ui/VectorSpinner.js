@@ -18,27 +18,7 @@ constructor(options) {
     this._handleChange = this._handleChange.bind(this);
     this._handleInput = this._handleInput.bind(this);
 
-    /*const opts = {
-        value : this.value,
-        min   : this.min,
-        max   : this.max,
-        step  : this.step
-    };*/
-
-    /*this._spinnerX = new Spinner(opts);
-    this._spinnerY = new Spinner(opts);
-    this._spinnerZ = new Spinner(opts);
-
-    this._spinnerX.appendTo(this._binds.vectorX);
-    this._spinnerY.appendTo(this._binds.vectorY);
-    this._spinnerZ.appendTo(this._binds.vectorZ);*/
-
     let spinners = this.shadowRoot.querySelectorAll('vpt-spinner');
-    /*for (const spinner of spinners) {
-        for (const iterator in opts) {
-            spinner.setAttribute(iterator, opts[iterator]);
-        }
-    }*/
 
     this._spinnerX = spinners[0];
     this._spinnerY = spinners[1];
@@ -60,7 +40,6 @@ connectedCallback() {
     });
 
     const opts = {
-        //value : this.value,
         min   : this.min,
         max   : this.max,
         step  : this.step
@@ -88,7 +67,7 @@ deserialize(setting) {
     this._spinnerZ._input.value = setting.z;
 }
 
-destroy() {
+destroy() { // Unused?
     this._spinnerX.destroy();
     this._spinnerY.destroy();
     this._spinnerZ.destroy();

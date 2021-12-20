@@ -18,11 +18,7 @@ constructor(options) {
 
     this._handle = this.shadowRoot.querySelector('.handle');
 
-    //this._binds.handle.textContent = this.label;
-    //this._binds.handle.addEventListener('click', this._handleClick);
-    //this._handle.textContent = this.label;
     this._handle.addEventListener('click', this._handleClick);
-    //this.setContracted(this.contracted);
 }
 
 connectedCallback() {

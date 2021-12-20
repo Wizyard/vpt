@@ -14,17 +14,9 @@ constructor(options) {
     this._handleClick = this._handleClick.bind(this);
 
     this._element.addEventListener('click', this._handleClick);
-    //this._element.classList.toggle('checked', this.checked);
 }
 
 connectedCallback() {
-    /*let checked = true;
-    if (!this.hasAttribute('checked') || this.getAttribute('checked') === 'false') {
-        checked = false;
-    }
-    Object.assign(this, {
-        checked : checked
-    });*/
     this.checked = !this.hasAttribute('checked') || this.getAttribute('checked') !== 'false';
     
     this._element.classList.toggle('checked', this.checked);

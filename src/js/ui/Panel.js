@@ -10,8 +10,6 @@ constructor(options) {
     Object.assign(this, {
         scrollable: false
     }, options);
-
-    //this.setScrollable(this.scrollable);
 }
 
 connectedCallback() {

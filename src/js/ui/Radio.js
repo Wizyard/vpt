@@ -16,10 +16,6 @@ constructor(options) {
     this._handleClick = this._handleClick.bind(this);
 
     this._radioName = 'radio' + Radio._nextId++;
-    //this._element.classList.toggle('vertical', this.vertical);
-    /*for (let option of this.options) {
-        this.addOption(option.value, option.label, option.selected);
-    }*/
 }
 
 connectedCallback() {

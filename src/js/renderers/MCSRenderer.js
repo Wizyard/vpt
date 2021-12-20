@@ -8,22 +8,9 @@ class MCSRenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        /*_sigmaMax        : 1,
-        _alphaCorrection : 1,*/
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-    //this._handleTFChange = this._handleTFChange.bind(this);
-
-    //this.addEventListeners();
-
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCS, MIXINS);
 
     this._frameNumber = 1;
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -47,15 +34,11 @@ registerSettings() {
 initDefaults() {
     this._sigmaMax = this.settings.extinction.attributes.value;
     this._alphaCorrection = this.settings.extinction.attributes.value;
-
-    //this.reset();
 }
 
 deserializeNoGUI(settings) {
     this._sigmaMax = settings.extinction;
     this._alphaCorrection = settings.extinction;
-
-    //this.setTransferFunction(settings.transferFunction);
 
     this.reset();
 }

@@ -8,24 +8,7 @@ class MCMRenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        //absorptionCoefficient : 1,
-        //scatteringCoefficient : 1,
-        //scatteringBias        : 0,
-        //majorant              : 2,
-        //maxBounces            : 8,
-        //steps                 : 1
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-    //this._handleTFChange = this._handleTFChange.bind(this);
-
-    //this.addEventListeners();
-
     this._programs = WebGL.buildPrograms(gl, SHADERS.renderers.MCM, MIXINS);
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -104,8 +87,6 @@ initDefaults() {
     this.ratio      = this.settings.ratio.attributes.value;
     this.maxBounces = this.settings.bounces.attributes.value;
     this.steps      = this.settings.steps.attributes.value;
-
-    //this.reset();
 }
 
 deserializeNoGUI(settings) {
@@ -115,8 +96,6 @@ deserializeNoGUI(settings) {
     this.ratio      = settings.ratio;
     this.maxBounces = settings.bounces;
     this.steps      = settings.steps;
-
-    //this.setTransferFunction(settings.transferFunction);
 
     this.reset();
 }
@@ -137,25 +116,12 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    /*const extinction = this.settings.extinction.component.getValue();
-    const albedo     = this.settings.albedo.component.getValue();
-    const bias       = this.settings.bias.component.getValue();
-    const ratio      = this.settings.ratio.component.getValue();
-    const bounces    = this.settings.bounces.component.getValue();
-    const steps      = this.settings.steps.component.getValue();*/
     this.extinction = this.settings.extinction.component.getValue();
     this.albedo     = this.settings.albedo.component.getValue();
     this.scatteringBias = this.settings.bias.component.getValue();
     this.ratio      = this.settings.ratio.component.getValue();
     this.maxBounces = this.settings.bounces.component.getValue();
     this.steps      = this.settings.steps.component.getValue();
-
-    /*this.absorptionCoefficient = extinction * (1 - albedo);
-    this.scatteringCoefficient = extinction * albedo;
-    this.scatteringBias = bias;
-    this.majorant = extinction * ratio;
-    this.maxBounces = bounces;
-    this.steps = steps;*/
 
     this.reset();
 }

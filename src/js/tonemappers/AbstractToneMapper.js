@@ -25,7 +25,6 @@ constructor(gl, texture, options) {
     this.settings = {};
     this.registerSettings();
     this.initDefaults();
-    //this.makeDialog('tone-mapper');
 }
 
 destroy() {

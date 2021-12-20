@@ -41,7 +41,6 @@ connectedCallback() {
     }
     this.logarithmic = this.getAttribute('logarithmic') === '' || this.getAttribute('logarithmic') === 'true';
 
-    //let input = this._binds.input;
     let input = this._input;
     if (this.value !== null) {
         input.value = this.value;
@@ -67,7 +66,6 @@ deserialize(setting) {
 }
 
 setEnabled(enabled) {
-    //this._binds.input.disabled = !enabled;
     this._input.disabled = !enabled;
     super.setEnabled(enabled);
 }
@@ -81,7 +79,6 @@ setValue(value) {
         this.value = Math.min(this.value, this.max);
     }
     if (this.logarithmic) {
-        //this._binds.input.step = this.value * this.step;
         this._input.step = this.value * this.step;
     }
 }
@@ -93,17 +90,15 @@ getValue() {
 _handleInput(e) {
     e.stopPropagation();
 
-    if (this._input.value === '') { //(this._binds.input.value === '') {
+    if (this._input.value === '') {
         return;
     }
 
-    //const parsedValue = parseFloat(this._binds.input.value);
     const parsedValue = parseFloat(this._input.value);
     if (!isNaN(parsedValue)) {
         this.setValue(parsedValue);
         this.trigger('input');
     } else {
-        //this._binds.input.value = parsedValue;
         this._input.value = parsedValue;
     }
 }
@@ -111,17 +106,14 @@ _handleInput(e) {
 _handleChange(e) {
     e.stopPropagation();
 
-    //const parsedValue = parseFloat(this._binds.input.value);
     const parsedValue = this._input.value;
     if (!isNaN(parsedValue)) {
         this.setValue(parsedValue);
-        if (this._input.value !== this.value) { //(this._binds.input.value !== this.value) {
-            //this._binds.input.value = this.value;
+        if (this._input.value !== this.value) {
             this._input.value = this.value;
             this.trigger('change');
         }
     } else {
-        //this._binds.input.value = this.value;
         this._input.value = this.value;
     }
 }

@@ -11,9 +11,7 @@ constructor(options) {
         label: ''
     }, options);
 
-    //this._binds.input.value = this.label;
     this._input = this.shadowRoot.querySelector('input');
-    //this._input.value = this.label;
 }
 
 connectedCallback() {
@@ -23,7 +21,6 @@ connectedCallback() {
 }
 
 setEnabled(enabled) {
-    //this._binds.input.disabled = !enabled;
     this._input.disabled = !enabled;
     super.setEnabled(enabled);
 }

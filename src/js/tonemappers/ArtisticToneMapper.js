@@ -8,23 +8,9 @@ class ArtisticToneMapper extends AbstractToneMapper {
 constructor(gl, texture, options) {
     super(gl, texture, options);
 
-    Object.assign(this, {
-        /*low        : 0,
-        mid        : 0.5,
-        high       : 1,
-        saturation : 1*/
-    }, options);
-    
-    //this._handleChange = this._handleChange.bind(this);
-    
-    //this.addEventListeners();
-
     this._program = WebGL.buildPrograms(this._gl, {
         ArtisticToneMapper : SHADERS.ArtisticToneMapper
     }, MIXINS).ArtisticToneMapper;
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -100,19 +86,10 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    /*const low = this.settings.low.component.getValue();
-    const high = this.settings.high.component.getValue();
-    const midtones = this.settings.midtones.component.getValue();
-    const saturation = this.settings.saturation.component.getValue();*/
     this.low = this.settings.low.component.getValue();
     this.high = this.settings.high.component.getValue();
     this.midtones = this.settings.midtones.component.getValue();
     this.saturation = this.settings.saturation.component.getValue();
-
-    /*this.low = low;
-    this.mid = low + (1 - midtones) * (high - low);
-    this.high = high;
-    this.saturation = saturation;*/
 }
 
 destroy() {

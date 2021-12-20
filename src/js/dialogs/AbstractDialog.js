@@ -1,41 +1,22 @@
 // #part /js/dialogs/AbstractDialog
 
 // #link ../ui
-// #link ../EventEmitter
 // #link ../Serializable
 
-//class AbstractDialog extends EventEmitter {
 class AbstractDialog extends HTMLElement {
 
 constructor(spec, options) {
     super();
-    //this._eventHandlers = {};
-    //Object.assign(this, EventEmitter);
-    //Object.assign(this, Serializable);
-
-    /*let visible = true;
-    if (this.hasAttribute('visible')) {
-        visible = this.getAttribute('visible') === 'true';
-    }*/
 
     Object.assign(this, {
         visible: true
     }, options);
 
-    /*this._spec = spec;
-
-    const creation = UI.create(JSON.parse(this._spec));
-    this._object = creation.object;
-    this._binds = creation.binds;*/
-
-    this._element = DOMUtils.instantiate(spec); // this._object?
-    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);//.cloneNode(true));
-
-    /*if (this.visible === false) {
-        this.hide();
-    }*/
+    this._element = DOMUtils.instantiate(spec);
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);
 }
 
+////// Unused?
 destroy() {
     this._object.destroy();
 }
@@ -49,13 +30,11 @@ setVisible(visible) {
 }
 
 show() {
-    //this._object.show();
-    this.hidden = false;
+    this._object.show();
 }
 
 hide() {
-    //this._object.hide();
-    this.hidden = true;
+    this._object.hide();
 }
 
 appendTo(object) {
@@ -65,5 +44,6 @@ appendTo(object) {
 detach() {
     this._object.detach();
 }
+//////
 
 }

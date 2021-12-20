@@ -50,8 +50,6 @@ add(name, object) { // Unused
         header : header,
         panel  : panel
     });
-    //this._binds.container.appendChild(panel);
-    //this._binds.headers.appendChild(header);
     this.shadowRoot.querySelector('.container').appendChild(panel);
     this.shadowRoot.querySelector('.headers').appendChild(header);
     object.appendTo(panel);

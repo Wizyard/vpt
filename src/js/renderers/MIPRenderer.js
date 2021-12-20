@@ -8,19 +8,7 @@ class MIPRenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        //steps : 64
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-
-    //this.addEventListeners(); // change instead of input on a spinner?
-    //this.settings.steps.component.addEventListener('change', this._handleChange);
-
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.MIP, MIXINS);
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {

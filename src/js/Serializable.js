@@ -13,6 +13,7 @@ let Serializable = {
 
     deserialize(loadedSettings, gui) {
         this.verifySettings(loadedSettings);
+        console.log(loadedSettings);
         if (gui) {
             for (const key in this.settings) {
                 const value = loadedSettings[key];
@@ -46,7 +47,7 @@ let Serializable = {
                         break;
                 }
             } else {
-                alert('Setting for ' + registeredKey + ' missing. Using default value');
+                console.error('Setting for ' + registeredKey + ' missing. Using default value');
                 switch(registeredSetting.type) {
                     case 'transfer-function-widget':
                         loadedSettings[registeredKey] = [];
@@ -72,7 +73,7 @@ let Serializable = {
     verifyDefault(value, registeredSetting) {
         let newValue = this.verifyInput(value, registeredSetting, registeredSetting.attributes.value);
         if (newValue === null) {
-            alert('Type of ' + registeredSetting.name + ' value must be float or number. Using default value');
+            console.error('Type of ' + registeredSetting.name + ' value must be float or number. Using default value (' + registeredSetting.attributes.value + ')');
             newValue = registeredSetting.attributes.value;
         }
         return newValue;
@@ -83,8 +84,11 @@ let Serializable = {
         let vectorKeys = ['x', 'y', 'z'];
         for (const key of vectorKeys) {
             let newValue = this.verifyInput(vector[key], registeredSetting, registeredSetting.attributes[key], key);
-            if (newValue === null) {
-                alert(registeredSetting.name + '.' + key + ' value missing or incorrect type (must be float or number). Using default value');
+            if (vector[key] == null) { // not using === because it can be undefined
+                console.error(registeredSetting.name + '.' + key + ' value missing. Using default value (' + registeredSetting.attributes[key] + ')');
+                newValue = registeredSetting.attributes[key];
+            } else if (newValue === null) {
+                console.error(registeredSetting.name + '.' + key + ' value is of incorrect type (must be float or number). Using default value (' + registeredSetting.attributes[key] + ')');
                 newValue = registeredSetting.attributes[key];
             }
             newVector[key] = newValue;
@@ -107,9 +111,9 @@ let Serializable = {
             }
             if (correctedValue !== loadedValue) {
                 if (xyz) {
-                    alert('Value of ' + registeredSetting.name + '.' + xyz + ' is out of allowed range. Using closest allowed value');
+                    console.error('Value of ' + registeredSetting.name + '.' + xyz + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
                 } else {
-                    alert('Value of ' + registeredSetting.name + ' is out of allowed range. Using closest allowed value');
+                    console.error('Value of ' + registeredSetting.name + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
                 }
             }
         }
@@ -119,15 +123,15 @@ let Serializable = {
     verifyColorChooser(value, registeredSetting) {
         let regex = /^#[0-9A-F]{6}$/i;
         if (!regex.test(value)) {
-            alert('Type of ' + registeredSetting.name + ' value must be a hexadecimal color. Using default value');
+            console.error('Type of ' + registeredSetting.name + ' value must be a hexadecimal color. Using default value (' + registeredSetting.attributes.value + ')');
             return registeredSetting.attributes.value;
         }
         return value;
     },
 
     verifyCheckbox(value, registeredSetting) {
-        if (value != true && value != false && value !== 'true' && value !== 'false') {
-            alert('Type of ' + registeredSetting.name + ' value must be boolean. Using default value');
+        if (value != true && value != false && value !== 'true' && value !== 'false') { // accepts 0 and 1 as well
+            console.error('Type of ' + registeredSetting.name + ' value must be boolean. Using default value (' + registeredSetting.attributes.checked + ')');
             value = registeredSetting.attributes.checked;
         }
         return value == true || value === 'true';
@@ -147,15 +151,15 @@ let Serializable = {
                 removedCount++;
             } else {
                 if (!bump.position) {
-                    alert('Setting for transfer function bump ' + i + ', property position missing. Using default values');
+                    console.error('Setting for transfer function bump ' + i + ', property position missing. Using default values');
                     bump.position = defaultPos;
                 }
                 if (!bump.size) {
-                    alert('Setting for transfer function bump ' + i + ', property size missing. Using default values');
+                    console.error('Setting for transfer function bump ' + i + ', property size missing. Using default values');
                     bump.size = defaultSize;
                 }
                 if (!bump.color) {
-                    alert('Setting for transfer function bump ' + i + ', property color missing. Using default values');
+                    console.error('Setting for transfer function bump ' + i + ', property color missing. Using default values');
                     bump.color = defaultColor;
                 }
                 let xyArray = ['x', 'y'];
@@ -185,7 +189,7 @@ let Serializable = {
             }
         }
         if (removedCount > 0) {
-            alert('Removed ' + removedCount + ' transfer function bumps because they had no relevant parameters');
+            console.error('Removed ' + removedCount + ' transfer function bumps because they had no relevant parameters');
         }
         return transferFunction;
     },
@@ -193,14 +197,17 @@ let Serializable = {
     verifyBumpValue(value, defaultValue, i, property) {
         let correctedValue = defaultValue;
         const loadedValue = parseFloat(value);
-        if (isNaN(loadedValue)) {
-            alert('Setting for transfer function bump ' + i + ', property ' + property + ' missing or incorrect type (must be float or number). Using default value');
+        if (value == null) { // not using === because it can be undefined
+            console.error('Setting for transfer function bump ' + i + ', property ' + property + ' missing. Using default value (' + defaultValue + ')');
+            return null;
+        } else if (isNaN(loadedValue)) {
+            console.error('Setting for transfer function bump ' + i + ', property ' + property + ' is of incorrect type (must be float or number). Using default value (' + defaultValue + ')');
             return null;
         } else {
             correctedValue = loadedValue;
             correctedValue = Math.min(Math.max(correctedValue, 0), 1);
             if (correctedValue !== loadedValue) {
-                alert('Value of transfer function bump ' + i + ', property ' + property + ' is out of allowed range. Using closest allowed value');
+                console.error('Value of transfer function bump ' + i + ', property ' + property + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
             }
         }
         return correctedValue;

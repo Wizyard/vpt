@@ -9,30 +9,7 @@ class DOSRenderer extends AbstractRenderer {
 constructor(gl, volume, environmentTexture, options) {
     super(gl, volume, environmentTexture, options);
 
-    Object.assign(this, {
-        /*steps      : 50,
-        slices     : 200,
-        extinction : 100,
-        aperture   : 30,
-        samples    : 8,
-        _depth     : 0,
-        _minDepth  : 0,
-        _maxDepth  : 0,*/
-        // It works even if _depth, _minDepth and _maxDepth aren't initialized
-    }, options);
-
-    //this._handleChange = this._handleChange.bind(this);
-    //this._handleSamplesChange = this._handleSamplesChange.bind(this);
-    //this._handleTFChange = this._handleTFChange.bind(this);
-
-    //this.addEventListeners();
-
     this._programs = WebGL.buildPrograms(this._gl, SHADERS.renderers.DOS, MIXINS);
-
-    //this.generateOcclusionSamples();
-    //this._handleChange();
-    //this._handleSamplesChange();
-    //this.initDefaults();
 }
 
 registerSettings() {
@@ -100,9 +77,6 @@ initDefaults() {
     this.aperture = this.settings.aperture.attributes.value;
 
     this.samples = this.settings.samples.attributes.value;
-    //this.generateOcclusionSamples();
-
-    //this.reset();
 }
 
 deserializeNoGUI(settings) {
@@ -113,8 +87,6 @@ deserializeNoGUI(settings) {
 
     this.samples = settings.samples;
     this.generateOcclusionSamples();
-
-    //this.setTransferFunction(settings.transferFunction);
 
     this.reset();
 }

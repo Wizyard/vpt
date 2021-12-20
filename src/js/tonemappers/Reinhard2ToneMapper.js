@@ -7,19 +7,10 @@ class Reinhard2ToneMapper extends AbstractToneMapper {
 
 constructor(gl, texture, options) {
     super(gl, texture, options);
-
-    //this.exposure = 1;
-
-    //this._handleChange = this._handleChange.bind(this);
-    
-    //this.addEventListeners();
     
     this._program = WebGL.buildPrograms(this._gl, {
         Reinhard2ToneMapper : SHADERS.Reinhard2ToneMapper
     }, MIXINS).Reinhard2ToneMapper;
-
-    //this._handleChange();
-    //this.initDefaults();
 }
 
 registerSettings() {

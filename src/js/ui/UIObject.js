@@ -20,9 +20,8 @@ constructor(template, options) {
     this._template = template;
 
     this._element = DOMUtils.instantiate(this._template);
-    //this._binds = DOMUtils.bind(this._element); // Unused?
 
-    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);//.cloneNode(true));
+    const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);
 
     this._element.classList.toggle('disabled', !this.enabled);
     this._element.classList.toggle('invisible', !this.visible);
