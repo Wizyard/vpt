@@ -54,8 +54,8 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this._sigmaMax = this.settings.extinction.component.getValue();
-    this._alphaCorrection = this.settings.extinction.component.getValue();
+    this._sigmaMax = this.settings.extinction.component.value;
+    this._alphaCorrection = this.settings.extinction.component.value;
 
     this.reset();
 }

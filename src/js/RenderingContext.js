@@ -125,20 +125,20 @@ handleChanges() {
 
 _handleResolutionChange() {
     this.dispatchEvent(new CustomEvent('resolution', { detail: {
-        resolution: this.settings.resolution.component.getValue()
+        resolution: this.settings.resolution.component.value
     }}));
 }
 
 _handleTransformationChange() {
     this.dispatchEvent(new CustomEvent('transformation', { detail: {
-        scale       : this.settings.scale.component.getValue(),
-        translation : this.settings.translation.component.getValue()
+        scale       : this.settings.scale.component.getValues(),
+        translation : this.settings.translation.component.getValues()
     }}));
 }
 
 _handleFilterChange() {
     this.dispatchEvent(new CustomEvent('filter', { detail: {
-        filter: this.settings.filter.component.isChecked() ? 'linear' : 'nearest'
+        filter: this.settings.filter.component.checked ? 'linear' : 'nearest'
     }}));
 }
 

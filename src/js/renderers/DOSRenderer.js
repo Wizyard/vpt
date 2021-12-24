@@ -108,15 +108,15 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.steps = this.settings.steps.component.getValue();
-    this.slices = this.settings.slices.component.getValue();
-    this.extinction = this.settings.extinction.component.getValue();
-    this.aperture = this.settings.aperture.component.getValue();
+    this.steps = this.settings.steps.component.value;
+    this.slices = this.settings.slices.component.value;
+    this.extinction = this.settings.extinction.component.value;
+    this.aperture = this.settings.aperture.component.value;
     this.reset();
 }
 
 handleSamplesChange() {
-    this.samples = this.settings.samples.component.getValue();
+    this.samples = this.settings.samples.component.value;
     this.generateOcclusionSamples();
     this.reset();
 }

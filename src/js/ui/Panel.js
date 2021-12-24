@@ -7,24 +7,29 @@ class Panel extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Panel, options);
 
-    Object.assign(this, {
-        scrollable: false
-    }, options);
+    Object.assign(this, options);
 }
 
-connectedCallback() {
-    this.scrollable = this.getAttribute('scrollable') === '' || this.getAttribute('scrollable') === 'true';
-
-    this.setScrollable(this.scrollable);
+static get observedAttributes() {
+    return ['scrollable'];
 }
 
-setScrollable(scrollable) {
-    this.scrollable = scrollable;
-    this._element.classList.toggle('scrollable', scrollable);
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'scrollable') {
+        this._element.classList.toggle('scrollable', this.scrollable);
+    }
 }
 
-add(object) { // Unused?
-    object.appendTo(this._element);
+get scrollable() {
+    return this.hasAttribute('scrollable');
+}
+
+set scrollable(value) {
+    if (!value) {
+        this.removeAttribute('scrollable');
+    } else {
+        this.setAttribute('scrollable', '');
+    }
 }
 
 }

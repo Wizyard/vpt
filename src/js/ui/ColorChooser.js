@@ -7,9 +7,7 @@ class ColorChooser extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.ColorChooser, options);
 
-    Object.assign(this, {
-        value: null
-    }, options);
+    Object.assign(this, options);
 
     this._input = this.shadowRoot.querySelector('input');
     this._color = this.shadowRoot.querySelector('.color');
@@ -22,22 +20,40 @@ constructor(options) {
     this._element.addEventListener('click', this._handleClick);
 }
 
-connectedCallback() {
-    this.value = this.getAttribute("value");
+static get observedAttributes() {
+    return ['value'];
+}
 
-    if (this.value !== null) {
-        this._input.value = this.value;
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'value') {
+        if (newValue !== null) {
+            this._input.value = newValue;
+            this.trigger('change');
+        }
+        this._color.style.backgroundColor = this._input.value /* + alpha */;
     }
-    this._color.style.backgroundColor = this._input.value /* + alpha */;
+}
+
+get value() {
+    return this.getAttribute('value');
+}
+
+set value(value) {
+    this.setAttribute('value', value);
+}
+
+connectedCallback() {
+    if (!this.hasAttribute('value')) {
+        this.value = '#000000';
+    }
 }
 
 serialize() {
-    return this.getValue();
+    return this.value;
 }
 
 deserialize(setting) {
-    this.setValue(setting);
-    this._color.style.backgroundColor = setting;
+    this.value = setting;
 }
 
 setEnabled(enabled) {
@@ -46,19 +62,11 @@ setEnabled(enabled) {
 }
 
 _handleInput(e) {
-    this._color.style.backgroundColor = this._input.value /* + alpha */;
+    this.value = this._input.value;
 }
 
 _handleClick() {
     this._input.click();
-}
-
-getValue() {
-    return this._input.value;
-}
-
-setValue(value) {
-    this._input.value = value;
 }
 
 }

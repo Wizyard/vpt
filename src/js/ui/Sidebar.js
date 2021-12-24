@@ -7,9 +7,7 @@ class Sidebar extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Sidebar, options);
 
-    Object.assign(this, {
-        contracted: false
-    }, options);
+    Object.assign(this, options);
 
     this._handleClick = this._handleClick.bind(this);
 
@@ -18,19 +16,26 @@ constructor(options) {
     this._handle.addEventListener('click', this._handleClick);
 }
 
-connectedCallback() {
-    this.contracted = this.getAttribute('contracted') === '' || this.getAttribute('contracted') === 'true';
-    
-    this.setContracted(this.contracted);
+static get observedAttributes() {
+    return ['contracted'];
 }
 
-add(object) { // Unused?
-    object.appendTo(this._binds.container);
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'contracted') {
+        this._element.classList.toggle('contracted', this.contracted);
+    }
 }
 
-setContracted(contracted) {
-    this.contracted = contracted;
-    this._element.classList.toggle('contracted', contracted);
+get contracted() {
+    return this.hasAttribute('contracted');
+}
+
+set contracted(value) {
+    if (!value) {
+        this.removeAttribute('contracted');
+    } else {
+        this.setAttribute('contracted', '');
+    }
 }
 
 expand() {
@@ -38,7 +43,7 @@ expand() {
         return;
     }
 
-    this.setContracted(false);
+    this.contracted = false;
 }
 
 contract() {
@@ -46,11 +51,11 @@ contract() {
         return;
     }
 
-    this.setContracted(true);
+    this.contracted = true;
 }
 
 toggleContracted() {
-    this.setContracted(!this.contracted);
+    this.contracted = !this.contracted;
 }
 
 _handleClick() {

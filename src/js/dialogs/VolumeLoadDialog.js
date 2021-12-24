@@ -85,7 +85,7 @@ _handleLoadFile() {
 
     const file = files[0];
     const filetype = this._getVolumeTypeFromURL(file.name);
-    const dimensions = this._dimensions.getValue();
+    const dimensions = this._dimensions.getValues();
     const precision = parseInt(this._precision.getValue(), 10);
 
     this.dispatchEvent(new CustomEvent('load', { detail: {
@@ -98,7 +98,7 @@ _handleLoadFile() {
 }
 
 _handleLoadURL() {
-    const url = this._url.getValue();
+    const url = this._url.value;
     const filetype = this._getVolumeTypeFromURL(url);
     this.dispatchEvent(new CustomEvent('load', { detail: {
         type     : 'url',
@@ -167,7 +167,7 @@ _updateLoadButtonAndProgressVisibility() {
             this._loadButtonAndProgress.setVisible(files.length > 0);
             break;
         case 'url':
-            const urlEmpty = this._url.getValue() === '';
+            const urlEmpty = this._url.value === '';
             this._loadButtonAndProgress.setVisible(!urlEmpty);
             break;
         case 'demo':

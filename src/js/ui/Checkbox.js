@@ -7,43 +7,46 @@ class Checkbox extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Checkbox, options);
 
-    Object.assign(this, {
-        checked : true
-    }, options);
+    Object.assign(this, options);
 
     this._handleClick = this._handleClick.bind(this);
 
     this._element.addEventListener('click', this._handleClick);
 }
 
-connectedCallback() {
-    this.checked = !this.hasAttribute('checked') || this.getAttribute('checked') !== 'false';
-    
-    this._element.classList.toggle('checked', this.checked);
+static get observedAttributes() {
+    return ['checked'];
 }
 
-serialize() {
-    return this.isChecked();
-}
-
-deserialize(setting) {
-    this.setChecked(setting);
-}
-
-isChecked() {
-    return this.checked;
-}
-
-setChecked(checked) {
-    if (this.checked !== checked) {
-        this.checked = checked;
-        this._element.classList.toggle('checked', checked);
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'checked') {
+        this._element.classList.toggle('checked', this.checked);
         this.trigger('change');
     }
 }
 
+get checked() {
+    return this.hasAttribute('checked');
+}
+
+set checked(value) {
+    if (!value) {
+        this.removeAttribute('checked');
+    } else {
+        this.setAttribute('checked', '');
+    }
+}
+
+serialize() {
+    return this.checked;
+}
+
+deserialize(setting) {
+    this.checked = setting;
+}
+
 toggleChecked() {
-    this.setChecked(!this.checked);
+    this.checked = !this.checked;
 }
 
 _handleClick() {

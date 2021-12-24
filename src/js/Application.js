@@ -30,7 +30,6 @@ constructor() {
 
     window.customElements.define('vpt-volume-load-dialog', VolumeLoadDialog);
     window.customElements.define('vpt-envmap-load-dialog', EnvmapLoadDialog);
-    window.customElements.define('vpt-main-dialog', MainDialog);
 
     this._handleFileDrop = this._handleFileDrop.bind(this);
     this._handleRendererChange = this._handleRendererChange.bind(this);
@@ -53,15 +52,26 @@ constructor() {
     document.body.addEventListener('dragover', e => e.preventDefault());
     document.body.addEventListener('drop', this._handleFileDrop);
 
-    this._mainDialog = document.querySelector('vpt-main-dialog');
+    this._rendererSelect = document.querySelector('#renderer-dropdown');
+    this._toneMapperSelect = document.querySelector('#tone-mapper-dropdown');
+
+    this._handleRendererDropdownChange = this._handleRendererDropdownChange.bind(this);
+    this._handleToneMapperDropdownChange = this._handleToneMapperDropdownChange.bind(this);
+
+    this._rendererSelect.addEventListener('change', this._handleRendererDropdownChange);
+    this._toneMapperSelect.addEventListener('change', this._handleToneMapperDropdownChange);
+
+    const about = DOMUtils.instantiate(TEMPLATES.AboutText);
+    document.querySelector('#about-panel').appendChild(about);
+
     if (!this._renderingContext.hasComputeCapabilities()) {
-        this._mainDialog.disableMCC();
+        this.disableMCC();
     }
 
-    this._volumeLoadDialog = this._mainDialog.shadowRoot.querySelector('vpt-volume-load-dialog');
+    this._volumeLoadDialog = document.querySelector('vpt-volume-load-dialog');
     this._volumeLoadDialog.addEventListener('load', this._handleVolumeLoad);
 
-    this._envmapLoadDialog = this._mainDialog.shadowRoot.querySelector('vpt-envmap-load-dialog');
+    this._envmapLoadDialog = document.querySelector('vpt-envmap-load-dialog');
     this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);
 
     this.serializationVersion = '1.0';
@@ -85,20 +95,20 @@ constructor() {
             this._renderingContext.setFilter(options.filter);
         });
     } else {
-        this._mainDialog.shadowRoot.querySelector('#save-button').classList += 'invisible';
+        document.querySelector('#save-button').classList += 'invisible';
     }
 
-    this._mainDialog.shadowRoot.querySelector('#save-button').addEventListener('click', this._serialize);
-    this._mainDialog.shadowRoot.querySelector('#load-button').addEventListener('click', this._deserialize);
+    document.querySelector('#save-button').addEventListener('click', this._serialize);
+    document.querySelector('#load-button').addEventListener('click', this._deserialize);
 
-    this._mainDialog.addEventListener('rendererchange', this._handleRendererChange);
-    this._mainDialog.addEventListener('tonemapperchange', this._handleToneMapperChange);
-    this._mainDialog.dispatchEvent(new CustomEvent('rendererchange', { detail: this._mainDialog.getSelectedRenderer() }));
-    this._mainDialog.dispatchEvent(new CustomEvent('tonemapperchange', { detail: this._mainDialog.getSelectedToneMapper() }));
+    document.addEventListener('rendererchange', this._handleRendererChange);
+    document.addEventListener('tonemapperchange', this._handleToneMapperChange);
+    document.dispatchEvent(new CustomEvent('rendererchange', { detail: this.getSelectedRenderer() }));
+    document.dispatchEvent(new CustomEvent('tonemapperchange', { detail: this.getSelectedToneMapper() }));
 }
 
 _makeDialog(which, settings) {
-    let dialogPanel = this._mainDialog.shadowRoot.querySelector('#attach-' + which);
+    let dialogPanel = document.querySelector('#attach-' + which);
     for (const key in settings) {
         let setting = settings[key];
         let newElement = document.createElement('vpt-' + setting.type);
@@ -126,9 +136,9 @@ _makeDialog(which, settings) {
 _serialize = () => {
     const settings = {
         version: this.serializationVersion,
-        renderer: this._mainDialog.getSelectedRenderer(),
+        renderer: this.getSelectedRenderer(),
         rendererSettings: this._renderingContext.getRenderer().serialize(),
-        toneMapper: this._mainDialog.getSelectedToneMapper(),
+        toneMapper: this.getSelectedToneMapper(),
         toneMapperSettings: this._renderingContext.getToneMapper().serialize(),
         context: this._renderingContext.serialize(),
         camera: this._renderingContext.serializeCamera()
@@ -149,7 +159,7 @@ _deserialize = () => {
             console.error('Renderer name missing. Renderer settings discarded. Using previously selected renderer');
         } else {
             const newRendererName = settings.renderer;
-            if (this._mainDialog.setRenderer(newRendererName)) {
+            if (this.setRenderer(newRendererName)) {
                 const newRenderer = this._renderingContext.getRenderer();
                 if (!settings.rendererSettings) {
                     console.error('Renderer settings missing. Using default values for this renderer');
@@ -172,7 +182,7 @@ _deserialize = () => {
             console.error('Tone mapper name missing. Tone mapper settings discarded. Using previously selected tone mapper');
         } else {
             const newToneMapperName = settings.toneMapper;
-            if (this._mainDialog.setToneMapper(newToneMapperName)) {
+            if (this.setToneMapper(newToneMapperName)) {
                 const newToneMapper = this._renderingContext.getToneMapper();
                 if (!settings.toneMapperSettings) {
                     console.error('Tone mapper settings missing. Using default values for this tone mapper');
@@ -202,6 +212,46 @@ _deserialize = () => {
     });
 }
 
+getSelectedRenderer() {
+    return this._rendererSelect.getValue();
+}
+
+getSelectedToneMapper() {
+    return this._toneMapperSelect.getValue();
+}
+
+setRenderer(renderer) {
+    if (!this._rendererSelect.setValue(renderer)) {
+        console.error('Renderer does not exist. Renderer settings discarded. Using previously selected renderer');
+        return false;
+    }
+    document.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
+    return true;
+}
+
+setToneMapper(toneMapper) {
+    if (!this._toneMapperSelect.setValue(toneMapper)) {
+        console.error('Tone mapper does not exist. Tone mapper settings discarded. Using previously selected tone mapper');
+        return false;
+    }
+    document.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
+    return true;
+}
+
+_handleRendererDropdownChange() {
+    const renderer = this._rendererSelect.getValue();
+    document.dispatchEvent(new CustomEvent('rendererchange', { detail: renderer }));
+}
+
+_handleToneMapperDropdownChange() {
+    const toneMapper = this._toneMapperSelect.getValue();
+    document.dispatchEvent(new CustomEvent('tonemapperchange', { detail: toneMapper }));
+}
+
+disableMCC() {
+    this._rendererSelect.removeOption('mcc');
+}
+
 _handleFileDrop(e) {
     e.preventDefault();
     const files = e.dataTransfer.files;
@@ -221,9 +271,19 @@ _handleFileDrop(e) {
     }});
 }
 
+destroyChildren(dialog) {
+    while (dialog.firstChild) {
+        //this.destroyChildren(dialog.firstChild);
+        dialog.firstChild.destroy();
+        dialog.removeChild(dialog.firstChild);
+    }
+}
+
 _handleRendererChange(event) {
-    let which = event.detail;
-    this._mainDialog.shadowRoot.querySelector('#attach-renderer').innerHTML = '';
+    const which = event.detail;
+
+    const rendererDialog = document.querySelector('#attach-renderer');
+    this.destroyChildren(rendererDialog);
 
     this._renderingContext.chooseRenderer(which);
     const renderer = this._renderingContext.getRenderer();
@@ -234,8 +294,10 @@ _handleRendererChange(event) {
 }
 
 _handleToneMapperChange(event) {
-    let which = event.detail;
-    this._mainDialog.shadowRoot.querySelector('#attach-tone-mapper').innerHTML = '';
+    const which = event.detail;
+
+    const toneMapperDialog = document.querySelector('#attach-tone-mapper');
+    this.destroyChildren(toneMapperDialog);
     
     this._renderingContext.chooseToneMapper(which);
     const toneMapper = this._renderingContext.getToneMapper();

@@ -8,13 +8,7 @@ class Slider extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Slider, options);
 
-    Object.assign(this, {
-        value       : 0,
-        min         : 0,
-        max         : 100,
-        step        : 1,
-        logarithmic : false
-    }, options);
+    Object.assign(this, options);
 
     this._handleMouseDown = this._handleMouseDown.bind(this);
     this._handleMouseUp   = this._handleMouseUp.bind(this);
@@ -28,43 +22,93 @@ constructor(options) {
     this._element.addEventListener('wheel', this._handleWheel);
 }
 
-connectedCallback() {
-    if (this.hasAttribute('value')) {
-        this.value = parseFloat(this.getAttribute('value'));
-    }
-    if (this.hasAttribute('min')) {
-        this.min = parseFloat(this.getAttribute('min'));
-    }
-    if (this.hasAttribute('max')) {
-        this.max = parseFloat(this.getAttribute('max'));
-    }
-    if (this.hasAttribute('step')) {
-        this.step = parseFloat(this.getAttribute('step'));
-    }
-    this.logarithmic = this.getAttribute('logarithmic') === '' || this.getAttribute('logarithmic') === 'true';
+static get observedAttributes() {
+    return ['value', 'min', 'max', 'step', 'logarithmic'];
+}
 
-    this._updateUI();
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name !== 'logarithmic' && isNaN(parseFloat(newValue))) {
+        if (!isNaN(parseFloat(oldValue))) {
+            this[name] = oldValue;
+        }
+    } else {
+        this._updateUI();
+        this.trigger('change');
+    }
+}
+
+get value() {
+    return parseFloat(this.getAttribute('value'));
+}
+
+set value(value) {
+    this.setAttribute('value', CommonUtils.clamp(value, this.min, this.max));
+}
+
+get min() {
+    return parseFloat(this.getAttribute('min'));
+}
+
+set min(value) {
+    this.setAttribute('min', value);
+}
+
+get max() {
+    return parseFloat(this.getAttribute('max'));
+}
+
+set max(value) {
+    this.setAttribute('max', value);
+}
+
+get step() {
+    return parseFloat(this.getAttribute('step'));
+}
+
+set step(value) {
+    this.setAttribute('step', value);
+}
+
+get logarithmic() {
+    return this.hasAttribute('logarithmic');
+}
+
+set logarithmic(value) {
+    if (!value) {
+        this.removeAttribute('logarithmic');
+    } else {
+        this.setAttribute('logarithmic', '');
+    }
+}
+
+connectedCallback() {
+    if (!this.hasAttribute('min')) {
+        this.min = 0;
+    }
+    if (!this.hasAttribute('max')) {
+        this.max = 100;
+    }
+    if (!this.hasAttribute('step')) {
+        this.step = 1;
+    }
+    if (!this.hasAttribute('value')) {
+        this.value = 0;
+    }
 }
 
 serialize() {
-    return this.getValue();
+    return this.value;
 }
 
 deserialize(setting) {
-    this.setValue(setting);
+    this.value = setting;
 }
 
-destroy() { // Unused?
+destroy() {
     document.removeEventListener('mouseup', this._handleMouseUp);
     document.removeEventListener('mousemove', this._handleMouseMove);
 
     super.destroy();
-}
-
-setValue(value) {
-    this.value = CommonUtils.clamp(value, this.min, this.max);
-    this._updateUI();
-    this.trigger('change');
 }
 
 _updateUI() {
@@ -79,10 +123,6 @@ _updateUI() {
     }
 }
 
-getValue() {
-    return this.value;
-}
-
 _setValueByEvent(e) {
     const rect = this._container.getBoundingClientRect();
     const ratio = (e.pageX - rect.left) / (rect.right - rect.left);
@@ -90,10 +130,10 @@ _setValueByEvent(e) {
         const logmin = Math.log(this.min);
         const logmax = Math.log(this.max);
         const value = Math.exp(logmin + ratio * (logmax - logmin));
-        this.setValue(value);
+        this.value = value;
     } else {
         const value = this.min + ratio * (this.max - this.min);
-        this.setValue(value);
+        this.value = value;
     }
 }
 
@@ -124,7 +164,7 @@ _handleWheel(e) {
     }
 
     const delta = this.logarithmic ? this.value * this.step * wheel : this.step * wheel;
-    this.setValue(this.value + delta);
+    this.value = this.value + delta;
 }
 
 }

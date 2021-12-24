@@ -7,18 +7,30 @@ class Field extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Field, options);
 
-    Object.assign(this, {
-        label: ''
-    }, options);
+    Object.assign(this, options);
 
     this._content = null;
 }
 
-connectedCallback() {
-    this.shadowRoot.querySelector('label').textContent = this.getAttribute('label');
+static get observedAttributes() {
+    return ['label'];
 }
 
-destroy() { // Unused?
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'label') {
+        this.shadowRoot.querySelector('label').textContent = newValue;
+    }
+}
+
+get label() {
+    return this.getAttribute('label');
+}
+
+set label(value) {
+    this.setAttribute('label', value);
+}
+
+destroy() {
     if (this._content) {
         this._content.detach();
     }
@@ -32,14 +44,6 @@ setEnabled(enabled) {
     }
 
     super.setEnabled(enabled);
-}
-
-add(object) { // Unused?
-    if (!this._content) {
-        this._content = object;
-        object.appendTo(this._binds.container);
-        object.setEnabled(this.enabled);
-    }
 }
 
 }

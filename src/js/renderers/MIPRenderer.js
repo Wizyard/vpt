@@ -40,7 +40,7 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.steps = this.settings.steps.component.getValue();
+    this.steps = this.settings.steps.component.value;
 }
 
 destroy() {

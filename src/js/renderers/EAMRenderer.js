@@ -61,8 +61,8 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.slices = this.settings.slices.component.getValue();
-    this.extinction = this.settings.extinction.component.getValue();
+    this.slices = this.settings.slices.component.value;
+    this.extinction = this.settings.extinction.component.value;
     this.reset();
 }
 

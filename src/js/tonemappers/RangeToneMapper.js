@@ -58,8 +58,8 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this._min = this.settings.low.component.getValue();
-    this._max = this.settings.high.component.getValue();
+    this._min = this.settings.low.component.value;
+    this._max = this.settings.high.component.value;
 }
 
 destroy() {

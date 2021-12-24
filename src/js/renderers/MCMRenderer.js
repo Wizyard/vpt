@@ -116,12 +116,12 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.extinction = this.settings.extinction.component.getValue();
-    this.albedo     = this.settings.albedo.component.getValue();
-    this.scatteringBias = this.settings.bias.component.getValue();
-    this.ratio      = this.settings.ratio.component.getValue();
-    this.maxBounces = this.settings.bounces.component.getValue();
-    this.steps      = this.settings.steps.component.getValue();
+    this.extinction = this.settings.extinction.component.value;
+    this.albedo     = this.settings.albedo.component.value;
+    this.scatteringBias = this.settings.bias.component.value;
+    this.ratio      = this.settings.ratio.component.value;
+    this.maxBounces = this.settings.bounces.component.value;
+    this.steps      = this.settings.steps.component.value;
 
     this.reset();
 }

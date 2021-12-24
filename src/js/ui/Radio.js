@@ -10,7 +10,6 @@ constructor(options) {
 
     Object.assign(this, {
         options  : [],
-        vertical : false
     }, options);
 
     this._handleClick = this._handleClick.bind(this);
@@ -18,13 +17,33 @@ constructor(options) {
     this._radioName = 'radio' + Radio._nextId++;
 }
 
+static get observedAttributes() {
+    return ['vertical'];
+}
+
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'vertical') {
+        this._element.classList.toggle('vertical', this.vertical);
+    }
+}
+
+get vertical() {
+    return this.hasAttribute('vertical');
+}
+
+set vertical(value) {
+    if (!value) {
+        this.removeAttribute('vertical');
+    } else {
+        this.setAttribute('vertical', '');
+    }
+}
+
 connectedCallback() {
     Object.assign(this, {
-        options  : this.querySelectorAll('option'),
-        vertical : this.getAttribute('vertical') === '' || this.getAttribute('vertical') === 'true'
+        options  : this.querySelectorAll('option')
     });
     
-    this._element.classList.toggle('vertical', this.vertical);
     for (let option of this.options) {
         this.addOption(option.value, option.label, option.selected);
     }

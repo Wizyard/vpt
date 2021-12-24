@@ -9,10 +9,7 @@ class Accordion extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Accordion, options);
 
-    Object.assign(this, {
-        label      : '',
-        contracted : false
-    }, options);
+    Object.assign(this, options);
 
     this._handleClick = this._handleClick.bind(this);
 
@@ -21,23 +18,39 @@ constructor(options) {
     this._handle.addEventListener('click', this._handleClick);
 }
 
-connectedCallback() {
-    Object.assign(this, {
-        label      : this.getAttribute('label'),
-        contracted : this.getAttribute('contracted') === '' || this.getAttribute('contracted') === 'true'
-    });
-
-    this._handle.textContent = this.label;
-    this.setContracted(this.contracted);
+static get observedAttributes() {
+    return ['label', 'contracted'];
 }
 
-add(object) { // Unused?
-    object.appendTo(this._binds.container);
+attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+        case 'label':
+            this._handle.textContent = newValue;
+            break;
+        case 'contracted':
+            this._element.classList.toggle('contracted', this.contracted);
+            break;
+    }
 }
 
-setContracted(contracted) {
-    this.contracted = contracted;
-    this._element.classList.toggle('contracted', contracted);
+get label() {
+    return this.getAttribute('label');
+}
+
+set label(value) {
+    this.setAttribute('label', value);
+}
+
+get contracted() {
+    return this.hasAttribute('contracted');
+}
+
+set contracted(value) {
+    if (!value) {
+        this.removeAttribute('contracted');
+    } else {
+        this.setAttribute('contracted', '');
+    }
 }
 
 expand() {
@@ -45,7 +58,7 @@ expand() {
         return;
     }
 
-    this.setContracted(false);
+    this.contracted = false;
 }
 
 contract() {
@@ -53,11 +66,11 @@ contract() {
         return;
     }
 
-    this.setContracted(true);
+    this.contracted = true;
 }
 
 toggleContracted() {
-    this.setContracted(!this.contracted);
+    this.contracted = !this.contracted;
 }
 
 _handleClick() {

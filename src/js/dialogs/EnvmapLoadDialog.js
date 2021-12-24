@@ -79,7 +79,7 @@ _handleLoadFile() {
 }
 
 _handleLoadURL() {
-    const url = this._url.getValue();
+    const url = this._url.value;
     this.dispatchEvent(new CustomEvent('load', { detail: {
         type : 'url',
         url  : url
@@ -136,7 +136,7 @@ _updateLoadButtonAndProgressVisibility() {
             this._loadButtonAndProgress.setVisible(files.length > 0);
             break;
         case 'url':
-            const urlEmpty = this._url.getValue() === '';
+            const urlEmpty = this._url.value === '';
             this._loadButtonAndProgress.setVisible(!urlEmpty);
             break;
         case 'demo':

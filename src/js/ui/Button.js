@@ -7,17 +7,27 @@ class Button extends UIObject {
 constructor(options) {
     super(TEMPLATES.ui.Button, options);
 
-    Object.assign(this, {
-        label: ''
-    }, options);
+    Object.assign(this, options);
 
     this._input = this.shadowRoot.querySelector('input');
 }
 
-connectedCallback() {
-    this.label = this.getAttribute('label');
-    
-    this._input.value = this.label;
+static get observedAttributes() {
+    return ['label'];
+}
+
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'label') {
+        this._input.value = newValue;
+    }
+}
+
+get label() {
+    return this.getAttribute('label');
+}
+
+set label(value) {
+    this.setAttribute('label', value);
 }
 
 setEnabled(enabled) {

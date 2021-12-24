@@ -91,15 +91,15 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this._stepSize = 1 / this.settings.steps.component.getValue();
-    this._isovalue = this.settings.isovalue.component.getValue();
+    this._stepSize = 1 / this.settings.steps.component.value;
+    this._isovalue = this.settings.isovalue.component.value;
 
-    const color = CommonUtils.hex2rgb(this.settings.color.component.getValue());
+    const color = CommonUtils.hex2rgb(this.settings.color.component.value);
     this._diffuse[0] = color.r;
     this._diffuse[1] = color.g;
     this._diffuse[2] = color.b;
 
-    const direction = this.settings.direction.component.getValue();
+    const direction = this.settings.direction.component.getValues();
     this._light[0] = direction.x;
     this._light[1] = direction.y;
     this._light[2] = direction.z;

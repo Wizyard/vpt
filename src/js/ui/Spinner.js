@@ -8,13 +8,7 @@ constructor(options) {
     super(TEMPLATES.ui.Spinner, options);
 
     Object.assign(this, {
-        value : 0,
-        min   : null,
-        max   : null,
-        step  : 1,
         unit  : null, // TODO: add a label with units at the end of input
-        // If logarithmic, step size is proportional to value * this.step
-        logarithmic : false
     }, options);
 
     this._handleInput = this._handleInput.bind(this);
@@ -26,65 +20,115 @@ constructor(options) {
     this._input.addEventListener('change', this._handleChange);
 }
 
-connectedCallback() {
-    if (this.hasAttribute('value') && this.getAttribute('value') !== 'null') {
-        this.value = this.getAttribute('value');
-    }
-    if (this.hasAttribute('min') && this.getAttribute('min') !== 'null') {
-        this.min = this.getAttribute('min');
-    }
-    if (this.hasAttribute('max') && this.getAttribute('max') !== 'null') {
-        this.max = this.getAttribute('max');
-    }
-    if (this.hasAttribute('step')) {
-        this.step = this.getAttribute('step');
-    }
-    this.logarithmic = this.getAttribute('logarithmic') === '' || this.getAttribute('logarithmic') === 'true';
+static get observedAttributes() {
+    return ['value', 'min', 'max', 'step', 'logarithmic'];
+}
 
-    let input = this._input;
-    if (this.value !== null) {
-        input.value = this.value;
+attributeChangedCallback(name, oldValue, newValue) {
+    if (name !== 'logarithmic' && isNaN(parseFloat(newValue))) {
+        if (!isNaN(parseFloat(oldValue))) {
+            this[name] = oldValue;
+        }
+    } else {
+        let input = this._input;
+        switch(name) {
+            case 'value':
+                if (newValue != oldValue) {
+                    input.value = newValue;
+                }
+                break;
+            case 'min':
+                input.min = newValue;
+                break;
+            case 'max':
+                input.max = newValue;
+                break;
+            case 'step':
+                input.step = newValue;
+                break;
+        }
+        this.trigger('input');
+        this.trigger('change');
     }
+}
+
+get value() {
+    return parseFloat(this.getAttribute('value'));
+}
+
+set value(value) {
+    let newValue = value;
     if (this.min !== null) {
-        input.min = this.min;
+        newValue = Math.max(newValue, this.min);
     }
     if (this.max !== null) {
-        input.max = this.max;
+        newValue = Math.min(newValue, this.max);
     }
-    if (this.step !== null) {
-        input.step = this.step;
+    if (this.logarithmic) {
+        this._input.step = newValue * this.step;
+    }
+    this.setAttribute('value', newValue);
+}
+
+get min() {
+    return parseFloat(this.getAttribute('min'));
+}
+
+set min(value) {
+    this.setAttribute('min', value);
+}
+
+get max() {
+    return parseFloat(this.getAttribute('max'));
+}
+
+set max(value) {
+    this.setAttribute('max', value);
+}
+
+get step() {
+    return parseFloat(this.getAttribute('step'));
+}
+
+set step(value) {
+    this.setAttribute('step', value);
+}
+
+get logarithmic() {
+    return this.hasAttribute('logarithmic');
+}
+
+set logarithmic(value) {
+    if (!value) {
+        this.removeAttribute('logarithmic');
+    } else {
+        this.setAttribute('logarithmic', '');
+    }
+}
+
+connectedCallback() {
+    if (!this.hasAttribute('min')) {
+        this.min = -Infinity;
+    }
+    if (!this.hasAttribute('max')) {
+        this.max = Infinity;
+    }
+    if (!this.hasAttribute('value')) {
+        this.value = 0;
     }
 }
 
 serialize() {
-    return this.getValue();
+    return this.value;
 }
 
 deserialize(setting) {
-    this.setValue(setting);
-    this._input.value = setting;
+    this.value = setting;
 }
 
 setEnabled(enabled) {
     this._input.disabled = !enabled;
     super.setEnabled(enabled);
-}
-
-setValue(value) {
-    this.value = value;
-    if (this.min !== null) {
-        this.value = Math.max(this.value, this.min);
-    }
-    if (this.max !== null) {
-        this.value = Math.min(this.value, this.max);
-    }
-    if (this.logarithmic) {
-        this._input.step = this.value * this.step;
-    }
-}
-
-getValue() {
-    return this.value;
 }
 
 _handleInput(e) {
@@ -96,7 +140,7 @@ _handleInput(e) {
 
     const parsedValue = parseFloat(this._input.value);
     if (!isNaN(parsedValue)) {
-        this.setValue(parsedValue);
+        this.value = parsedValue;
         this.trigger('input');
     } else {
         this._input.value = parsedValue;
@@ -106,9 +150,9 @@ _handleInput(e) {
 _handleChange(e) {
     e.stopPropagation();
 
-    const parsedValue = this._input.value;
+    const parsedValue = parseFloat(this._input.value);
     if (!isNaN(parsedValue)) {
-        this.setValue(parsedValue);
+        this.value = parsedValue;
         if (this._input.value !== this.value) {
             this._input.value = this.value;
             this.trigger('change');

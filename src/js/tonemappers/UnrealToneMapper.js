@@ -44,7 +44,7 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.exposure = this.settings.exposure.component.getValue();
+    this.exposure = this.settings.exposure.component.value;
 }
 
 destroy() {

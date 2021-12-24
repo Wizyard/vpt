@@ -86,10 +86,10 @@ bindHandlersAndListeners() {
 }
 
 handleChange() {
-    this.low = this.settings.low.component.getValue();
-    this.high = this.settings.high.component.getValue();
-    this.midtones = this.settings.midtones.component.getValue();
-    this.saturation = this.settings.saturation.component.getValue();
+    this.low = this.settings.low.component.value;
+    this.high = this.settings.high.component.value;
+    this.midtones = this.settings.midtones.component.value;
+    this.saturation = this.settings.saturation.component.value;
 }
 
 destroy() {
