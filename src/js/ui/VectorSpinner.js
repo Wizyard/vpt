@@ -122,6 +122,43 @@ deserialize(setting) {
     this.setValues(setting);
 }
 
+static verify(vector, registeredSetting) {
+    let newVector = {};
+    let vectorKeys = ['x', 'y', 'z'];
+    for (const key of vectorKeys) {
+        let newValue = this.verifyInput(vector[key], registeredSetting, registeredSetting.attributes[key], key);
+        if (vector[key] == null) { // not using === because it can be undefined
+            console.error(registeredSetting.name + '.' + key + ' value missing. Using default value (' + registeredSetting.attributes[key] + ')');
+            newValue = registeredSetting.attributes[key];
+        } else if (newValue === null) {
+            console.error(registeredSetting.name + '.' + key + ' value is of incorrect type (must be float or number). Using default value (' + registeredSetting.attributes[key] + ')');
+            newValue = registeredSetting.attributes[key];
+        }
+        newVector[key] = newValue;
+    }
+    return newVector;
+}
+
+static verifyInput(value, registeredSetting, defaultValue, xyz) {
+    let correctedValue = defaultValue;
+    const loadedValue = parseFloat(value);
+    if (isNaN(loadedValue)) {
+        return null;
+    } else {
+        correctedValue = loadedValue;
+        if (registeredSetting.attributes.min != null) { // not using !== because it can be undefined
+            correctedValue = Math.max(correctedValue, registeredSetting.attributes.min);
+        }
+        if (registeredSetting.attributes.max != null) {
+            correctedValue = Math.min(correctedValue, registeredSetting.attributes.max);
+        }
+        if (correctedValue !== loadedValue) {
+            console.error('Value of ' + registeredSetting.name + '.' + xyz + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
+        }
+    }
+    return correctedValue;
+}
+
 destroy() {
     this._spinnerX.destroy();
     this._spinnerY.destroy();

@@ -56,6 +56,15 @@ deserialize(setting) {
     this.value = setting;
 }
 
+static verify(value, registeredSetting) {
+    let regex = /^#[0-9A-F]{6}$/i;
+    if (!regex.test(value)) {
+        console.error('Type of ' + registeredSetting.name + ' value must be a hexadecimal color. Using default value (' + registeredSetting.attributes.value + ')');
+        return registeredSetting.attributes.value;
+    }
+    return value;
+}
+
 setEnabled(enabled) {
     this._input.disabled = !enabled;
     super.setEnabled(enabled);

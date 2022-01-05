@@ -104,6 +104,35 @@ deserialize(setting) {
     this.value = setting;
 }
 
+static verify(value, registeredSetting) {
+    let newValue = this.verifyInput(value, registeredSetting, registeredSetting.attributes.value);
+    if (newValue === null) {
+        console.error('Type of ' + registeredSetting.name + ' value must be float or number. Using default value (' + registeredSetting.attributes.value + ')');
+        newValue = registeredSetting.attributes.value;
+    }
+    return newValue;
+}
+
+static verifyInput(value, registeredSetting, defaultValue) {
+    let correctedValue = defaultValue;
+    const loadedValue = parseFloat(value);
+    if (isNaN(loadedValue)) {
+        return null;
+    } else {
+        correctedValue = loadedValue;
+        if (registeredSetting.attributes.min != null) { // not using !== because it can be undefined
+            correctedValue = Math.max(correctedValue, registeredSetting.attributes.min);
+        }
+        if (registeredSetting.attributes.max != null) {
+            correctedValue = Math.min(correctedValue, registeredSetting.attributes.max);
+        }
+        if (correctedValue !== loadedValue) {
+            console.error('Value of ' + registeredSetting.name + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
+        }
+    }
+    return correctedValue;
+}
+
 destroy() {
     document.removeEventListener('mouseup', this._handleMouseUp);
     document.removeEventListener('mousemove', this._handleMouseMove);

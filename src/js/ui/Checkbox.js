@@ -45,6 +45,14 @@ deserialize(setting) {
     this.checked = setting;
 }
 
+static verify(value, registeredSetting) {
+    if (value != true && value != false && value !== 'true' && value !== 'false') { // accepts 0 and 1 as well
+        console.error('Type of ' + registeredSetting.name + ' value must be boolean. Using default value (' + registeredSetting.attributes.checked + ')');
+        value = registeredSetting.attributes.checked;
+    }
+    return value == true || value === 'true';
+}
+
 toggleChecked() {
     this.checked = !this.checked;
 }

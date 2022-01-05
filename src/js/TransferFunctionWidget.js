@@ -97,6 +97,82 @@ deserialize(setting) {
     }
 }
 
+static verify(transferFunction) {
+    let defaultPos = { x: 0.5, y: 0.5 }
+    let defaultSize = { x: 0.2, y: 0.2 }
+    let defaultColor = { r: 1, g: 0, b: 0, a: 1 }
+
+    let i = 0;
+    let removedCount = 0;
+    while (i < transferFunction.length) {
+        let bump = transferFunction[i];
+        if (!bump.position && !bump.size && !bump.color) {
+            transferFunction.splice(i, 1);
+            removedCount++;
+        } else {
+            if (!bump.position) {
+                console.error('Setting for transfer function bump ' + i + ', property position missing. Using default values');
+                bump.position = defaultPos;
+            }
+            if (!bump.size) {
+                console.error('Setting for transfer function bump ' + i + ', property size missing. Using default values');
+                bump.size = defaultSize;
+            }
+            if (!bump.color) {
+                console.error('Setting for transfer function bump ' + i + ', property color missing. Using default values');
+                bump.color = defaultColor;
+            }
+            let xyArray = ['x', 'y'];
+            for (const key of xyArray) {
+                let newValue = this.verifyBumpValue(bump.position[key], defaultPos[key], i, 'position.' + key);
+                if (newValue === null) {
+                    newValue = defaultPos[key];
+                }
+                bump.position[key] = newValue;
+            }
+            for (const key of xyArray) {
+                let newValue = this.verifyBumpValue(bump.size[key], defaultSize[key], i, 'size.' + key);
+                if (newValue === null) {
+                    newValue = defaultSize[key];
+                }
+                bump.size[key] = newValue;
+            }
+            let rgbaKeys = ['r', 'g', 'b', 'a'];
+            for (const key of rgbaKeys) {
+                let newValue = this.verifyBumpValue(bump.color[key], defaultColor[key], i, 'color.' + key);
+                if (newValue === null) {
+                    newValue = defaultColor[key];
+                }
+                bump.color[key] = newValue;
+            }
+            i++;
+        }
+    }
+    if (removedCount > 0) {
+        console.error('Removed ' + removedCount + ' transfer function bumps because they had no relevant parameters');
+    }
+    return transferFunction;
+}
+
+static verifyBumpValue(value, defaultValue, i, property) {
+    let correctedValue = defaultValue;
+    const loadedValue = parseFloat(value);
+    if (value == null) { // not using === because it can be undefined
+        console.error('Setting for transfer function bump ' + i + ', property ' + property + ' missing. Using default value (' + defaultValue + ')');
+        return null;
+    } else if (isNaN(loadedValue)) {
+        console.error('Setting for transfer function bump ' + i + ', property ' + property + ' is of incorrect type (must be float or number). Using default value (' + defaultValue + ')');
+        return null;
+    } else {
+        correctedValue = loadedValue;
+        correctedValue = Math.min(Math.max(correctedValue, 0), 1);
+        if (correctedValue !== loadedValue) {
+            console.error('Value of transfer function bump ' + i + ', property ' + property + ' is out of allowed range. Using closest allowed value (' + correctedValue + ')');
+        }
+    }
+    return correctedValue;
+}
+
 destroy() {
     const gl = this._gl;
     gl.deleteBuffer(this._clipQuad);
