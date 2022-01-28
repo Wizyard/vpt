@@ -15,7 +15,6 @@ let Serializable = {
 
     deserialize(loadedSettings, gui) {
         this.verifySettings(loadedSettings);
-        console.log(loadedSettings);
         if (gui) {
             for (const key in this.settings) {
                 const value = loadedSettings[key];

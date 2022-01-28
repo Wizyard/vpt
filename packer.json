@@ -3,7 +3,7 @@
         {
             "input": "src",
             "output": "/",
-            "filter": "\\.(js|html|css|json|glsl)$",
+            "filter": "\\.(js|html|json|glsl)$",
             "recursive": true,
             "parse": true
         },
@@ -57,11 +57,6 @@
         {
             "input": "/glsl/mixins",
             "output": "build/glsl/mixins.json",
-            "mode": "json"
-        },
-        {
-            "input": "/uispecs",
-            "output": "build/uispecs.json",
             "mode": "json"
         }
     ]

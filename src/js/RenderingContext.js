@@ -412,6 +412,7 @@ _getRendererClass(renderer) {
         case 'mcm' : return MCMRenderer;
         case 'mcc' : return MCCRenderer;
         case 'dos' : return DOSRenderer;
+        case 'new' : return NewRenderer;
     }
 }
 

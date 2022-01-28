@@ -1,7 +1,6 @@
 // #part /js/dialogs/AbstractDialog
 
 // #link ../ui
-// #link ../Serializable
 
 class AbstractDialog extends HTMLElement {
 

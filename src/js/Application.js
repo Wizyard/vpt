@@ -52,6 +52,8 @@ constructor() {
     document.body.addEventListener('dragover', e => e.preventDefault());
     document.body.addEventListener('drop', this._handleFileDrop);
 
+    document.body.appendChild(document.querySelector('#main-dialog').content);
+
     this._rendererSelect = document.querySelector('#renderer-dropdown');
     this._toneMapperSelect = document.querySelector('#tone-mapper-dropdown');
 
@@ -75,7 +77,7 @@ constructor() {
     this._envmapLoadDialog.addEventListener('load', this._handleEnvmapLoad);
 
     this.serializationVersion = '1.0';
-    this.showSettings = true; // This controls whether Renderer's, Tone mapper's and Rendering Context's settings can be manually adjusted or not
+    this.showSettings = true; // This controls whether Renderer, Tone mapper and Rendering Context settings can be manually adjusted or not
     if (this.showSettings) {
         this._makeDialog('rendering-context', this._renderingContext.settings);
         this._renderingContext.bindHandlersAndListeners();
@@ -143,7 +145,6 @@ _serialize = () => {
         context: this._renderingContext.serialize(),
         camera: this._renderingContext.serializeCamera()
     }
-    console.log(settings);
     CommonUtils.downloadJSON(settings, 'Settings.json');
 }
 
@@ -196,7 +197,7 @@ _deserialize = () => {
         }
 
         if (!settings.context) {
-            console.error('Rendering context settings missing. Using default values');
+            console.error('Rendering context settings missing. Values unchanged');
         } else {
             this._renderingContext.deserialize(settings.context, this.showSettings);
             if (this.showSettings) {
@@ -358,33 +359,6 @@ _getReaderForFileType(type) {
         case 'bvp'  : return BVPReader;
         case 'raw'  : return RAWReader;
         case 'zip'  : return ZIPReader;
-    }
-}
-
-_getDialogForRenderer(renderer) {
-    switch (renderer) {
-        case 'mip' : return MIPRendererDialog;
-        case 'iso' : return ISORendererDialog;
-        case 'eam' : return EAMRendererDialog;
-        case 'mcs' : return MCSRendererDialog;
-        case 'mcm' : return MCMRendererDialog;
-        case 'mcc' : return MCMRendererDialog; // yes, the same
-        case 'dos' : return DOSRendererDialog;
-    }
-}
-
-_getDialogForToneMapper(toneMapper) {
-    switch (toneMapper) {
-        case 'artistic'   : return ArtisticToneMapperDialog;
-        case 'range'      : return RangeToneMapperDialog;
-        case 'reinhard'   : return ReinhardToneMapperDialog;
-        case 'reinhard2'  : return Reinhard2ToneMapperDialog;
-        case 'uncharted2' : return Uncharted2ToneMapperDialog;
-        case 'filmic'     : return FilmicToneMapperDialog;
-        case 'unreal'     : return UnrealToneMapperDialog;
-        case 'aces'       : return AcesToneMapperDialog;
-        case 'lottes'     : return LottesToneMapperDialog;
-        case 'uchimura'   : return UchimuraToneMapperDialog;
     }
 }
 

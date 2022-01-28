@@ -57,7 +57,7 @@ deserialize(setting) {
 }
 
 static verify(value, registeredSetting) {
-    let regex = /^#[0-9A-F]{6}$/i;
+    let regex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
     if (!regex.test(value)) {
         console.error('Type of ' + registeredSetting.name + ' value must be a hexadecimal color. Using default value (' + registeredSetting.attributes.value + ')');
         return registeredSetting.attributes.value;

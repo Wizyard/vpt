@@ -18,6 +18,7 @@
 
 </head>
 <body>
+<template id="main-dialog">
   <vpt-sidebar>
     <vpt-panel scrollable>
         <vpt-tabs>
@@ -52,6 +53,7 @@
                                 <option value="mcs">Single scattering</option>
                                 <option value="mcm" selected>Multiple scattering</option>
                                 <option value="mcc">Multiple scattering (compute)</option>
+                                <option value="new">New</option>
                             </vpt-dropdown>
                         </vpt-field>
                         <vpt-panel id="attach-renderer"></vpt-panel>
@@ -84,5 +86,6 @@
         </vpt-tabs>
     </vpt-panel>
   </vpt-sidebar>
+</template>
 </body>
 </html>
