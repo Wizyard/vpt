@@ -5,7 +5,7 @@
 class Panel extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Panel, options);
+    super(TEMPLATES.ui.Panel, STYLES.ui.Panel, options);
 
     Object.assign(this, options);
 }

@@ -7,7 +7,7 @@
 class Accordion extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Accordion, options);
+    super(TEMPLATES.ui.Accordion, STYLES.ui.Accordion, options);
 
     Object.assign(this, options);
 

@@ -5,7 +5,7 @@
 class Sidebar extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Sidebar, options);
+    super(TEMPLATES.ui.Sidebar, STYLES.ui.Sidebar, options);
 
     Object.assign(this, options);
 

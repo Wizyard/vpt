@@ -5,7 +5,7 @@
 class Tabs extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Tabs, options);
+    super(TEMPLATES.ui.Tabs, STYLES.ui.Tabs, options);
 
     this._handleClick = this._handleClick.bind(this);
 

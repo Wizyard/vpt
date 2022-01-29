@@ -5,7 +5,7 @@
 class Spinner extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Spinner, options);
+    super(TEMPLATES.ui.Spinner, STYLES.ui.Spinner, options);
 
     Object.assign(this, {
         unit  : null, // TODO: add a label with units at the end of input

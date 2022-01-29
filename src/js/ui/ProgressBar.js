@@ -6,7 +6,7 @@
 class ProgressBar extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.ProgressBar, options);
+    super(TEMPLATES.ui.ProgressBar, STYLES.ui.ProgressBar, options);
 
     Object.assign(this, {
         progress: 0

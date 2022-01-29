@@ -5,7 +5,7 @@
 class FileChooser extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.FileChooser, options);
+    super(TEMPLATES.ui.FileChooser, STYLES.ui.FileChooser, options);
 
     this._handleChange = this._handleChange.bind(this);
     this._handleClick = this._handleClick.bind(this);

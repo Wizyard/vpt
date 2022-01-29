@@ -6,7 +6,7 @@
 class Dropdown extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Dropdown, options);
+    super(TEMPLATES.ui.Dropdown, STYLES.ui.Dropdown, options);
 
     Object.assign(this, {
         options: []

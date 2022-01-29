@@ -6,7 +6,7 @@
 class Radio extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Radio, options);
+    super(TEMPLATES.ui.Radio, STYLES.ui.Radio, options);
 
     Object.assign(this, {
         options  : [],

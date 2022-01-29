@@ -6,7 +6,7 @@
 class Slider extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Slider, options);
+    super(TEMPLATES.ui.Slider, STYLES.ui.Slider, options);
 
     Object.assign(this, options);
 

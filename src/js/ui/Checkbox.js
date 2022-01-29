@@ -5,7 +5,7 @@
 class Checkbox extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Checkbox, options);
+    super(TEMPLATES.ui.Checkbox, STYLES.ui.Checkbox, options);
 
     Object.assign(this, options);
 

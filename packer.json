@@ -3,14 +3,9 @@
         {
             "input": "src",
             "output": "/",
-            "filter": "\\.(js|html|json|glsl)$",
+            "filter": "\\.(js|html|css|json|glsl)$",
             "recursive": true,
             "parse": true
-        },
-        {
-            "input": "src/css",
-            "output": "/css",
-            "recursive": true
         },
         {
             "input": "src/images",
@@ -41,8 +36,8 @@
         },
         {
             "input": "/css",
-            "output": "build/css",
-            "mode": "each"
+            "output": "build/css/styles.json",
+            "mode": "json"
         },
         {
             "input": "/html",

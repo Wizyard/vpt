@@ -5,7 +5,7 @@
 class ColorChooser extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.ColorChooser, options);
+    super(TEMPLATES.ui.ColorChooser, STYLES.ui.ColorChooser, options);
 
     Object.assign(this, options);
 

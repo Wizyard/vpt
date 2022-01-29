@@ -54,6 +54,10 @@ constructor() {
 
     document.body.appendChild(document.querySelector('#main-dialog').content);
 
+    let mainStyle = document.createElement('style');
+    mainStyle.innerHTML = STYLES.main;
+    document.head.appendChild(mainStyle);
+
     this._rendererSelect = document.querySelector('#renderer-dropdown');
     this._toneMapperSelect = document.querySelector('#tone-mapper-dropdown');
 
@@ -65,6 +69,10 @@ constructor() {
 
     const about = DOMUtils.instantiate(TEMPLATES.AboutText);
     document.querySelector('#about-panel').appendChild(about);
+
+    let aboutStyle = document.createElement('style');
+    aboutStyle.innerHTML = STYLES.AboutText;
+    about.appendChild(aboutStyle);
 
     if (!this._renderingContext.hasComputeCapabilities()) {
         this.disableMCC();

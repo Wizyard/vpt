@@ -16,12 +16,17 @@ const resources = {
         type: 'json',
         url: 'html/templates.json'
     },
+    styles: {
+        type: 'json',
+        url: 'css/styles.json'
+    },
     all: {
         type: 'dummy',
         dependencies: [
             'shaders',
             'mixins',
-            'templates'
+            'templates',
+            'styles'
         ]
     }
 };
@@ -32,13 +37,15 @@ ResourceLoader.instance = new ResourceLoader(resources);
 let SHADERS;
 let MIXINS;
 let TEMPLATES;
+let STYLES;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const rl = ResourceLoader.instance;
-    [ SHADERS, MIXINS, TEMPLATES, UISPECS ] = await Promise.all([
+    [ SHADERS, MIXINS, TEMPLATES, STYLES ] = await Promise.all([
         rl.loadResource('shaders'),
         rl.loadResource('mixins'),
-        rl.loadResource('templates')
+        rl.loadResource('templates'),
+        rl.loadResource('styles')
     ]);
     const application = new Application();
 });

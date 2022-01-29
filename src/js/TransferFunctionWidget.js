@@ -25,6 +25,15 @@ constructor(options) {
 
     this._$html = DOMUtils.instantiate(TEMPLATES.TransferFunctionWidget);
     const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._$html);
+   
+    let buttonStyle = document.createElement('style');
+    buttonStyle.innerHTML = STYLES.ui.Button;
+    shadowRoot.appendChild(buttonStyle);
+
+    let TFStyle = document.createElement('style');
+    TFStyle.innerHTML = STYLES.TransferFunctionWidget;
+    shadowRoot.appendChild(TFStyle);
+
     this._$colorPicker   = this.shadowRoot.querySelector('[name="color"]');
     this._$alphaPicker   = this.shadowRoot.querySelector('[name="alpha"]');
     this._$addBumpButton = this.shadowRoot.querySelector('[name="add-bump"]');

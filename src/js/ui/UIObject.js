@@ -4,7 +4,7 @@
 
 class UIObject extends HTMLElement {
 
-constructor(template, options) {
+constructor(template, stylesheet, options) {
     super();
     
     let visible = true;
@@ -22,6 +22,10 @@ constructor(template, options) {
     this._element = DOMUtils.instantiate(this._template);
 
     const shadowRoot = this.attachShadow({mode: 'open'}).appendChild(this._element);
+
+    let styleElement = document.createElement('style');
+    styleElement.innerHTML = stylesheet;
+    shadowRoot.appendChild(styleElement);
 
     this._element.classList.toggle('disabled', !this.enabled);
     this._element.classList.toggle('invisible', !this.visible);

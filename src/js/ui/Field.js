@@ -5,7 +5,7 @@
 class Field extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Field, options);
+    super(TEMPLATES.ui.Field, STYLES.ui.Field, options);
 
     Object.assign(this, options);
 

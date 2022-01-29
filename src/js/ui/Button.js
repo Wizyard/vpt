@@ -5,7 +5,7 @@
 class Button extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Button, options);
+    super(TEMPLATES.ui.Button, STYLES.ui.Button, options);
 
     Object.assign(this, options);
 

@@ -6,7 +6,7 @@
 class VectorSpinner extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.VectorSpinner, options);
+    super(TEMPLATES.ui.VectorSpinner, STYLES.ui.VectorSpinner, options);
 
     Object.assign(this, options);
 

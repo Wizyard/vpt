@@ -5,7 +5,7 @@
 class Textbox extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.Textbox, options);
+    super(TEMPLATES.ui.Textbox, STYLES.ui.Textbox, options);
 
     Object.assign(this, options);
 

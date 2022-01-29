@@ -6,7 +6,7 @@
 class StatusBar extends UIObject {
 
 constructor(options) {
-    super(TEMPLATES.ui.StatusBar, options);
+    super(TEMPLATES.ui.StatusBar, STYLES.ui.StatusBar, options);
 }
 
 _log(text, level) {
